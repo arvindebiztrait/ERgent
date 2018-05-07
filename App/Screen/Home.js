@@ -68,7 +68,7 @@ export default class Home extends Component<Props> {
                     fontWeight: 'bold',
                     // backgroundColor:'yellow',
                     marginHorizontal:10,
-                }}>How Can We Help?</Text>
+                }}>How Can We Help? </Text>
                 <View style={{
                     borderWidth:0.5,
                     width:70,
