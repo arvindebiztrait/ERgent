@@ -188,9 +188,11 @@ export default class SymtomsList extends Component {
 
     onClickListView(rowData) {
         console.log("rowData:=",rowData)
+        this.props.navigation.push('hospitalList', {'isForSearch':false})
     }
 
     onClickBack() {
         console.log("onClickBack")
+        this.props.navigation.pop()
     }
 }

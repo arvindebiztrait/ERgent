@@ -7,6 +7,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   ListView,
+  TextInput,
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
@@ -19,6 +20,8 @@ export default class HospitalList extends Component {
         this.state = {
             dataSource:ds,
             arrHospitals:[],
+            searchText:'',
+            isForSearch:props.navigation.state.params.isForSearch,
         };
     }
 
@@ -102,10 +105,77 @@ export default class HospitalList extends Component {
                     ></Image>
 
                 </View>
+                
+                {/* SearchBar */}
+
+                {this.state.isForSearch ? 
+                    <View style={{
+                        // flex:242,
+                        backgroundColor:'rgba(242,243,245,1)',
+                        justifyContent:'center',
+                        alignItems:'center',
+                        height:64,
+                    }}>
+                        <View style={{
+                            backgroundColor:'white',
+                            // marginLeft:10,
+                            // marginRight:10,
+                            width:'90%',
+                            height:'60%',
+                            borderRadius:20,
+                            flexDirection:'row',
+                            // justifyContent:'center',
+                            alignItems:'center',
+                            paddingLeft:15
+                        }}>
+                            <TextInput style={{
+                                // borderBottomColor:'grey',
+                                // borderBottomWidth:1,
+                                // marginLeft:10,
+                                // marginRight:10,
+                                // paddingBottom:Platform.ios === 'ios' ? 0 : 5,
+                                // height:Platform.ios === 'ios' ? 23 : 32,
+                                width:'80%'
+                            }}
+                                placeholder= {'Search'}
+                                allowFontScaling={false}
+                                ref='bName'
+                                keyboardType='default'
+                                returnKeyType='done'
+                                placeholderTextColor='rgba(79,90,105,1)'
+                                underlineColorAndroid='transparent'
+                                value={this.state.searchText}
+                                autoCapitalize='none'
+                                onChangeText={(text) => this.setState({searchText:text})}
+                                onSubmitEditing={(event) => this.onSearchClick()}
+                                // onBlur= {this.onBlurTextInput.bind(this)}
+                                />
+                            <TouchableWithoutFeedback style={{
+                                }} onPress={this.onSearchClick.bind(this)}>
+                            <Image style={{
+                                position:'relative',
+                                backgroundColor:'red',
+                                width:40,
+                                height:'100%',
+                                // marginTop:20,
+                                marginLeft:10
+                                }}
+                                // source={require('Domingo/Src/images/search.png')}
+                                resizeMethod='resize'
+                                resizeMode='center'
+                                />
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </View>
+
+                    :
+
+                    undefined                
+                }
 
                 {/* Content View */}
                 <View style={{
-                    height:Constant.DEVICE_HEIGHT-64,
+                    height: (Constant.DEVICE_HEIGHT- 64 - (this.state.isForSearch ? 64 : 0)),
                     // backgroundColor:'yellow',
                     width:Constant.DEVICE_WIDTH
                 }}>
@@ -114,7 +184,7 @@ export default class HospitalList extends Component {
                             backgroundColor:'rgba(239,240,241,1)',
                             paddingBottom:10,
                             // backgroundColor:'yellow',
-                            paddingTop:10,
+                            paddingTop: this.state.isForSearch ? 0 : 10,
                         }}
                         dataSource={this.state.dataSource}
                         renderRow={this.renderRow.bind(this)}
@@ -129,6 +199,13 @@ export default class HospitalList extends Component {
 
             </View>
         )
+    }
+
+    onSearchClick() {
+        if (this.state.searchText === '') {
+          alert('Please enter text to search hospital')
+          return
+        }
     }
 
     renderRow(rowdata) {
@@ -196,5 +273,6 @@ export default class HospitalList extends Component {
 
     onClickBack() {
         console.log("onClickBack")
+        this.props.navigation.pop()
     }
 }

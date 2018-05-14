@@ -32,13 +32,14 @@ export const STATUSBAR_HEIGHT  = Platform.OS === 'ios' ? 0 : StatusBar.currentHe
 export default class TermsConditions extends Component {
 
   constructor(props) {
-    console.log('props:=',props.isForAboutUs)
+    console.log('props:=',props.navigation.state.params.isForPrivacy)
     super(props)
     this.state = {
       isShowHud:false,
       aboutUsResponse:'',
       cnt:0,
-      title:'Terms & Conditions'
+      title: props.navigation.state.params.isForPrivacy === '1' ? 'Privacy Policy' : 'Terms & Conditions',
+      isForPrivacy: props.navigation.state.params.isForPrivacy,
     };
   }
 
@@ -115,6 +116,10 @@ export default class TermsConditions extends Component {
           alignItems:'center',
           width:'100%',
           height:64,
+          shadowColor:'gray',
+          shadowOpacity:1.0,
+          shadowOffset:{ width: 0, height: 2 },
+          zIndex:1,
         }}>
           <TouchableWithoutFeedback style={{ backgroundColor:'red'
                 }} onPress={this.onClickMenu.bind(this)}>

@@ -313,12 +313,12 @@ export default class Home extends Component {
 
   gotoPrivacyPolicy() {
     console.log("on Click Privacy Policy")
-    this.props.navigation.push('termsConditions')
+    this.props.navigation.push('termsConditions',{'isForPrivacy':'1'})
   }
 
   gotoTermsAndConditions() {
     console.log("on Click Terms & Conditions")
-    this.props.navigation.push('termsConditions')
+    this.props.navigation.push('termsConditions',{'isForPrivacy':'0'})
   }
 
   gotoSymtoms() {
@@ -326,7 +326,7 @@ export default class Home extends Component {
   }
 
   gotoSearch() {
-    this.props.navigation.push('hospitalList')
+    this.props.navigation.push('hospitalList', {'isForSearch':true})
   }
 }
 
