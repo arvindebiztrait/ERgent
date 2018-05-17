@@ -90,13 +90,54 @@ export default class Home extends Component {
             </View>
 
             <TouchableWithoutFeedback onPress={
-                    this.gotoSymtoms.bind(this)
+                    this.gotoShortestWaitTime.bind(this)
                 }>
             <View style={{
                 height:55,
                 backgroundColor:'rgba(254,255,255,1)',
                 width:Constant.DEVICE_WIDTH-30,
                 marginTop:50,
+                justifyContent:'center',
+                flexDirection:'row',
+                alignItems:'center',
+                shadowColor:'gray',
+                shadowOpacity:0.5,
+                shadowOffset:{ width: 0, height: 1 },
+                borderRadius:2.0,
+            }}> 
+                <Image style={{
+                    height:45,
+                    width:45,
+                    backgroundColor:'red',
+                    marginLeft:5,
+                }}></Image>
+
+                <Text style={{
+                    width:Constant.DEVICE_WIDTH-140,
+                    marginLeft: 5,
+                    // backgroundColor:'yellow',
+                    fontSize:17,
+                    color:'rgba(114,114,115,1)'
+                }}>Shortest Wait Time</Text>
+
+                <Image style={{
+                    height:45,
+                    width:45,
+                    backgroundColor:'red',
+                    marginLeft:5,
+                }}></Image>
+
+            </View>
+            </TouchableWithoutFeedback>
+
+            <TouchableWithoutFeedback onPress={
+                    this.gotoSymtoms.bind(this)
+                }>
+            <View style={{
+                height:55,
+                backgroundColor:'rgba(254,255,255,1)',
+                width:Constant.DEVICE_WIDTH-30,
+                marginTop:10,
                 justifyContent:'center',
                 flexDirection:'row',
                 alignItems:'center',
@@ -159,7 +200,7 @@ export default class Home extends Component {
                     // backgroundColor:'yellow',
                     fontSize:17,
                     color:'rgba(114,114,115,1)'
-                }}>Search</Text>
+                }}>Search By Location</Text>
 
                 <Image style={{
                     height:45,
@@ -319,6 +360,10 @@ export default class Home extends Component {
   gotoTermsAndConditions() {
     console.log("on Click Terms & Conditions")
     this.props.navigation.push('termsConditions',{'isForPrivacy':'0'})
+  }
+
+  gotoShortestWaitTime() {
+    this.props.navigation.push('shortestWaitTimeList')
   }
 
   gotoSymtoms() {

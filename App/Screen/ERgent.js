@@ -25,6 +25,8 @@ import Home from './Home'
 import HospitalList from './HospitalList'
 import SymtomsList from './SymtomsList'
 import TermsConditions from './TermsConditions'
+import ShortestWaitTimeList from './ShortestWaitTimeList'
+import SearchByLocation from './SearchByLocation'
 
 export default class ERgent extends Component {
     constructor(props){
@@ -55,18 +57,19 @@ export default class ERgent extends Component {
 
 //Creating the Navigation 
 export const createRootNavigator = (signedIn,userType) => {
-    console.log("signed in is",signedIn,userType)
-   return StackNavigator(
-     {        
-         home: {screen: Home, path: 'main'},
-         termsConditions: {screen: TermsConditions},
-         hospitalList: {screen: HospitalList},
-         symtomsList: {screen: SymtomsList},
-     },
-     {
-       headerMode: "none",
-       mode: "card",
-       initialRouteName: "home"
-     }
-   );
- };
+  console.log("signed in is",signedIn,userType)
+  return StackNavigator(
+    {        
+        home: {screen: Home, path: 'main'},
+        termsConditions: {screen: TermsConditions},
+        hospitalList: {screen: HospitalList},
+        symtomsList: {screen: SymtomsList},
+        shortestWaitTimeList: {screen: ShortestWaitTimeList}
+    },
+    {
+      headerMode: "none",
+      mode: "card",
+      initialRouteName: "home"
+    }
+  );
+};
