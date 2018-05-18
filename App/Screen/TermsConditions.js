@@ -131,7 +131,7 @@ export default class TermsConditions extends Component {
                 marginTop:Platform.OS === 'ios' ? 20 : 0,
                 marginLeft:10
               }}
-              // source={require('Domingo/Src/images/menu.png')}
+              source={require('../Images/back.png')}
               resizeMethod='resize'
               resizeMode='center'
             />

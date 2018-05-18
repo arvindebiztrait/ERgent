@@ -80,6 +80,7 @@ export default class HospitalList extends Component {
                                 marginTop:15,
                                 marginLeft:5,
                             }}
+                            source={require('../Images/back.png')}
                         ></Image>
                     </TouchableWithoutFeedback>
 

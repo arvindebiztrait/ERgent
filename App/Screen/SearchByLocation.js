@@ -76,10 +76,11 @@ export default class SearchByLocation extends Component {
                             style={{
                                 height:40,
                                 width:40,
-                                backgroundColor:'white',
+                                // backgroundColor:'white',
                                 marginTop:15,
                                 marginLeft:5,
                             }}
+                            source={require('../Images/back.png')}
                         ></Image>
                     </TouchableWithoutFeedback>
 

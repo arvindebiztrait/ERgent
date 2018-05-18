@@ -108,9 +108,12 @@ export default class Home extends Component {
                 <Image style={{
                     height:45,
                     width:45,
-                    backgroundColor:'red',
+                    // backgroundColor:'red',
                     marginLeft:5,
-                }}></Image>
+                }}
+                source={require('../Images/wait-time.png')}
+                resizeMode='center'
+                ></Image>
 
                 <Text style={{
                     width:Constant.DEVICE_WIDTH-140,
@@ -121,11 +124,15 @@ export default class Home extends Component {
                 }}>Shortest Wait Time</Text>
 
                 <Image style={{
-                    height:45,
+                    height:20,
                     width:45,
-                    backgroundColor:'red',
+                    // backgroundColor:'red',
                     marginLeft:5,
-                }}></Image>
+                }}
+                source={require('../Images/next.png')}
+                resizeMode='center'
+                // resizeMethod='auto'
+                ></Image>
 
             </View>
             </TouchableWithoutFeedback>
@@ -149,9 +156,12 @@ export default class Home extends Component {
                 <Image style={{
                     height:45,
                     width:45,
-                    backgroundColor:'red',
+                    // backgroundColor:'red',
                     marginLeft:5,
-                }}></Image>
+                }}
+                source={require('../Images/symptoms.png')}
+                resizeMode='center'
+                ></Image>
 
                 <Text style={{
                     width:Constant.DEVICE_WIDTH-140,
@@ -162,11 +172,14 @@ export default class Home extends Component {
                 }}>Symtoms</Text>
 
                 <Image style={{
-                    height:45,
+                    height:20,
                     width:45,
-                    backgroundColor:'red',
+                    // backgroundColor:'red',
                     marginLeft:5,
-                }}></Image>
+                }}
+                source={require('../Images/next.png')}
+                resizeMode='center'
+                ></Image>
 
             </View>
             </TouchableWithoutFeedback>
@@ -190,9 +203,12 @@ export default class Home extends Component {
                 <Image style={{
                     height:45,
                     width:45,
-                    backgroundColor:'red',
+                    // backgroundColor:'red',
                     marginLeft:5,
-                }}></Image>
+                }}
+                source={require('../Images/location.png')}
+                resizeMode='center'
+                ></Image>
 
                 <Text style={{
                     width:Constant.DEVICE_WIDTH-140,
@@ -203,11 +219,14 @@ export default class Home extends Component {
                 }}>Search By Location</Text>
 
                 <Image style={{
-                    height:45,
+                    height:20,
                     width:45,
-                    backgroundColor:'red',
+                    // backgroundColor:'red',
                     marginLeft:5,
-                }}></Image>
+                }}
+                source={require('../Images/next.png')}
+                resizeMode='center'
+                ></Image>
 
             </View>
             </TouchableWithoutFeedback>
@@ -338,7 +357,9 @@ export default class Home extends Component {
                             borderRadius:50,
                             borderWidth:1,
                             borderColor:'rgba(227,54,74,1)'
-                        }}>
+                        }}
+                        source={require('../Images/logo-popup.png')}
+                        >
                         </Image>
                     </View>
             </Modal>
@@ -371,7 +392,7 @@ export default class Home extends Component {
   }
 
   gotoSearch() {
-    this.props.navigation.push('hospitalList', {'isForSearch':true})
+    this.props.navigation.push('searchByLocation', {'isForSearch':true})
   }
 }
 

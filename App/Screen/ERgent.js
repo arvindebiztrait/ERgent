@@ -64,7 +64,8 @@ export const createRootNavigator = (signedIn,userType) => {
         termsConditions: {screen: TermsConditions},
         hospitalList: {screen: HospitalList},
         symtomsList: {screen: SymtomsList},
-        shortestWaitTimeList: {screen: ShortestWaitTimeList}
+        shortestWaitTimeList: {screen: ShortestWaitTimeList},
+        searchByLocation: {screen: SearchByLocation}
     },
     {
       headerMode: "none",

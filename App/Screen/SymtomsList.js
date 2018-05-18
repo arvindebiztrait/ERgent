@@ -73,6 +73,7 @@ export default class SymtomsList extends Component {
                                 marginTop:15,
                                 marginLeft:5,
                             }}
+                            source={require('../Images/back.png')}
                         ></Image>
                     </TouchableWithoutFeedback>
 

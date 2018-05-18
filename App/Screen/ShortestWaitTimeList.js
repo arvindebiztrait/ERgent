@@ -76,10 +76,12 @@ export default class ShortestWaitTimeList extends Component {
                             style={{
                                 height:40,
                                 width:40,
-                                backgroundColor:'white',
+                                // backgroundColor:'white',
                                 marginTop:15,
                                 marginLeft:5,
                             }}
+                            source={require('../Images/back.png')}
+                            resizeMode={'center'}
                         ></Image>
                     </TouchableWithoutFeedback>
 
@@ -98,10 +100,12 @@ export default class ShortestWaitTimeList extends Component {
                         style={{
                             height:40,
                             width:40,
-                            backgroundColor:'white',
+                            // backgroundColor:'white',
                             marginTop:15,
                             marginLeft:5,
                         }}
+                        source={require('../Images/filter.png')}
+                        resizeMode={'center'}
                     ></Image>
 
                 </View>
@@ -115,19 +119,21 @@ export default class ShortestWaitTimeList extends Component {
                         justifyContent:'center',
                         alignItems:'center',
                         height:64,
-                        backgroundColor:'red'
+                        // backgroundColor:'red'
                     }}>
                         <View style={{
-                            backgroundColor:'white',
+                            // backgroundColor:'white',
                             // marginLeft:10,
                             // marginRight:10,
-                            width:'90%',
+                            width:Constant.DEVICE_WIDTH-20,
                             height:'60%',
-                            borderRadius:20,
+                            // borderRadius:20,
                             flexDirection:'row',
                             // justifyContent:'center',
                             alignItems:'center',
-                            paddingLeft:15
+                            paddingLeft:15,
+                            borderColor:'black',
+                            borderBottomWidth:1,
                         }}>
                             <TextInput style={{
                                 // borderBottomColor:'grey',
@@ -136,7 +142,7 @@ export default class ShortestWaitTimeList extends Component {
                                 // marginRight:10,
                                 // paddingBottom:Platform.ios === 'ios' ? 0 : 5,
                                 // height:Platform.ios === 'ios' ? 23 : 32,
-                                width:'%'
+                                width:Constant.DEVICE_WIDTH-70,
                             }}
                                 placeholder= {'Search'}
                                 allowFontScaling={false}
@@ -155,15 +161,15 @@ export default class ShortestWaitTimeList extends Component {
                                 }} onPress={this.onSearchClick.bind(this)}>
                             <Image style={{
                                 position:'relative',
-                                backgroundColor:'red',
-                                width:40,
+                                // backgroundColor:'red',
+                                width:20,
                                 height:'100%',
                                 // marginTop:20,
                                 marginLeft:10
                                 }}
-                                // source={require('Domingo/Src/images/search.png')}
-                                resizeMethod='resize'
-                                resizeMode='center'
+                                source={require('../Images/search.png')}
+                                // resizeMethod='resize'
+                                resizeMode='contain'
                                 />
                             </TouchableWithoutFeedback>
                         </View>
