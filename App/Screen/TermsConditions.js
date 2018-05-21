@@ -112,10 +112,10 @@ export default class TermsConditions extends Component {
           // flex:240,
           backgroundColor:'rgba(227,54,74,1)',
           flexDirection:'row',
-          justifyContent:'center',
+          // justifyContent:'center',
           alignItems:'center',
           width:'100%',
-          height:64,
+          height: Platform.OS === 'ios' ? 64 : 54,
           shadowColor:'gray',
           shadowOpacity:1.0,
           shadowOffset:{ width: 0, height: 2 },
@@ -125,7 +125,7 @@ export default class TermsConditions extends Component {
                 }} onPress={this.onClickMenu.bind(this)}>
             <Image style={{
                 position:'relative',
-                backgroundColor:'white',
+                // backgroundColor:'white',
                 width:40,
                 height:40,
                 marginTop:Platform.OS === 'ios' ? 20 : 0,
@@ -150,7 +150,7 @@ export default class TermsConditions extends Component {
                 }} onPress={this.onClickMenu.bind(this)}>
             <Image style={{
                 position:'relative',
-                backgroundColor:'white',
+                // backgroundColor:'white',
                 width:40,
                 height:40,
                 marginTop:Platform.OS === 'ios' ? 20 : 0,

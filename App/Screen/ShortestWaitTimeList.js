@@ -60,10 +60,10 @@ export default class ShortestWaitTimeList extends Component {
 
                 {/* Header View */}
                 <View style={{
-                    height:64,
+                    height: Platform.OS === 'ios' ? 64 : 54,
                     backgroundColor:'rgba(227,54,74,1)',
                     width:'100%',
-                    justifyContent:'center',
+                    // justifyContent:'center',
                     alignItems:'center',
                     shadowColor:'gray',
                     shadowOpacity:1.0,
@@ -77,7 +77,7 @@ export default class ShortestWaitTimeList extends Component {
                                 height:40,
                                 width:40,
                                 // backgroundColor:'white',
-                                marginTop:15,
+                                marginTop: Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:5,
                             }}
                             source={require('../Images/back.png')}
@@ -89,7 +89,7 @@ export default class ShortestWaitTimeList extends Component {
                         color:'white',
                         fontSize: 18,
                         fontWeight:'bold',
-                        marginTop: Platform.OS === 'ios' ? 12 : 12,
+                        marginTop: Platform.OS === 'ios' ? 12 : 0,
                         width:Constant.DEVICE_WIDTH - 100,
                         marginLeft: 5,
                         // backgroundColor:'yellow',
@@ -101,7 +101,7 @@ export default class ShortestWaitTimeList extends Component {
                             height:40,
                             width:40,
                             // backgroundColor:'white',
-                            marginTop:15,
+                            marginTop: Platform.OS === 'ios' ? 15 : 0,
                             marginLeft:5,
                         }}
                         source={require('../Images/filter.png')}

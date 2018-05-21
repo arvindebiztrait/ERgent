@@ -44,7 +44,7 @@ export default class Home extends Component {
 
             {/* Header View */}
             <View style={{
-                height:64,
+                height: Platform.OS === 'ios' ? 64 : 54,
                 backgroundColor:'rgba(227,54,74,1)',
                 width:'100%',
                 justifyContent:'center',
@@ -58,7 +58,7 @@ export default class Home extends Component {
                     color:'white',
                     fontSize: 18,
                     fontWeight:'bold',
-                    marginTop: Platform.OS === 'ios' ? 12 : 12,
+                    marginTop: Platform.OS === 'ios' ? 12 : 0,
                 }}>HOME</Text>
 
             </View>
@@ -287,7 +287,7 @@ export default class Home extends Component {
                 />
             </View>
 
-            <Modal visible={this.state.isShowPopup} animationType={'fade'} transparent={true}>
+            <Modal visible={this.state.isShowPopup} animationType={'fade'} transparent={true} onRequestClose={this.onModalCloseAction.bind(this)}>
                 <View style={{
                     backgroundColor: 'rgba(0,0,0,0.4)',
                     flex: 1,
@@ -365,6 +365,10 @@ export default class Home extends Component {
             </Modal>
         </View>
     );
+  }
+
+  onModalCloseAction() {
+
   }
 
   onClickUnderstand() {

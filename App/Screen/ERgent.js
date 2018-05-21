@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 
 import {
-    StackNavigator,
+    createStackNavigator,
   } from 'react-navigation';
 
 import Home from './Home'
@@ -58,7 +58,7 @@ export default class ERgent extends Component {
 //Creating the Navigation 
 export const createRootNavigator = (signedIn,userType) => {
   console.log("signed in is",signedIn,userType)
-  return StackNavigator(
+  return createStackNavigator(
     {        
         home: {screen: Home, path: 'main'},
         termsConditions: {screen: TermsConditions},
