@@ -38,10 +38,10 @@ module.exports = {
     
     isConnectedGlobal : '',
     //local link
-//   serverUri : 'http://192.168.0.19:8010/api/',   
+  serverUri : 'http://192.168.0.19:8040/api/',   
  
   //live inhouse link
-  serverUri : 'http://angola.sandboxserver.info/api/',
+//   serverUri : 'http://angola.sandboxserver.info/api/',
    languageId : '',
    deviceToken :'',
    CALL_ONETIME:'',

@@ -27,6 +27,7 @@ import SymtomsList from './SymtomsList'
 import TermsConditions from './TermsConditions'
 import ShortestWaitTimeList from './ShortestWaitTimeList'
 import SearchByLocation from './SearchByLocation'
+import ws from './GeneralClass/webservice'
 
 export default class ERgent extends Component {
     constructor(props){
@@ -41,7 +42,7 @@ export default class ERgent extends Component {
      }
 
      componentDidMount() {
-
+        ws.initNetInfoForConnectivity()
      }
 
      render() {

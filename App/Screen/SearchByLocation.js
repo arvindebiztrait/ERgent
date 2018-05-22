@@ -9,11 +9,19 @@ import {
   ListView,
   TextInput,
   ActivityIndicator,
+  NetInfo,
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
+import Geocoder from 'react-native-geocoding';
+import ws from './GeneralClass/webservice';
+import Events from 'react-native-simple-events';
+import Modal from 'react-native-modalbox';
+
+//InHouse Development Key
+Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
 
 export default class SearchByLocation extends Component {
 
@@ -43,16 +51,33 @@ export default class SearchByLocation extends Component {
                 longitude: -122.4324,
             },
             placesList:[],
+            selectedAddress:{},
+            selectedHospital:{},
+            isUpdateRegion:false,
+            isOpen: false,
+            isDisabled: false,
+            swipeToClose: true,
+            sliderValue: 0.3,
+            isOpenModal:false,
         };
     }
 
     componentDidMount() {
         // super.componentDidMount()
-        this.setDummyHospital()
+        Events.on('receiveResponse', 'receiveMenuScreen', this.onReceiveResponse.bind(this)) 
+
+        // this.setDummyHospital()
 
         this.watchID = navigator.geolocation.getCurrentPosition(
             (position) => {
                 console.log("Current Location:=",position)
+                var that = this
+                setTimeout(function(){
+ 
+                    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+                    that.state.isUpdateRegion = true
+               
+                  }, 2000);
               this.setState({
                 isLoading:false,
                 coordinate: { 
@@ -71,8 +96,47 @@ export default class SearchByLocation extends Component {
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },);
     }
 
-    getHospitalFromCurrentLocation() {
+    onReceiveResponse (responceData) { 
+       
+        if (responceData.MethodName == 'getHospitalByLatLong') {
+          console.log('responceData:=',responceData)
+          this.setState({isLoading: false,isDisable:false})
+          if (responceData.Status == true) {                    
+            var hospitalData = responceData.Results.HospitalData            
+            this.setState({
+                arrHospitals:hospitalData,
+                isLoading:false
+            })
+          }
+          else {
+            alert(responceData.ErrorMessage)
+          }
+        }        
+    }
 
+    getHospitalFromCurrentLocation() {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log(isConnected)
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+            if(isConnected) {
+              var param = {
+                  'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+                  'Latitude': this.state.coordinate.latitude,
+                  'Longitude': this.state.coordinate.longitude,
+                  'PageNumber': 1,
+                  'PageSize': 20,
+                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+              }
+              console.log("param is ",param);
+              this.setState({
+                isLoading : true
+              })
+              ws.callWebservice('getHospitalByLatLong',param,'')
+            }
+            else {
+              alert(Constant.NETWORK_ALERT)
+            }
+        });
     }
 
     setDummyHospital() {
@@ -268,6 +332,9 @@ export default class SearchByLocation extends Component {
                         onRegionChange={this.onRegionChange.bind(this)}
                         showsMyLocationButton={true}
                         showsUserLocation={true}
+                        showsCompass={false}
+                        
+                        // onMarkerPress={this.onMarkerClicked.bind(this)}                       
                     >
                     {/* <Marker draggable
                     coordinate={this.state.coordinate}
@@ -281,19 +348,37 @@ export default class SearchByLocation extends Component {
                         }
                     },this.loadAddressFromMap())}
                     /> */}
+
+                    {this.state.arrHospitals.map((place, index) => (
+                        <MapView.Marker
+                        key={index}
+                        // title={place.HospitalName}
+                        // description={place.Address}
+                        coordinate={{ 
+                            latitude: parseFloat(place.Latitude),
+                            longitude: parseFloat(place.Longitude) 
+                        }}
+                        onMarkerPress={this.onMarkerClicked.bind(this,place)}
+                        onPress={this.onMarkerClicked.bind(this,place)}
+                        />
+                    ))}
                     </MapView>
 
-                    {/* {this.state.placesList.length > 0 ?  */}
+                    {this.state.placesList.length > 0 ? 
                         <View style={{
                             position:'absolute',
                             zIndex:5,
-                            marginTop:80,
+                            marginTop:60,
                             height:200,
-                            backgroundColor:'yellow'
+                            // backgroundColor:'yellow',
+                            marginHorizontal:10,
+                            shadowColor:'gray',
+                            shadowOpacity:1.0,
+                            shadowOffset:{ width: 0, height: 2 },
                         }}>
                         <ListView
                             contentContainerStyle={{
-                                backgroundColor:'rgba(239,240,241,1)',
+                                // backgroundColor:'rgba(239,240,241,1)',
                                 paddingBottom:10,
                                 // backgroundColor:'yellow',
                                 paddingTop: this.state.isForSearch ? 0 : 10,
@@ -309,9 +394,9 @@ export default class SearchByLocation extends Component {
                             showsVerticalScrollIndicator={false}
                         />
                         </View>
-                    {/* // :
-                    //     undefined
-                    // } */}
+                    :
+                        undefined
+                    }
 
                 </View>
                 { this.state.isLoading == true ? <ActivityIndicator
@@ -327,8 +412,134 @@ export default class SearchByLocation extends Component {
                     }}
                     />: null
                 }
+
+                <Modal style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 300,
+                    backgroundColor: 'transparent'
+                }} 
+                position={"bottom"} 
+                ref={"modal6"} 
+                swipeArea={20}
+                isOpen={this.state.isOpenModal}
+                onClosed={this.onClose.bind(this)}
+                onOpened={this.onOpen.bind(this)}
+                onClosingState={this.onClosingState}>
+                
+                {/* <ScrollView> */}
+                    <View style={{
+                        width: Constant.DEVICE_WIDTH, 
+                        height:300, 
+                        // paddingLeft: 10, 
+                        backgroundColor:'transparent', 
+                        borderTopWidth:1,
+                    }}>
+                        <View style={{
+                            backgroundColor:'rgba(227,54,74,1)',
+                            // height:100,
+                            width:'100%',
+                            paddingBottom:10,
+                        }}>
+                            <Text style={{
+                                color:'white',
+                                marginHorizontal:30,
+                                marginTop:10,
+                                fontSize:18,
+                            }}>{this.state.selectedHospital.HospitalName}</Text>
+                            <View style={{
+                                flexDirection:'row',
+                                marginHorizontal:30,
+                                // backgroundColor:'yellow',
+                                marginTop:10,
+                            }}>
+                                <Image
+                                    style={{
+                                        height:25,
+                                        width:25,
+                                        // backgroundColor:'black',
+                                        // marginTop: 5,
+                                        marginLeft:0,
+                                    }}
+                                    source={require('../Images/location_white.png')}
+                                    resizeMode='center'
+                                ></Image>
+                                <View style={{
+                                    // backgroundColor:'green',
+                                    marginLeft:10,
+                                }}>
+                                <Text style={{
+                                    color:'white',
+                                    fontSize:12,
+                                }}>{this.state.selectedHospital.Address}</Text>
+                                <Text style={{
+                                    color:'white',
+                                    fontSize:12,
+                                }}>{this.state.selectedHospital.City}</Text>
+                                <Text style={{
+                                    color:'white',
+                                    fontSize:12,
+                                }}>{this.state.selectedHospital.CountyName + ", " + this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={{
+                        backgroundColor:'white',
+                    }}>
+                            <View style={{
+                                flexDirection:'row',
+                                marginHorizontal:30,
+                            }}>
+                                <Image
+                                    style={{
+                                        height:25,
+                                        width:25,
+                                        // backgroundColor:'black',
+                                        // marginTop: 5,
+                                        marginLeft:0,
+                                    }}
+                                    source={require('../Images/location_white.png')}
+                                    resizeMode='center'
+                                ></Image>
+
+                                <Text style={{
+                                    color:'gray',
+                                    fontSize:12,
+                                }}>{"Door to Doctor : " + this.state.selectedHospital.DoorToDoctorTimeUnweighted}</Text>
+                            </View>
+
+                        </View>
+                    
+                    {/* {this.renderList()} */}
+                    </View>
+                {/* </ScrollView> */}
+                </Modal>
             </View>
         )
+    }
+
+    onClose() {
+        this.setState({
+            isOpenModal:false
+        })
+        console.log('Modal just closed');
+    }
+    
+      onOpen() {
+        console.log('Modal just openned');
+      }
+    
+      onClosingState(state) {
+        console.log('the open/close of the swipeToClose just changed');
+      }
+
+    onMarkerClicked(param) {
+        console.log("onMarkerClicked:=",param)
+        this.setState({
+            isOpenModal:true,
+            selectedHospital:param
+        })
     }
 
     loadAddressFromMap() {
@@ -395,13 +606,15 @@ export default class SearchByLocation extends Component {
     onRegionChange(region) {
         // this.setState({ region:region });
         console.log("region:=",region)
-        // this.setState({
-        //     region: region,
-        //     // coordinate: {
-        //     //     latitude: region.latitude,
-        //     //     longitude: region.longitude
-        //     // }
-        // });
+        if (this.state.isUpdateRegion === true) {
+            this.setState({
+                region: region,
+                // coordinate: {
+                //     latitude: region.latitude,
+                //     longitude: region.longitude
+                // }
+            });
+        }
     }
 
     onSearchClick() {
@@ -413,71 +626,47 @@ export default class SearchByLocation extends Component {
 
     onClearSearchClick() {
         this.setState({
-            searchText:''
+            searchText:'',
+            placesList:[],
         })
     }
 
     renderRow(rowdata) {
         console.log("row data inside",rowdata);
-        var imgUrl = rowdata.ImagePath;
+        // var imgUrl = rowdata.ImagePath;
         return ( 
             <TouchableWithoutFeedback underlayColor = {'transparent'} onPress={this.onClickListView.bind(this,rowdata)}>
                 <View style = {{
                     backgroundColor:'white',
                     width:Constant.DEVICE_WIDTH-20,
                     flexDirection:'row',
-                    marginHorizontal:10,
-                    marginVertical:5,
+                    marginVertical:1,
                     borderRadius:3,
                     shadowColor:'gray',
                     shadowOpacity:0.3,
                     shadowOffset:{ width: 0, height: 2 },
-                    height:80,
                 }}>    
-                    <View style={{
-                        flexDirection:'column',
-                        width:Constant.DEVICE_WIDTH-80,
-                        justifyContent: 'flex-start',
-                        height:'100%',
-                    }}> 
-                        <Text style={{
-                            marginLeft:10,
-                            marginTop:5,
-                            fontSize:19,
-                            color:'rgba(114,114,115,1)'
-                        }}>{rowdata.name}</Text>
-                        <Text style={{
-                            marginLeft:10,
-                            marginTop:5,
-                            marginBottom:10,
-                            color:'rgba(114,114,115,1)'
-                        }}
-                        numberOfLines={2}
-                        >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</Text>
-                    </View>
-
-                    <View style={{
-                        width:50,
-                        height:'100%',
-                        // backgroundColor:'red',
+                    <Text style={{
                         marginLeft:10,
-                        justifyContent:'center',
-                        alignItems:'center',
-                        flexDirection:'column',
-                    }}>
-                        <Image style={{
-                            height:40,
-                            width:40,
-                            backgroundColor:'red',
-                        }}></Image>
-                    </View>
+                        // marginTop:5,
+                        fontSize:13,
+                        color:'rgba(114,114,115,1)',
+                        paddingVertical:5,
+                    }}>{rowdata.description}</Text>
                 </View>
             </TouchableWithoutFeedback>
         );
     }
 
     onClickListView(rowData) {
-        console.log("rowData:=",rowData)
+        console.log("rowData:=???",rowData)
+        this.setState({
+            selectedAddress:rowData,
+            isLoading:true,
+            placesList:[],
+            searchText:rowData.description
+        })
+        this.getLatLongFromAddressFun(rowData)
     }
 
     onClickBack() {
@@ -489,16 +678,23 @@ export default class SearchByLocation extends Component {
     searchPlacesByText(strSearchText) {
         
         console.log("strSearchText:=",strSearchText)
+        this.setState({
+            searchText : strSearchText,
+            
+        })
         if (strSearchText.length > 3) {
+            this.setState({
+                isLoading : true,
+            })
             var strUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + strSearchText + "&key="+ "AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg"
             let formData = new FormData();
 			const config = {
-				method: 'POST',
+				method: 'GET',
 				headers: {
 					'Accept': 'application/json',
-					'Content-Type': 'json/form-data;',
+					'Content-Type': 'application/json;',
 				},
-				body: formData,
+				// body: formData,
 			}
 			console.log("Request RecentOtp:=",config)
 			fetch(strUrl, config)
@@ -506,10 +702,11 @@ export default class SearchByLocation extends Component {
 			.then((responseData) => {
                 console.log("Google Places:=",responseData)		
                 if (responseData.status === 'OK') {
-                    // this.setState({
-                    //     placesList:responseData.predictions,
-                    //     dataSource:this.state.dataSource.cloneWithRows(responseData.predictions)
-                    // })
+                    this.setState({
+                        placesList:responseData.predictions,
+                        dataSource:this.state.dataSource.cloneWithRows(responseData.predictions),
+                        isLoading: false,
+                    })
                 }
                 else {
                     console.log("Google Places:= error in response , ",error);
@@ -522,8 +719,91 @@ export default class SearchByLocation extends Component {
         }
         else {
             console.log("Less Than 3 character")
+            if (strSearchText === '' || strSearchText.length === 0) {
+                this.setState({
+                    placesList:[],
+                    isLoading:false
+                })
+            }
         }
+    }
 
-        this.setState({searchText:strSearchText})
+    getLatLongFromAddressFun(rowData) {
+        console.log("getLatLongFromAddress called")
+        Geocoder.getFromLocation(rowData.description).then(
+            json => {
+                console.log("json:=",json)
+                if (json.results.length > 0) {
+                    var geometry = json.results[0].geometry
+                    console.log("Latitude:=",geometry.location.lat, "Longitude:=", geometry.location.lng)
+                    this.setState({
+                        isLoading:false,
+                        coordinate:{
+                            latitude:geometry.location.lat,
+                            longitude:geometry.location.lng
+                        },
+                        region:{
+                            latitude:geometry.location.lat,
+                            longitude:geometry.location.lng,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }
+                    },this.getHospitalFromCurrentLocation())
+                }
+                else {
+                    alert("Latitude/Longitude not found")
+                }
+                // console.log("json.results[0]:=",json.results[0])
+                // console.log("json.results[0].formatted_address:=",json.results[0].formatted_address)
+                // this.setState({
+                //   fullAddress:json.results[0].formatted_address,
+                //   isShowHudForAddress:false,
+                // })
+                // var address_component = json.results[0].address_components;
+                // for (let index = 0; index < address_component.length; index++) {
+                //     const element = address_component[index];
+                //     if (element.types.includes('street_number')) {
+                //         console.log("street_number matched")
+                //         this.setState({
+                //             block_no:element.long_name
+                //         });
+                //     }
+                //     else if (element.types.includes('route') || element.types.includes('neighborhood') || element.types.includes('sublocality_level_1')) {
+                //       this.setState({
+                //           areaName: element.long_name
+                //       });
+                //     }
+                //     else if (element.types.includes('locality')) {
+                //         this.setState({
+                //             city: element.long_name
+                //         });
+                //     }
+                //     else if (element.types.includes('administrative_area_level_1')) {
+                //         this.setState({
+                //             street:element.long_name
+                //         })
+                //     }
+                //     else if (element.types.includes('country')) {
+                //         this.setState({
+                //           country:element.long_name
+                //         })
+                //     }
+                //     else if (element.types.includes('postal_code')) {
+                //       this.setState({
+                //           zipCode:element.long_name
+                //       })
+                //   }
+                // }
+                // console.log("address_component:=",address_component[0].types[0])
+                // console.log("locality:=",json.results[0].address_components.locality)
+            },
+            error => {
+                console.log("ERROR:=",error)
+                alert("Error to get address from lat-long:",error)
+                this.setState({
+                  isShowHudForAddress:false
+                })
+            }
+          );
     }
 }
