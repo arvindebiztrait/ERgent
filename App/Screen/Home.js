@@ -164,149 +164,149 @@ export default class Home extends Component {
             <TouchableWithoutFeedback onPress={
                     this.gotoShortestWaitTime.bind(this)
                 }>
-            <View style={{
-                height:55,
-                backgroundColor:'rgba(254,255,255,1)',
-                width:Constant.DEVICE_WIDTH-30,
-                marginTop:50,
-                justifyContent:'center',
-                flexDirection:'row',
-                alignItems:'center',
-                shadowColor:'gray',
-                shadowOpacity:0.5,
-                shadowOffset:{ width: 0, height: 1 },
-                borderRadius:2.0,
-                elevation:2
-            }}> 
-                <Image style={{
-                    height:45,
-                    width:45,
-                    // backgroundColor:'red',
-                    marginLeft:5,
-                }}
-                source={require('../Images/wait-time.png')}
-                resizeMode='center'
-                ></Image>
+                <View style={{
+                    height:55,
+                    backgroundColor:'rgba(254,255,255,1)',
+                    width:Constant.DEVICE_WIDTH-30,
+                    marginTop:50,
+                    justifyContent:'center',
+                    flexDirection:'row',
+                    alignItems:'center',
+                    shadowColor:'gray',
+                    shadowOpacity:0.5,
+                    shadowOffset:{ width: 0, height: 1 },
+                    borderRadius:2.0,
+                    elevation:2
+                }}> 
+                    <Image style={{
+                        height:45,
+                        width:45,
+                        // backgroundColor:'red',
+                        marginLeft:5,
+                    }}
+                    source={require('../Images/wait-time.png')}
+                    resizeMode='center'
+                    ></Image>
 
-                <Text style={{
-                    width:Constant.DEVICE_WIDTH-140,
-                    marginLeft: 5,
-                    // backgroundColor:'yellow',
-                    fontSize:17,
-                    color:'rgba(114,114,115,1)',
-                    fontFamily:"Lato-Regular"
-                }}>Shortest Wait Time</Text>
+                    <Text style={{
+                        width:Constant.DEVICE_WIDTH-140,
+                        marginLeft: 5,
+                        // backgroundColor:'yellow',
+                        fontSize:17,
+                        color:'rgba(114,114,115,1)',
+                        fontFamily:"Lato-Regular"
+                    }}>Shortest Wait Time</Text>
 
-                <Image style={{
-                    height:20,
-                    width:45,
-                    // backgroundColor:'red',
-                    marginLeft:5,
-                }}
-                source={require('../Images/next.png')}
-                resizeMode='center'
-                // resizeMethod='auto'
-                ></Image>
+                    <Image style={{
+                        height:20,
+                        width:45,
+                        // backgroundColor:'red',
+                        marginLeft:5,
+                    }}
+                    source={require('../Images/next.png')}
+                    resizeMode='center'
+                    // resizeMethod='auto'
+                    ></Image>
 
-            </View>
+                </View>
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback onPress={
                     this.gotoSymtoms.bind(this)
                 }>
-            <View style={{
-                height:55,
-                backgroundColor:'rgba(254,255,255,1)',
-                width:Constant.DEVICE_WIDTH-30,
-                marginTop:10,
-                justifyContent:'center',
-                flexDirection:'row',
-                alignItems:'center',
-                shadowColor:'gray',
-                shadowOpacity:0.5,
-                shadowOffset:{ width: 0, height: 1 },
-                borderRadius:2.0,
-                elevation:2,
-            }}> 
-                <Image style={{
-                    height:45,
-                    width:45,
-                    // backgroundColor:'red',
-                    marginLeft:5,
-                }}
-                source={require('../Images/symptoms.png')}
-                resizeMode='center'
-                ></Image>
+                <View style={{
+                    height:55,
+                    backgroundColor:'rgba(254,255,255,1)',
+                    width:Constant.DEVICE_WIDTH-30,
+                    marginTop:10,
+                    justifyContent:'center',
+                    flexDirection:'row',
+                    alignItems:'center',
+                    shadowColor:'gray',
+                    shadowOpacity:0.5,
+                    shadowOffset:{ width: 0, height: 1 },
+                    borderRadius:2.0,
+                    elevation:2,
+                }}> 
+                    <Image style={{
+                        height:45,
+                        width:45,
+                        // backgroundColor:'red',
+                        marginLeft:5,
+                    }}
+                    source={require('../Images/symptoms.png')}
+                    resizeMode='center'
+                    ></Image>
 
-                <Text style={{
-                    width:Constant.DEVICE_WIDTH-140,
-                    marginLeft: 5,
-                    // backgroundColor:'yellow',
-                    fontSize:17,
-                    color:'rgba(114,114,115,1)',
-                    fontFamily:"Lato-Regular"
-                }}>Symtoms</Text>
+                    <Text style={{
+                        width:Constant.DEVICE_WIDTH-140,
+                        marginLeft: 5,
+                        // backgroundColor:'yellow',
+                        fontSize:17,
+                        color:'rgba(114,114,115,1)',
+                        fontFamily:"Lato-Regular"
+                    }}>Symtoms</Text>
 
-                <Image style={{
-                    height:20,
-                    width:45,
-                    // backgroundColor:'red',
-                    marginLeft:5,
-                }}
-                source={require('../Images/next.png')}
-                resizeMode='center'
-                ></Image>
+                    <Image style={{
+                        height:20,
+                        width:45,
+                        // backgroundColor:'red',
+                        marginLeft:5,
+                    }}
+                    source={require('../Images/next.png')}
+                    resizeMode='center'
+                    ></Image>
 
-            </View>
+                </View>
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback onPress={
                     this.gotoSearch.bind(this)
                 }>
-            <View style={{
-                height:55,
-                backgroundColor:'white',
-                width:Constant.DEVICE_WIDTH-30,
-                marginTop:10,
-                justifyContent:'center',
-                flexDirection:'row',
-                alignItems:'center',
-                shadowColor:'gray',
-                shadowOpacity:0.5,
-                shadowOffset:{ width: 0, height: 1 },
-                borderRadius:2.0,
-                elevation:2,
-            }}> 
-                <Image style={{
-                    height:45,
-                    width:45,
-                    // backgroundColor:'red',
-                    marginLeft:5,
-                }}
-                source={require('../Images/location.png')}
-                resizeMode='center'
-                ></Image>
+                <View style={{
+                    height:55,
+                    backgroundColor:'white',
+                    width:Constant.DEVICE_WIDTH-30,
+                    marginTop:10,
+                    justifyContent:'center',
+                    flexDirection:'row',
+                    alignItems:'center',
+                    shadowColor:'gray',
+                    shadowOpacity:0.5,
+                    shadowOffset:{ width: 0, height: 1 },
+                    borderRadius:2.0,
+                    elevation:2,
+                }}> 
+                    <Image style={{
+                        height:45,
+                        width:45,
+                        // backgroundColor:'red',
+                        marginLeft:5,
+                    }}
+                    source={require('../Images/location.png')}
+                    resizeMode='center'
+                    ></Image>
 
-                <Text style={{
-                    width:Constant.DEVICE_WIDTH-140,
-                    marginLeft: 5,
-                    // backgroundColor:'yellow',
-                    fontSize:17,
-                    color:'rgba(114,114,115,1)',
-                    fontFamily:"Lato-Regular"
-                }}>Search By Location</Text>
+                    <Text style={{
+                        width:Constant.DEVICE_WIDTH-140,
+                        marginLeft: 5,
+                        // backgroundColor:'yellow',
+                        fontSize:17,
+                        color:'rgba(114,114,115,1)',
+                        fontFamily:"Lato-Regular"
+                    }}>Search By Location</Text>
 
-                <Image style={{
-                    height:20,
-                    width:45,
-                    // backgroundColor:'red',
-                    marginLeft:5,
-                }}
-                source={require('../Images/next.png')}
-                resizeMode='center'
-                ></Image>
+                    <Image style={{
+                        height:20,
+                        width:45,
+                        // backgroundColor:'red',
+                        marginLeft:5,
+                    }}
+                    source={require('../Images/next.png')}
+                    resizeMode='center'
+                    ></Image>
 
-            </View>
+                </View>
             </TouchableWithoutFeedback>
 
             <View style={{
