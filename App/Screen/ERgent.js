@@ -27,6 +27,7 @@ import SymtomsList from './SymtomsList'
 import TermsConditions from './TermsConditions'
 import ShortestWaitTimeList from './ShortestWaitTimeList'
 import SearchByLocation from './SearchByLocation'
+import DirectionScreen from './DirectionScreen'
 import ws from './GeneralClass/webservice'
 
 export default class ERgent extends Component {
@@ -66,7 +67,8 @@ export const createRootNavigator = (signedIn,userType) => {
         hospitalList: {screen: HospitalList},
         symtomsList: {screen: SymtomsList},
         shortestWaitTimeList: {screen: ShortestWaitTimeList},
-        searchByLocation: {screen: SearchByLocation}
+        searchByLocation: {screen: SearchByLocation},
+        directionScreen: {screen: DirectionScreen},
     },
     {
       headerMode: "none",

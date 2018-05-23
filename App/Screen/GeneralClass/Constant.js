@@ -25,7 +25,7 @@ module.exports = {
 
     //Alert Message 
     NETWORK_ALERT : 'Please check your internet connectivity.',
-    APP_NAME :'NimeNoEis',
+    APP_NAME :'ERgent',
     DEVICEID_NOT_FOUND:'Your device id is not found, please try again.',
   
     ENTER_EMAIL:'Please enter email.',

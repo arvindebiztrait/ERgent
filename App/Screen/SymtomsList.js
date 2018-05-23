@@ -88,6 +88,7 @@ export default class SymtomsList extends Component {
                         marginLeft: 5,
                         // backgroundColor:'yellow',
                         textAlign:'center',
+                        fontFamily:"Lato-Bold"
                     }}>Symtoms</Text>
 
                     <Image
@@ -108,7 +109,7 @@ export default class SymtomsList extends Component {
                     // backgroundColor:'yellow',
                     width:Constant.DEVICE_WIDTH
                 }}>
-                    <ListView
+                    {/* <ListView
                         contentContainerStyle={{
                             backgroundColor:'rgba(239,240,241,1)',
                             paddingBottom:10,
@@ -123,7 +124,14 @@ export default class SymtomsList extends Component {
                         enableEmptySections={true}
                         automaticallyAdjustContentInsets={false}
                         showsVerticalScrollIndicator={false}
-                    />
+                    /> */}
+                    <Text style={{
+                        flex:1,
+                        textAlign:'center',
+                        textAlignVertical:'center',
+                        // backgroundColor:'red',
+                        justifyContent:'center',
+                    }} >Under Development</Text>
                 </View>
 
             </View>

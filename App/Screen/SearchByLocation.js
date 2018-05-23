@@ -10,6 +10,9 @@ import {
   TextInput,
   ActivityIndicator,
   NetInfo,
+  Linking,
+  PermissionsAndroid,
+  Alert
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
@@ -19,6 +22,7 @@ import Geocoder from 'react-native-geocoding';
 import ws from './GeneralClass/webservice';
 import Events from 'react-native-simple-events';
 import Modal from 'react-native-modalbox';
+import Permissions from 'react-native-permissions';
 
 //InHouse Development Key
 Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
@@ -50,6 +54,14 @@ export default class SearchByLocation extends Component {
                 latitude: 37.78825,
                 longitude: -122.4324,
             },
+            userLocation:{
+                latitude: 37.78825,
+                longitude: -122.4324,
+            },
+            dummyLocation:{
+                latitude: 37.78825,
+                longitude: -122.4324,
+            },
             placesList:[],
             selectedAddress:{},
             selectedHospital:{},
@@ -59,15 +71,65 @@ export default class SearchByLocation extends Component {
             swipeToClose: true,
             sliderValue: 0.3,
             isOpenModal:false,
+            mapType:'standard',
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // super.componentDidMount()
         Events.on('receiveResponse', 'receiveMenuScreen', this.onReceiveResponse.bind(this)) 
 
         // this.setDummyHospital()
 
+        if (Platform.OS === 'ios') {
+            Permissions.check('location','whenInUse')
+            .then(response => {
+              //returns once the user has chosen to 'allow' or to 'not allow' access
+              //response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+              // this.setState({ photoPermission: response })
+              console.log('location Permission:=',response)
+              if (response == 'authorized') {
+                this.getUserCurrentLocation()
+              }
+              else if (response == 'undetermined') {
+                  Permissions.request('location','whenInUse').then(response => {
+                  // Returns once the user has chosen to 'allow' or to 'not allow' access
+                  // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+                  if(response=='authorized') {
+                    this.getUserCurrentLocation()
+                  }
+                })
+              }
+              else {
+                console.log('called error part')
+                Alert.alert(
+                    Constant.APP_NAME,
+                    'Your location access is denied, Please allow location access',
+                    Platform.OS == 'ios' ?
+                    [
+                        {text: 'Cancel', onPress: () => console.log('cancel')},
+                        {text: 'Okay', onPress: () => {Permissions.openSettings()}},
+                    ] : [{text: 'Okay', onPress: () => console.log('cancel')}],
+                    { cancelable: false }
+                )
+              }
+            });
+        }
+        else {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+                    title: 'App needs to access your location',
+                    message: 'App needs to access your location' +
+                    'so we can find near your professional'
+                }
+            );
+            if (granted) {
+                this.getUserCurrentLocation()
+            }
+        }
+    }
+
+    getUserCurrentLocation() {
         this.watchID = navigator.geolocation.getCurrentPosition(
             (position) => {
                 console.log("Current Location:=",position)
@@ -81,14 +143,18 @@ export default class SearchByLocation extends Component {
               this.setState({
                 isLoading:false,
                 coordinate: { 
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                },
+                userLocation: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
                 },
                 region: {
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
                 },
             },this.getHospitalFromCurrentLocation());
             },
@@ -203,6 +269,7 @@ export default class SearchByLocation extends Component {
                         marginLeft: 5,
                         // backgroundColor:'yellow',
                         textAlign:'center',
+                        fontFamily:"Lato-Bold"
                     }}>SEARCH</Text>
 
                     <Image
@@ -235,6 +302,7 @@ export default class SearchByLocation extends Component {
                         position:'absolute',
                         marginTop: Platform.OS === 'ios' ? 74 : 64,
                         zIndex:3,
+                        elevation:2
                     }}>
                         <View style={{
                             backgroundColor:'white',
@@ -273,6 +341,7 @@ export default class SearchByLocation extends Component {
                                 // backgroundColor:'red',
                                 height:'100%',
                                 marginLeft:5,
+                                fontFamily:"Lato-Regular"
                             }}
                                 placeholder= {'Search'}
                                 allowFontScaling={false}
@@ -333,7 +402,8 @@ export default class SearchByLocation extends Component {
                         showsMyLocationButton={true}
                         showsUserLocation={true}
                         showsCompass={false}
-                        
+                        mapType={this.state.mapType}
+                        // liteMode={true}
                         // onMarkerPress={this.onMarkerClicked.bind(this)}                       
                     >
                     {/* <Marker draggable
@@ -413,110 +483,332 @@ export default class SearchByLocation extends Component {
                     />: null
                 }
 
-                <Modal style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: 300,
-                    backgroundColor: 'transparent'
-                }} 
-                position={"bottom"} 
-                ref={"modal6"} 
-                swipeArea={20}
-                isOpen={this.state.isOpenModal}
-                onClosed={this.onClose.bind(this)}
-                onOpened={this.onOpen.bind(this)}
-                onClosingState={this.onClosingState}>
-                
-                {/* <ScrollView> */}
-                    <View style={{
-                        width: Constant.DEVICE_WIDTH, 
-                        height:300, 
-                        // paddingLeft: 10, 
-                        backgroundColor:'transparent', 
-                        borderTopWidth:1,
-                    }}>
-                        <View style={{
-                            backgroundColor:'rgba(227,54,74,1)',
-                            // height:100,
-                            width:'100%',
-                            paddingBottom:10,
-                        }}>
-                            <Text style={{
-                                color:'white',
-                                marginHorizontal:30,
-                                marginTop:10,
-                                fontSize:18,
-                            }}>{this.state.selectedHospital.HospitalName}</Text>
-                            <View style={{
-                                flexDirection:'row',
-                                marginHorizontal:30,
-                                // backgroundColor:'yellow',
-                                marginTop:10,
-                            }}>
-                                <Image
-                                    style={{
-                                        height:25,
-                                        width:25,
-                                        // backgroundColor:'black',
-                                        // marginTop: 5,
-                                        marginLeft:0,
-                                    }}
-                                    source={require('../Images/location_white.png')}
-                                    resizeMode='center'
-                                ></Image>
-                                <View style={{
-                                    // backgroundColor:'green',
-                                    marginLeft:10,
-                                }}>
-                                <Text style={{
-                                    color:'white',
-                                    fontSize:12,
-                                }}>{this.state.selectedHospital.Address}</Text>
-                                <Text style={{
-                                    color:'white',
-                                    fontSize:12,
-                                }}>{this.state.selectedHospital.City}</Text>
-                                <Text style={{
-                                    color:'white',
-                                    fontSize:12,
-                                }}>{this.state.selectedHospital.CountyName + ", " + this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text>
-                            </View>
-                        </View>
-                    </View>
-
                     <View style={{
                         backgroundColor:'white',
+                        flexDirection:'row',
+                        position:'absolute',
+                        zIndex:5,
+                        // marginBottom:320,
+                        // marginRight:30,
+                        marginTop: (Constant.DEVICE_HEIGHT - (this.state.isOpenModal ? ( Platform.OS === 'ios' ? 350 : 370) :  Platform.OS === 'ios' ? 50 : 70)),
+                        marginLeft: Constant.DEVICE_WIDTH - 130,
+                        shadowColor:'gray',
+                        shadowOpacity:1.0,
+                        shadowOffset:{ width: 0, height: 2 },
+                        borderRadius:3,
+                        alignSelf:'flex-start',
+                        elevation:5,
                     }}>
+                        <TouchableWithoutFeedback onPress={this.onClickMapAction.bind(this)}>
                             <View style={{
-                                flexDirection:'row',
-                                marginHorizontal:30,
+                                height:30,
+                                width:60,
+                                justifyContent:'center',
+                                alignItems:'center',
+                                borderRightWidth:1,
+                                borderColor:'gray',
                             }}>
-                                <Image
-                                    style={{
-                                        height:25,
-                                        width:25,
-                                        // backgroundColor:'black',
-                                        // marginTop: 5,
-                                        marginLeft:0,
-                                    }}
-                                    source={require('../Images/location_white.png')}
-                                    resizeMode='center'
-                                ></Image>
-
                                 <Text style={{
-                                    color:'gray',
-                                    fontSize:12,
-                                }}>{"Door to Doctor : " + this.state.selectedHospital.DoorToDoctorTimeUnweighted}</Text>
+                                    fontFamily:"Lato-Regular"
+                                }}>Map</Text>
                             </View>
-
-                        </View>
-                    
-                    {/* {this.renderList()} */}
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={this.onClickSateliteAction.bind(this)}>
+                            <View style={{
+                                height:30,
+                                width:60,
+                                justifyContent:'center',
+                                alignItems:'center'
+                            }}>
+                                <Text style={{
+                                    fontFamily:"Lato-Regular"
+                                }}>Satelite</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
-                {/* </ScrollView> */}
-                </Modal>
+                
+                {this.loadAddressDetailView()}
             </View>
         )
+    }
+
+    onClickMapAction() {
+        this.setState({
+            mapType:'standard'
+        })
+    }
+
+    onClickSateliteAction() {
+        this.setState({
+            mapType:'satellite'
+        })
+    }
+
+    loadAddressDetailView() {
+        return (
+            <Modal style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 300,
+                // backgroundColor: 'transparent'
+            }} 
+            position={"bottom"} 
+            ref={"modal6"} 
+            swipeArea={20}
+            isOpen={this.state.isOpenModal}
+            onClosed={this.onClose.bind(this)}
+            onOpened={this.onOpen.bind(this)}
+            onClosingState={this.onClosingState}>
+            
+            {/* <ScrollView> */}
+                <View style={{
+                    width: Constant.DEVICE_WIDTH, 
+                    height:300, 
+                    // paddingLeft: 10, 
+                    backgroundColor:'transparent', 
+                    // borderTopWidth:1,
+                }}>
+                    <View style={{
+                        backgroundColor:'rgba(227,54,74,1)',
+                        // height:125,
+                        width:'100%',
+                        paddingBottom:10,
+                    }}>
+                        <Text style={{
+                            color:'white',
+                            marginHorizontal:30,
+                            marginTop:10,
+                            fontSize:17,
+                            fontFamily:"Lato-Regular"
+                        }}
+                        numberOfLines={2}
+                        >{this.state.selectedHospital.HospitalName}</Text>
+                        <View style={{
+                            flexDirection:'row',
+                            marginHorizontal:30,
+                            // backgroundColor:'yellow',
+                            marginTop:10,
+                        }}>
+                            <Image
+                                style={{
+                                    height:25,
+                                    width:25,
+                                    // backgroundColor:'black',
+                                    // marginTop: 5,
+                                    marginLeft:0,
+                                }}
+                                source={require('../Images/location_white.png')}
+                                resizeMode='center'
+                            ></Image>
+                            <View style={{
+                                // backgroundColor:'green',
+                                marginLeft:10,
+                            }}>
+                            <Text style={{
+                                color:'white',
+                                fontSize:12,
+                                fontFamily:"Lato-Regular"
+                            }}>{this.state.selectedHospital.Address}</Text>
+                            <Text style={{
+                                color:'white',
+                                fontSize:12,
+                                fontFamily:"Lato-Regular"
+                            }}>{this.state.selectedHospital.City}</Text>
+                            <Text style={{
+                                color:'white',
+                                fontSize:12,
+                                fontFamily:"Lato-Regular"
+                            }}>{this.state.selectedHospital.CountyName + ", " + this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text>
+                        </View>
+                    </View>
+                </View>
+
+                <View style={{
+                    backgroundColor:'white',
+                }}>
+                        <View style={{
+                            flexDirection:'row',
+                            marginHorizontal:30,
+                            // justifyContent:'center',
+                            alignItems:'center',
+                            marginTop:10,
+                        }}>
+                            <Image
+                                style={{
+                                    height:25,
+                                    width:25,
+                                    // backgroundColor:'black',
+                                    // marginTop: 5,
+                                    marginLeft:0,
+                                }}
+                                source={require('../Images/car.png')}
+                                resizeMode='center'
+                            ></Image>
+
+                            <Text style={{
+                                color:'rgba(100,101,101,1)',
+                                fontSize:13,
+                                marginLeft:10,
+                                fontFamily:"Lato-Regular"
+                            }}>{"Door to Doctor : " + this.state.selectedHospital.DoorToDoctorTimeUnweighted + " minutes"}</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginHorizontal:30,
+                            // justifyContent:'center',
+                            alignItems:'center',
+                            marginTop:10,
+                        }}>
+                            <Image
+                                style={{
+                                    height:25,
+                                    width:25,
+                                    // backgroundColor:'black',
+                                    // marginTop: 5,
+                                    marginLeft:0,
+                                }}
+                                source={require('../Images/car.png')}
+                                resizeMode='center'
+                            ></Image>
+
+                            <Text style={{
+                                color:'rgba(100,101,101,1)',
+                                fontSize:13,
+                                marginLeft:10,
+                                fontFamily:"Lato-Regular"
+                            }}>{"Drive to Hospital : " + this.state.selectedHospital.TravelTime}</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginHorizontal:30,
+                            // justifyContent:'center',
+                            alignItems:'center',
+                            marginTop:10,
+                            marginBottom:10,
+                        }}>
+                            <Image
+                                style={{
+                                    height:25,
+                                    width:25,
+                                    // backgroundColor:'black',
+                                    // marginTop: 5,
+                                    marginLeft:0,
+                                }}
+                                source={require('../Images/emergency.png')}
+                                resizeMode='center'
+                            ></Image>
+
+                            <Text style={{
+                                color:'rgba(100,101,101,1)',
+                                fontSize:13,
+                                marginLeft:10,
+                                fontFamily:"Lato-Regular"
+                            }}>{"Emergency Volume : " + this.state.selectedHospital.EdVolume}</Text>
+                        </View>
+
+                        <View style={{
+                            height:1,
+                            backgroundColor:'rgba(232,232,233,1)',
+                            marginHorizontal:15,
+                        }}></View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:10,
+                        }}>
+                            <TouchableWithoutFeedback onPress={this.onClickCallAction.bind(this)}>
+                                <View style={{
+                                    flexDirection:'row',
+                                    backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:20,
+                                    width:((Constant.DEVICE_WIDTH-60)/2),
+                                    height:40,
+                                    justifyContent:'center',
+                                    borderRadius:5,
+                                    marginBottom:15,
+                                }}>
+                                    <Image
+                                        style={{
+                                            height:25,
+                                            width:25,
+                                            // backgroundColor:'black',
+                                            // marginTop: 5,
+                                            marginLeft:0,
+                                        }}
+                                        source={require('../Images/call.png')}
+                                        resizeMode='center'
+                                    ></Image>
+                                    
+                                    <Text style={{
+                                        color:'white',
+                                        marginLeft:10,
+                                        fontFamily:"Lato-Regular"
+                                    }} >Call</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={this.onClickDirectionAction.bind(this)}>
+                                <View style={{
+                                    flexDirection:'row',
+                                    backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:20,
+                                    width:((Constant.DEVICE_WIDTH-60)/2),
+                                    height:40,
+                                    justifyContent:'center',
+                                    borderRadius:5,
+                                }}>
+                                    <Image
+                                        style={{
+                                            height:25,
+                                            width:25,
+                                            // backgroundColor:'black',
+                                            // marginTop: 5,
+                                            marginLeft:0,
+                                        }}
+                                        source={require('../Images/direction.png')}
+                                        resizeMode='center'
+                                    ></Image>
+                                    
+                                    <Text style={{
+                                        color:'white',
+                                        marginLeft:10,
+                                        fontFamily:"Lato-Regular"
+                                    }} >Direction</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+
+                    </View>
+                
+                {/* {this.renderList()} */}
+                </View>
+            {/* </ScrollView> */}
+            </Modal>
+        )
+    }
+
+    onClickDirectionAction() {
+        this.props.navigation.push('directionScreen',{
+            'selectedHospital':this.state.selectedHospital, 
+            'userLocation': this.state.userLocation
+            // 'userLocation': this.state.dummyLocation
+        })
+    }
+
+    onClickCallAction() {
+        var callUrl = 'tel:' + this.state.selectedHospital.PhoneNumber
+        console.log('call:=',callUrl)
+        Linking.canOpenURL(callUrl).then(supported => {
+            if (!supported) {
+                console.log('Can\'t handle url: ' + callUrl);
+                alert('This feature is not supported by device')
+            } else {
+                return Linking.openURL(callUrl);
+            }
+        }).catch(err => alert(err));
     }
 
     onClose() {
@@ -645,6 +937,8 @@ export default class SearchByLocation extends Component {
                     shadowColor:'gray',
                     shadowOpacity:0.3,
                     shadowOffset:{ width: 0, height: 2 },
+                    paddingVertical:5,
+                    elevation:3
                 }}>    
                     <Text style={{
                         marginLeft:10,

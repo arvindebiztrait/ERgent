@@ -13,23 +13,92 @@ import {
   Image,
   TouchableWithoutFeedback,
   Modal,
+  Alert,
+  PermissionsAndroid
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
+import Permissions from 'react-native-permissions';
 
 export default class Home extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            isShowPopup:false
+            isShowPopup:false,
+            userLocation:{
+                latitude: 0.0,
+                longitude: 0.0,
+            },
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({
             isShowPopup:true
         })
+
+        if (Platform.OS === 'ios') {
+            Permissions.check('location','whenInUse')
+            .then(response => {
+              //returns once the user has chosen to 'allow' or to 'not allow' access
+              //response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+              // this.setState({ photoPermission: response })
+              console.log('location Permission:=',response)
+              if (response == 'authorized') {
+                this.getUserCurrentLocation()
+              }
+              else if (response == 'undetermined') {
+                  Permissions.request('location','whenInUse').then(response => {
+                  // Returns once the user has chosen to 'allow' or to 'not allow' access
+                  // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+                  if(response=='authorized') {
+                    this.getUserCurrentLocation()
+                  }
+                })
+              }
+              else {
+                console.log('called error part')
+                Alert.alert(
+                    Constant.APP_NAME,
+                    'Your location access is denied, Please allow location access',
+                    Platform.OS == 'ios' ?
+                    [
+                        {text: 'Cancel', onPress: () => console.log('cancel')},
+                        {text: 'Okay', onPress: () => {Permissions.openSettings()}},
+                    ] : [{text: 'Okay', onPress: () => console.log('cancel')}],
+                    { cancelable: false }
+                )
+              }
+            });
+        }
+        else {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+                    title: 'App needs to access your location',
+                    message: 'App needs to access your location' +
+                    'so we can find near your professional'
+                }
+            );
+            if (granted) {
+                this.getUserCurrentLocation()
+            }
+        }
+    }
+
+    getUserCurrentLocation() {
+        this.watchID = navigator.geolocation.getCurrentPosition(
+            (position) => {
+                console.log("Current Location:=",position)
+                this.setState({
+                userLocation: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                }
+                });
+            },
+            (error) => console.log(error.error),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },);
     }
 
     render() {
@@ -52,6 +121,7 @@ export default class Home extends Component {
                 shadowColor:'gray',
                 shadowOpacity:1.0,
                 shadowOffset:{ width: 0, height: 2 },
+                elevation:5
             }}>
 
                 <Text style={{
@@ -59,6 +129,7 @@ export default class Home extends Component {
                     fontSize: 18,
                     fontWeight:'bold',
                     marginTop: Platform.OS === 'ios' ? 12 : 0,
+                    fontFamily:"Lato-Bold"
                 }}>HOME</Text>
 
             </View>
@@ -81,6 +152,7 @@ export default class Home extends Component {
                     fontWeight: 'bold',
                     // backgroundColor:'yellow',
                     marginHorizontal:10,
+                    fontFamily:"Lato-Semibold"
                 }}>How Can We Help? </Text>
                 <View style={{
                     borderWidth:0.5,
@@ -104,6 +176,7 @@ export default class Home extends Component {
                 shadowOpacity:0.5,
                 shadowOffset:{ width: 0, height: 1 },
                 borderRadius:2.0,
+                elevation:2
             }}> 
                 <Image style={{
                     height:45,
@@ -120,7 +193,8 @@ export default class Home extends Component {
                     marginLeft: 5,
                     // backgroundColor:'yellow',
                     fontSize:17,
-                    color:'rgba(114,114,115,1)'
+                    color:'rgba(114,114,115,1)',
+                    fontFamily:"Lato-Regular"
                 }}>Shortest Wait Time</Text>
 
                 <Image style={{
@@ -152,6 +226,7 @@ export default class Home extends Component {
                 shadowOpacity:0.5,
                 shadowOffset:{ width: 0, height: 1 },
                 borderRadius:2.0,
+                elevation:2,
             }}> 
                 <Image style={{
                     height:45,
@@ -168,7 +243,8 @@ export default class Home extends Component {
                     marginLeft: 5,
                     // backgroundColor:'yellow',
                     fontSize:17,
-                    color:'rgba(114,114,115,1)'
+                    color:'rgba(114,114,115,1)',
+                    fontFamily:"Lato-Regular"
                 }}>Symtoms</Text>
 
                 <Image style={{
@@ -199,6 +275,7 @@ export default class Home extends Component {
                 shadowOpacity:0.5,
                 shadowOffset:{ width: 0, height: 1 },
                 borderRadius:2.0,
+                elevation:2,
             }}> 
                 <Image style={{
                     height:45,
@@ -215,7 +292,8 @@ export default class Home extends Component {
                     marginLeft: 5,
                     // backgroundColor:'yellow',
                     fontSize:17,
-                    color:'rgba(114,114,115,1)'
+                    color:'rgba(114,114,115,1)',
+                    fontFamily:"Lato-Regular"
                 }}>Search By Location</Text>
 
                 <Image style={{
@@ -253,7 +331,8 @@ export default class Home extends Component {
                         borderRightColor:'gray'
                     }}>
                         <Text style={{
-                            color:'rgba(114,114,115,1)'
+                            color:'rgba(114,114,115,1)',
+                            fontFamily:"Lato-Regular"
                         }}>Privacy Policy</Text>
                     </View>    
                 </TouchableWithoutFeedback>
@@ -267,7 +346,8 @@ export default class Home extends Component {
                         alignItems:'center',
                     }}>
                         <Text style={{
-                            color:'rgba(114,114,115,1)'
+                            color:'rgba(114,114,115,1)',
+                            fontFamily:"Lato-Regular"
                         }}>Terms & Conditions</Text>
                     </View>
                 </TouchableWithoutFeedback>
@@ -308,6 +388,7 @@ export default class Home extends Component {
                         <Text style={{
                             marginTop:100,
                             fontWeight:'bold',
+                            fontFamily:"Lato-Bold"
                         }}>Message from the ERgent team</Text>
 
                         <Text style={{
@@ -315,9 +396,11 @@ export default class Home extends Component {
                             textAlign: 'center',
                             marginTop: 20,
                             marginHorizontal : 10,
+                            fontFamily:"Lato-Regular"
                         }}>
                             If you are requesting the immediate wait time, please call the hospital. If you are having a heart attack, stroke, or any life-threatening emergency, please call <Text style={{
-                                color:'rgba(227,54,74,1)'
+                                color:'rgba(227,54,74,1)',
+                                fontFamily:"Lato-Regular"
                             }}>911</Text>
                         </Text>
                         
@@ -332,6 +415,7 @@ export default class Home extends Component {
                             }}>
                                 <Text style={{
                                     color:'white',
+                                    fontFamily:"Lato-Semibold"
                                 }}>I Understand</Text>
                             </View>
                         </TouchableWithoutFeedback>

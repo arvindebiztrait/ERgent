@@ -94,6 +94,7 @@ export default class ShortestWaitTimeList extends Component {
                         marginLeft: 5,
                         // backgroundColor:'yellow',
                         textAlign:'center',
+                        fontFamily:"Lato-Bold"
                     }}>SHORTEST WAIT TIME</Text>
 
                     <Image
@@ -230,11 +231,12 @@ export default class ShortestWaitTimeList extends Component {
                     shadowColor:'gray',
                     shadowOpacity:0.3,
                     shadowOffset:{ width: 0, height: 2 },
-                    height:80,
+                    elevation:4,
+                    // height:80,
                 }}>    
                     <View style={{
                         flexDirection:'column',
-                        width:Constant.DEVICE_WIDTH-80,
+                        width:Constant.DEVICE_WIDTH-20,
                         justifyContent: 'flex-start',
                         height:'100%',
                     }}> 
@@ -242,32 +244,219 @@ export default class ShortestWaitTimeList extends Component {
                             marginLeft:10,
                             marginTop:5,
                             fontSize:19,
-                            color:'rgba(114,114,115,1)'
+                            color:'rgba(227,54,74,1)',
+                            fontFamily:'Lato-Regular',
                         }}>{rowdata.name}</Text>
-                        <Text style={{
-                            marginLeft:10,
-                            marginTop:5,
-                            marginBottom:10,
-                            color:'rgba(114,114,115,1)'
-                        }}
-                        numberOfLines={2}
-                        >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</Text>
-                    </View>
 
-                    <View style={{
-                        width:50,
-                        height:'100%',
-                        // backgroundColor:'red',
-                        marginLeft:10,
-                        justifyContent:'center',
-                        alignItems:'center',
-                        flexDirection:'column',
-                    }}>
-                        <Image style={{
-                            height:40,
-                            width:40,
-                            backgroundColor:'red',
-                        }}></Image>
+                        <View style={{
+                            flexDirection:'row',
+                            width:Constant.DEVICE_WIDTH-20,
+                            justifyContent: 'flex-start',
+                            // height:'100%',
+                        }}>
+                            <Text style={{
+                                    marginLeft:10,
+                                    marginTop:5,
+                                    marginBottom:10,
+                                    color:'rgba(26,26,26,1)',
+                                    fontFamily:'Lato-Regular',
+                                }}
+                                numberOfLines={2}
+                            >Door to Doctor Time :</Text>
+                            <Text style={{
+                                    marginLeft:5,
+                                    marginTop:5,
+                                    marginBottom:10,
+                                    color:'rgba(137,138,139,1)',
+                                    fontFamily:'Lato-Regular',
+                                }}
+                                numberOfLines={1}
+                            >30 Min</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:0,
+                        }}> 
+                            <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                width:((Constant.DEVICE_WIDTH)/2),
+                                borderRadius:5,
+                            }}>        
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >Travel Time :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >30 Min</Text>
+
+                                </View>
+                            </View>
+
+                            <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                marginLeft:5,
+                                width:((Constant.DEVICE_WIDTH-70)/2),
+                                borderRadius:5,
+                            }}> 
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={2}
+                                    >Ed. Vol. :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >High</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:0,
+                        }}> 
+                                <View style={{
+                                    flexDirection:'row',
+                                    alignItems:'center',
+                                    width:((Constant.DEVICE_WIDTH)/2),
+                                    borderRadius:5,
+                                }}>     
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent: 'flex-start',
+                                    }}>
+                                        <Text style={{
+                                                marginLeft:10,
+                                                marginBottom:10,
+                                                color:'rgba(26,26,26,1)',
+                                                fontFamily:'Lato-Regular',
+                                            }}
+                                            numberOfLines={2}
+                                        >2% left without being seen</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{
+                                    flexDirection:'row',
+                                    // backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:5,
+                                    width:((Constant.DEVICE_WIDTH-70)/2),
+                                    borderRadius:5,
+                                }}> 
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent: 'flex-start',
+                                        // backgroundColor:'yellow',
+                                    }}>
+                                        <Text style={{
+                                                marginLeft:10,
+                                                // marginTop:5,
+                                                marginBottom:10,
+                                                color:'rgba(137,138,139,1)',
+                                                fontFamily:'Lato-Regular',
+                                            }}
+                                            numberOfLines={1}
+                                        >2.5 Miles / 10 Min</Text>
+                                    </View>
+                                </View>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:10,
+                        }}>
+                            <TouchableWithoutFeedback onPress={this.onClickCallAction.bind(this, rowdata)}>
+                                <View style={{
+                                    flexDirection:'row',
+                                    backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:10,
+                                    width:((Constant.DEVICE_WIDTH-60)/2),
+                                    height:40,
+                                    justifyContent:'center',
+                                    borderRadius:5,
+                                    marginBottom:15,
+                                }}>
+                                    <Image
+                                        style={{
+                                            height:25,
+                                            width:25,
+                                            // backgroundColor:'black',
+                                            // marginTop: 5,
+                                            marginLeft:0,
+                                        }}
+                                        source={require('../Images/call.png')}
+                                        resizeMode='center'
+                                    ></Image>
+                                    
+                                    <Text style={{
+                                        color:'white',
+                                        marginLeft:10,
+                                        fontFamily:"Lato-Regular"
+                                    }} >Call</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={this.onClickDirectionAction.bind(this, rowdata)}>
+                                <View style={{
+                                    flexDirection:'row',
+                                    backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:20,
+                                    width:((Constant.DEVICE_WIDTH-60)/2),
+                                    height:40,
+                                    justifyContent:'center',
+                                    borderRadius:5,
+                                }}>
+                                    <Image
+                                        style={{
+                                            height:25,
+                                            width:25,
+                                            // backgroundColor:'black',
+                                            // marginTop: 5,
+                                            marginLeft:0,
+                                        }}
+                                        source={require('../Images/direction.png')}
+                                        resizeMode='center'
+                                    ></Image>
+                                    
+                                    <Text style={{
+                                        color:'white',
+                                        marginLeft:10,
+                                        fontFamily:"Lato-Regular"
+                                    }} >Direction</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                        
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -281,5 +470,26 @@ export default class ShortestWaitTimeList extends Component {
     onClickBack() {
         console.log("onClickBack")
         this.props.navigation.pop()
+    }
+
+    onClickCallAction(data) {
+        var callUrl = 'tel:' + data.PhoneNumber
+        console.log('call:=',callUrl)
+        Linking.canOpenURL(callUrl).then(supported => {
+            if (!supported) {
+                console.log('Can\'t handle url: ' + callUrl);
+                alert('This feature is not supported by device')
+            } else {
+                return Linking.openURL(callUrl);
+            }
+        }).catch(err => alert(err));
+    }
+
+    onClickDirectionAction(data) {
+        // this.props.navigation.push('directionScreen',{
+        //     'selectedHospital':this.state.selectedHospital, 
+        //     'userLocation': this.state.userLocation
+        //     // 'userLocation': this.state.dummyLocation
+        // })
     }
 }

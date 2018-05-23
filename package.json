@@ -11,7 +11,9 @@
     "react-native": "0.55.3",
     "react-native-geocoding": "^0.3.0",
     "react-native-maps": "^0.16.0",
+    "react-native-maps-directions": "^1.6.0",
     "react-native-modalbox": "^1.4.2",
+    "react-native-permissions": "^1.1.1",
     "react-native-simple-events": "^1.0.1",
     "react-navigation": "^2.0.0"
   },
@@ -23,5 +25,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
   }
 }
