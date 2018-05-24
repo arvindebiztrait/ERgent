@@ -23,6 +23,8 @@ import ws from './GeneralClass/webservice';
 import Events from 'react-native-simple-events';
 import Modal from 'react-native-modalbox';
 import Permissions from 'react-native-permissions';
+import FusedLocation from 'react-native-fused-location';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 //InHouse Development Key
 Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
@@ -41,14 +43,14 @@ export default class SearchByLocation extends Component {
             initialRegion: {
                 latitude: 37.78825,
                 longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitudeDelta: 0.5922,
+                longitudeDelta: 0.5421,
             },
             region: {
                 latitude: 37.78825,
                 longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitudeDelta: 0.5922,
+                longitudeDelta: 0.5421,
             },
             coordinate:{
                 latitude: 37.78825,
@@ -116,6 +118,7 @@ export default class SearchByLocation extends Component {
             });
         }
         else {
+            console.log("android Permission")
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
                     title: 'App needs to access your location',
@@ -124,9 +127,68 @@ export default class SearchByLocation extends Component {
                 }
             );
             if (granted) {
-                this.getUserCurrentLocation()
+                console.log("Permission granted:= true",granted)
+                // this.getUserCurrentLocation()
+                
+
+                RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
+                .then(data => {
+                    console.log("GPS ON:=",data)
+                    // The user has accepted to enable the location services
+                    // data can be :
+                    //  - "already-enabled" if the location services has been already enabled
+                    //  - "enabled" if user has clicked on OK button in the popup
+
+                    this.getUserLocaationAndroid()
+
+                }).catch(err => {
+                    console.log("GPS OFF:=",err)
+                    // The user has not accepted to enable the location services or something went wrong during the process
+                    // "err" : { "code" : "ERR00|ERR01|ERR02", "message" : "message"}
+                    // codes : 
+                    //  - ERR00 : The user has clicked on Cancel button in the popup
+                    //  - ERR01 : If the Settings change are unavailable
+                    //  - ERR02 : If the popup has failed to open
+                }); 
+            }
+            else {
+                console.log("Permission granted:=",granted)
             }
         }
+    }
+
+    async getUserLocaationAndroid() {
+        FusedLocation.setLocationPriority(FusedLocation.Constants.HIGH_ACCURACY);
+
+                // Get location once.
+                const location = await FusedLocation.getFusedLocation();
+                console.log("User Location Android:=",location)
+
+                var that = this
+                setTimeout(function(){
+ 
+                    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+                    that.state.isUpdateRegion = true
+               
+                  }, 2000);
+
+                this.setState({
+                    isLoading:false,
+                    coordinate: { 
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                    },
+                    userLocation: {
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                    },
+                    region: {
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        latitudeDelta: 0.5922,
+                        longitudeDelta: 0.5421,
+                    },
+                },this.getHospitalFromCurrentLocation());
     }
 
     getUserCurrentLocation() {
@@ -153,8 +215,8 @@ export default class SearchByLocation extends Component {
                 region: {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+                    latitudeDelta: 0.5922,
+                    longitudeDelta: 0.5421,
                 },
             },this.getHospitalFromCurrentLocation());
             },
@@ -769,7 +831,7 @@ export default class SearchByLocation extends Component {
                                             marginLeft:0,
                                         }}
                                         source={require('../Images/direction.png')}
-                                        resizeMode='center'
+                                        resizeMode='contain'
                                     ></Image>
                                     
                                     <Text style={{
@@ -910,7 +972,7 @@ export default class SearchByLocation extends Component {
     }
 
     onSearchClick() {
-        if (this.state.searchText === '') {
+        if (this.state.searchText.trim() === '') {
           alert('Please enter text to search hospital')
           return
         }
@@ -972,11 +1034,12 @@ export default class SearchByLocation extends Component {
     searchPlacesByText(strSearchText) {
         
         console.log("strSearchText:=",strSearchText)
+
         this.setState({
             searchText : strSearchText,
-            
         })
-        if (strSearchText.length > 3) {
+        if (strSearchText.trim().length > 3) {
+            
             this.setState({
                 isLoading : true,
             })
@@ -1039,8 +1102,8 @@ export default class SearchByLocation extends Component {
                         region:{
                             latitude:geometry.location.lat,
                             longitude:geometry.location.lng,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
+                            latitudeDelta: 0.5922,
+                            longitudeDelta: 0.5421,
                         }
                     },this.getHospitalFromCurrentLocation())
                 }

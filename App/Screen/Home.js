@@ -19,6 +19,8 @@ import {
 
 import Constant from './GeneralClass/Constant';
 import Permissions from 'react-native-permissions';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import FusedLocation from 'react-native-fused-location';
 
 export default class Home extends Component {
 
@@ -81,9 +83,45 @@ export default class Home extends Component {
                 }
             );
             if (granted) {
-                this.getUserCurrentLocation()
+
+                console.log("Permission granted:= true",granted)
+
+                // this.getUserCurrentLocation()
+                RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
+                .then(data => {
+                    console.log("GPS ON:=",data)
+                    // The user has accepted to enable the location services
+                    // data can be :
+                    //  - "already-enabled" if the location services has been already enabled
+                    //  - "enabled" if user has clicked on OK button in the popup
+
+                    this.getUserLocaationAndroid()
+
+                }).catch(err => {
+                    console.log("GPS OFF:=",err)
+                    // The user has not accepted to enable the location services or something went wrong during the process
+                    // "err" : { "code" : "ERR00|ERR01|ERR02", "message" : "message"}
+                    // codes : 
+                    //  - ERR00 : The user has clicked on Cancel button in the popup
+                    //  - ERR01 : If the Settings change are unavailable
+                    //  - ERR02 : If the popup has failed to open
+                });                
             }
         }
+    }
+
+    async getUserLocaationAndroid() {
+        FusedLocation.setLocationPriority(FusedLocation.Constants.HIGH_ACCURACY)
+        // Get location once.
+        const location = await FusedLocation.getFusedLocation()
+        console.log("User Location Android:=",location)
+
+        this.setState({
+            userLocation: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+            }
+        });
     }
 
     getUserCurrentLocation() {
@@ -91,10 +129,10 @@ export default class Home extends Component {
             (position) => {
                 console.log("Current Location:=",position)
                 this.setState({
-                userLocation: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                }
+                    userLocation: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    }
                 });
             },
             (error) => console.log(error.error),
@@ -144,7 +182,7 @@ export default class Home extends Component {
             }}>
                 <View style={{
                     borderWidth:0.5,
-                    width:70,
+                    width: Platform.OS === 'ios' ? 92 : 87,
                     borderColor:'rgba(218,219,220,1)',
                 }}></View>
                 <Text style={{
@@ -153,10 +191,10 @@ export default class Home extends Component {
                     // backgroundColor:'yellow',
                     marginHorizontal:10,
                     fontFamily:"Lato-Semibold"
-                }}>How Can We Help? </Text>
+                }}>How Can We Help?</Text>
                 <View style={{
                     borderWidth:0.5,
-                    width:70,
+                    width: Platform.OS === 'ios' ? 92 : 87,
                     borderColor:'rgba(218,219,220,1)',
                 }}></View>
             </View>

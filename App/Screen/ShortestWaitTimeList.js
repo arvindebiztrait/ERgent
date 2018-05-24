@@ -8,6 +8,8 @@ import {
   TouchableWithoutFeedback,
   ListView,
   TextInput,
+  Linking,
+  Alert,
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
