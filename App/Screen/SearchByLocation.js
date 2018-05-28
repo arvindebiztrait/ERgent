@@ -481,6 +481,23 @@ export default class SearchByLocation extends Component {
                     },this.loadAddressFromMap())}
                     /> */}
 
+                    <MapView.Marker
+                        key={0}
+                        // title={place.HospitalName}
+                        // description={place.Address}
+                        coordinate={this.state.coordinate}
+                        // onMarkerPress={this.onMarkerClicked.bind(this,place)}
+                        // onPress={this.onMarkerClicked.bind(this,place)}
+                        >
+                        {/* <Image
+                            source={require('../Images/clinic.png')}
+                            style={{
+                                height:40,
+                                width:40,
+                            }}
+                        /> */}
+                        </MapView.Marker>
+
                     {this.state.arrHospitals.map((place, index) => (
                         <MapView.Marker
                         key={index}
@@ -492,7 +509,15 @@ export default class SearchByLocation extends Component {
                         }}
                         onMarkerPress={this.onMarkerClicked.bind(this,place)}
                         onPress={this.onMarkerClicked.bind(this,place)}
+                        >
+                        <Image
+                            source={require('../Images/clinic.png')}
+                            style={{
+                                height:40,
+                                width:40,
+                            }}
                         />
+                        </MapView.Marker>
                     ))}
                     </MapView>
 
