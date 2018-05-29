@@ -510,7 +510,7 @@ export default class Home extends Component {
   }
 
   gotoShortestWaitTime() {
-    this.props.navigation.push('shortestWaitTimeList')
+    this.props.navigation.push('shortestWaitTimeList',{'userLocation':this.state.userLocation})
   }
 
   gotoSymtoms() {

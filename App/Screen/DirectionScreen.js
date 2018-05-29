@@ -10,6 +10,7 @@ import {
   TextInput,
   ActivityIndicator,
   NetInfo,
+  Linking,
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
@@ -128,18 +129,20 @@ export default class DirectionScreen extends Component {
                         textAlign:'center',
                         fontFamily:"Lato-Regular"
                     }}>Direction</Text>
-
-                    <Image
-                        style={{
-                            height:40,
-                            width:40,
-                            // backgroundColor:'white',
-                            marginTop:15,
-                            marginLeft:5,
-                            opacity:0,
-                        }}
-                    ></Image>
-
+                    <TouchableWithoutFeedback onPress={this.onClickExternalDirection.bind(this)}>
+                        <Image
+                            style={{
+                                height:40,
+                                width:40,
+                                // backgroundColor:'white',
+                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginLeft:5,
+                                // opacity:0,
+                            }}
+                            source={require('../Images/direction.png')}
+                            resizeMode='center'
+                        ></Image>
+                    </TouchableWithoutFeedback>
                 </View>        
                 
 
@@ -343,5 +346,29 @@ export default class DirectionScreen extends Component {
         navigator.geolocation.clearWatch(this.watchID);
         console.log("onClickBack")
         this.props.navigation.pop()
+    }
+
+    onClickExternalDirection() {
+        var url = ""
+        if (Platform.OS === 'ios') {
+            // url = "http://maps.apple.com/?ll="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            // url = "maps://app?ll="+this.state.userLocation.latitude+"," + this.state.userLocation.longitude+"&"+"ll="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            // url = "http://maps.apple.com/?saddr="+this.state.userLocation.latitude+"," + this.state.userLocation.longitude+"&daddr="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            url = "http://maps.apple.com/?daddr="+this.state.selectedHospital.Discription
+        }
+        else {
+            // url = "geo:"+ this.state.selectedHospital.Latitude + "," + this.state.selectedHospital.Longitude,
+            // url = "https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&destination="+"23.2156,72.6369" //test
+            url = "https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&destination="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+        }         
+
+        console.log("this.state.selectedHospital:=",this.state.selectedHospital)
+        console.log("url:=",url)
+        if (Linking.canOpenURL(url)) {
+            Linking.openURL(url)
+        }
+        else {
+            alert("You can't see route in another application because application is not install")
+        }
     }
 }

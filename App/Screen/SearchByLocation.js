@@ -333,18 +333,20 @@ export default class SearchByLocation extends Component {
                         textAlign:'center',
                         fontFamily:"Lato-Bold"
                     }}>SEARCH</Text>
-
-                    <Image
-                        style={{
-                            height:40,
-                            width:40,
-                            // backgroundColor:'white',
-                            marginTop:15,
-                            marginLeft:5,
-                            opacity:0,
-                        }}
-                    ></Image>
-
+                    <TouchableWithoutFeedback onPress={this.onClickListData.bind(this)}>
+                        <Image
+                            style={{
+                                height:40,
+                                width:40,
+                                // backgroundColor:'white',
+                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginLeft:5,
+                                // opacity:0,
+                            }}
+                            source={require('../Images/listview.png')}
+                            resizeMode='center'
+                        ></Image>
+                    </TouchableWithoutFeedback>
                 </View>
                 
                 {/* SearchBar */}
@@ -488,6 +490,8 @@ export default class SearchByLocation extends Component {
                         coordinate={this.state.coordinate}
                         // onMarkerPress={this.onMarkerClicked.bind(this,place)}
                         // onPress={this.onMarkerClicked.bind(this,place)}
+                        omMarkerPress={this.testRoutesStatic.bind(this)}
+                        onPress={this.testRoutesStatic.bind(this)}
                         >
                         {/* <Image
                             source={require('../Images/clinic.png')}
@@ -882,7 +886,57 @@ export default class SearchByLocation extends Component {
             'selectedHospital':this.state.selectedHospital, 
             'userLocation': this.state.userLocation
             // 'userLocation': this.state.dummyLocation
-        })
+        })        
+        // this.testRoutes()
+    }
+
+    testRoutes() {
+        var url = ""
+        if (Platform.OS === 'ios') {
+            // url = "http://maps.apple.com/?ll="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            // url = "maps://app?ll="+this.state.userLocation.latitude+"," + this.state.userLocation.longitude+"&"+"ll="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            // url = "http://maps.apple.com/?saddr="+this.state.userLocation.latitude+"," + this.state.userLocation.longitude+"&daddr="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            url = "http://maps.apple.com/?daddr="+this.state.selectedHospital.Discription
+        }
+        else {
+            // url = "geo:"+ this.state.selectedHospital.Latitude + "," + this.state.selectedHospital.Longitude,
+            // url = "https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&destination="+"23.2156,72.6369" //test
+            url = "https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&destination="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+        }         
+
+        console.log("this.state.selectedHospital:=",this.state.selectedHospital)
+        console.log("url:=",url)
+        if (Linking.canOpenURL(url)) {
+            Linking.openURL(url)
+        }
+        else {
+            alert("You can't see route in another application because application is not install")
+        }
+    }
+
+    testRoutesStatic() {
+        var url = ""
+        if (Platform.OS === 'ios') {
+            url = "http://maps.apple.com/?ll="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            // url = "maps://app?saddr="+this.state.userLocation.latitude+"," + this.state.userLocation.longitude+"&"+"ll="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            url = "http://maps.apple.com/?saddr="+this.state.userLocation.latitude+"," + this.state.userLocation.longitude+"&daddr="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            url = "http://maps.apple.com/?daddr="+this.state.selectedHospital.Discription
+        }
+        else {
+            // url = "geo:"+ 23.2464 + "," + 72.5087
+            // url = "geo:23.2464,72.5087"
+            // url = "geo:saddr="+this.state.userLocation.latitude+"," + this.state.userLocation.longitude+"&daddr="+this.state.selectedHospital.Latitude+"," + this.state.selectedHospital.Longitude
+            url = "https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&destination="+"23.2156,72.6369"
+        }         
+
+        console.log("this.state.selectedHospital:=",this.state.selectedHospital)
+        console.log("url:=",url)
+        if (Linking.canOpenURL(url)) {
+            Linking.openURL(url)
+        }
+        else {
+            alert("You can't see route in another application because application is not install")
+        }
     }
 
     onClickCallAction() {
@@ -1054,6 +1108,19 @@ export default class SearchByLocation extends Component {
         navigator.geolocation.clearWatch(this.watchID);
         console.log("onClickBack")
         this.props.navigation.pop()
+    }
+
+    onClickListData() {
+        if(this.state.arrHospitals.length > 0) {
+            this.props.navigation.push('mapViewListScreen',{
+                'arrHospitals':this.state.arrHospitals, 
+                'userLocation': this.state.userLocation
+                // 'userLocation': this.state.dummyLocation
+            })
+        }
+        else {
+            alert('Data not available')
+        }
     }
 
     searchPlacesByText(strSearchText) {

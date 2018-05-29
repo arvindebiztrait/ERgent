@@ -10,97 +10,27 @@ import {
   TextInput,
   Linking,
   Alert,
-  ActivityIndicator,
-  NetInfo,
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
-import Events from 'react-native-simple-events';
-import ws from './GeneralClass/webservice';
 
-export default class ShortestWaitTimeList extends Component {
+export default class MapViewListScreen extends Component {
 
     constructor(props) {
         super(props)
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds,
-            arrHospitals: [],
-            searchText: '',
-            isForSearch: true, //props.navigation.state.params.isForSearch,
-            userLocation: props.navigation.state.params.userLocation,
-            isSorting: 0,
-            PageNumber: 1,
-            isLoading: true,
-            totalPage:0,
-            isLoadmoreAvailable:true,
-            isLoadMoreRunnig:true,
-            isShowFooter:false,
+            dataSource:ds.cloneWithRows(props.navigation.state.params.arrHospitals),
+            arrHospitals:props.navigation.state.params.arrHospitals,
+            userLocation:props.navigation.state.params.userLocation,
+            searchText:'',
+            isForSearch: false, //props.navigation.state.params.isForSearch,
         };
     }
 
     componentDidMount() {
         // super.componentDidMount()
         // this.setDummyHospital()
-        Events.on('receiveResponse', 'receiveMenuScreen', this.onReceiveResponse.bind(this)) 
-        this.getHospitalBySWT()
-    }
-
-    onReceiveResponse (responceData) { 
-       
-        if (responceData.MethodName == 'getHospitalBySWT') {
-          console.log('responceData:=',responceData)
-            this.setState({isLoading: false,isDisable:false,isLoadMoreRunnig:false,isShowFooter:false})
-
-            this.state.totalPage = responceData.TotalPageCount
-            if (this.state.PageNumber >= this.state.totalPage) {
-                this.state.isLoadmoreAvailable = false
-            }
-
-            if (responceData.Status == true) {                    
-                let hospitalList = responceData.Results.HospitalData;
-                var totalHospital= this.state.arrHospitals.concat(hospitalList);
-                var totalHospitalUnique = totalHospital.map(item => item)
-                                .filter((value, index, self) => self.indexOf(value) === index)
-                this.setState({
-                    arrHospitals : totalHospitalUnique,
-                    dataSource:this.state.dataSource.cloneWithRows(totalHospitalUnique),
-                })
-            }
-            else {
-                this.setState({
-                    isLoading:false
-                })
-                alert(responceData.ErrorMessage)
-            }
-        }        
-    }
-
-    getHospitalBySWT() {
-        NetInfo.isConnected.fetch().then(isConnected => {
-            console.log(isConnected)
-            console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
-            if(isConnected) {
-              var param = {
-                  'DeviceType': Platform.OS === 'ios' ? 1 : 2,
-                  'Latitude': this.state.userLocation.latitude,
-                  'Longitude': this.state.userLocation.longitude,
-                  'PageNumber': this.state.PageNumber,
-                  'PageSize': 20,
-                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
-                  'IsSorting': this.state.isSorting,
-                  'SearchText': this.state.searchText,
-              }
-              console.log("param is ",param);
-              this.setState({
-                isLoading : true
-              })
-              ws.callWebservice('getHospitalBySWT',param,'')
-            }
-            else {
-              alert(Constant.NETWORK_ALERT)
-            }
-        });
     }
 
     setDummyHospital() {
@@ -168,21 +98,21 @@ export default class ShortestWaitTimeList extends Component {
                         // backgroundColor:'yellow',
                         textAlign:'center',
                         fontFamily:"Lato-Bold"
-                    }}>SHORTEST WAIT TIME</Text>
+                    }}>HOSPITAL LIST</Text>
 
-                    <TouchableWithoutFeedback onPress={this.onClickFilter.bind(this)}>
-                        <Image
-                            style={{
-                                height:40,
-                                width:40,
-                                // backgroundColor:'white',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
-                                marginLeft:5,
-                            }}
-                            source={require('../Images/filter.png')}
-                            resizeMode={'center'}
-                        ></Image>
-                    </TouchableWithoutFeedback>
+                    <Image
+                        style={{
+                            height:40,
+                            width:40,
+                            // backgroundColor:'white',
+                            marginTop: Platform.OS === 'ios' ? 15 : 0,
+                            marginLeft:5,
+                            opacity:0
+                        }}
+                        source={require('../Images/filter.png')}
+                        resizeMode={'center'}
+                    ></Image>
+
                 </View>
                 
                 {/* SearchBar */}
@@ -270,73 +200,17 @@ export default class ShortestWaitTimeList extends Component {
                         }}
                         dataSource={this.state.dataSource}
                         renderRow={this.renderRow.bind(this)}
-                        renderFooter={this.state.isShowFooter && this.state.arrHospitals.length > 0 ? this.renderFooter.bind(this) : null}
-                        onScroll={this.onSrollViewEnd.bind(this)}
-                        // onScrollEndDrag={this.onSrollViewEnd.bind(this)}
-                        scrollEventThrottle={9000}
+                        // renderFooter={this.state.isShowFooter ? this.renderFooter.bind(this) : null}
+                        // onScroll={this.onSrollViewEnd.bind(this)}
+                        // scrollEventThrottle={9000}
                         enableEmptySections={true}
                         automaticallyAdjustContentInsets={false}
                         showsVerticalScrollIndicator={false}
                     />
                 </View>
-                { this.state.isLoading == true && this.state.PageNumber === 1 ? <ActivityIndicator
-                    color={'rgba(227,54,74,1)'}    //rgba(254,130,1,0.5)'
-                    size={'large'}
-                    style={{
-                        height:'10%',
-                        width:'20%',
-                        position:'absolute',
-                        left:'40%',
-                        top:'45%',
-                        justifyContent:'center',
-                    }}
-                    />: null
-                }
+
             </View>
         )
-    }
-
-    renderFooter() {
-        return (
-          <View style ={{height:50,justifyContent:'center',alignItems:'center',flexDirection:'row',backgroundColor:'rgba(227,54,74,1)'}}>
-             <ActivityIndicator
-                        color={'white'}
-                        size={'large'}
-                        hidesWhenStopped={true}
-                        style={{marginLeft:20}}
-                        />
-             <Text style={{marginLeft:15,color:'white',fontSize:20}}>Loading...</Text>
-          </View>
-         )
-    }
-
-    onEndReached() {
-      console.log("onEndReached")
-      if(this.state.isLoadmoreAvailable == true) {
-        console.log("load more available")
-        if(this.state.isLoadMoreRunnig == false) {
-            this.state.PageNumber = this.state.PageNumber+1
-            this.setState({isLoadMoreRunnig:true,isShowFooter:true})
-            this.getHospitalBySWT()
-        }
-      }
-    }
-
-    onSrollViewEnd(e) {
-      console.log("end calleds")
-      var windowHeight = Constant.DEVICE_HEIGHT,
-      height = e.nativeEvent.contentSize.height,
-      offset = e.nativeEvent.contentOffset.y;
-      if( windowHeight + offset >= height ) {
-          if(this.state.isLoadmoreAvailable == true) {
-            console.log("load more available")
-            if(this.state.isLoadMoreRunnig == false) {
-                this.state.PageNumber = this.state.PageNumber+1
-                this.setState({isLoadMoreRunnig:true,isShowFooter:true})
-                this.getHospitalBySWT()
-            }
-          }
-      }
     }
 
     onSearchClick() {
@@ -344,15 +218,6 @@ export default class ShortestWaitTimeList extends Component {
           alert('Please enter text to search hospital')
           return
         }
-
-        this.state.PageNumber = 1
-        this.setState({
-            PageNumber: 1,
-            isLoading: true,
-            arrHospitals: [],
-            dataSource : this.state.dataSource.cloneWithRows([]),
-        })
-        this.getHospitalBySWT()
     }
 
     renderRow(rowdata) {
@@ -612,22 +477,6 @@ export default class ShortestWaitTimeList extends Component {
         this.props.navigation.pop()
     }
 
-    onClickFilter() {
-        if(this.state.isSorting === 1) {
-            this.state.isSorting = 0
-        }
-        else {
-            this.state.isSorting = 1
-        }
-        this.state.PageNumber = 1
-        this.state.isLoading = true
-        this.setState({
-            arrHospitals:[],
-            dataSource: this.state.dataSource.cloneWithRows([])
-        })
-        this.getHospitalBySWT()
-    }
-
     onClickCallAction(data) {
         var callUrl = 'tel:' + data.PhoneNumber
         console.log('call:=',callUrl)
@@ -643,7 +492,7 @@ export default class ShortestWaitTimeList extends Component {
 
     onClickDirectionAction(data) {
         this.props.navigation.push('directionScreen',{
-            'selectedHospital': data, 
+            'selectedHospital':data, 
             'userLocation': this.state.userLocation
             // 'userLocation': this.state.dummyLocation
         })
