@@ -46,7 +46,7 @@ export default class TermsConditions extends Component {
   componentDidMount() {
     Events.on('receiveResponse', 'receiveResponseAboutUs', this.onReceiveResponse.bind(this))
     Events.on('updateUI', 'updateUIAboutUs', this.onUpdateUI.bind(this))
-    // this.onWebServiceCallingForAboutUs()
+    this.onWebServiceCallingForAboutUs()
   }
 
   onUpdateUI() {
@@ -56,16 +56,16 @@ export default class TermsConditions extends Component {
   }
 
   onReceiveResponse (responceData) {
-
-    if (responceData.methodName == 'CMSData') {
+    console.log("Terms responceData:=",responceData)
+    if (responceData.MethodName == 'CMSData') {
         console.log('responceData:=',responceData)
-        console.log('responceData.Results.CmsData_List[0].Description:=',responceData.Results.CmsData_List[0].Discription)
+        console.log('responceData.Results.CmsData_List[0].Description:=',responceData.Results.CmsData[0].Discription)
         this.setState({isShowHud: false,isDisable:false})
 
         if (responceData.Status == true) {
-          console.log('responceData.Results.CmsData_List[0].Description:=',responceData.Results.CmsData_List[0].Discription)
+          console.log('responceData.Results.CmsData_List[0].Description:=',responceData.Results.CmsData[0].Discription)
           this.setState({
-            aboutUsResponse:responceData.Results.CmsData_List[0].Discription
+            aboutUsResponse:responceData.Results.CmsData[0].Discription
           })
         }
         else{
@@ -81,7 +81,7 @@ export default class TermsConditions extends Component {
 
       if(isConnected) {
             var param = {
-                  'CMSDataId':1,
+                  'CMSDataId': this.state.isForPrivacy === true ? 1 : 2,
             }
             console.log("param is ",param);
             this.setState({
@@ -129,7 +129,7 @@ export default class TermsConditions extends Component {
                 width:40,
                 height:40,
                 marginTop:Platform.OS === 'ios' ? 20 : 0,
-                marginLeft:10
+                marginLeft:5
               }}
               source={require('../Images/back.png')}
               resizeMethod='resize'
@@ -144,7 +144,7 @@ export default class TermsConditions extends Component {
               justifyContent:'center',
               textAlign:'center',
               alignItems:'center',
-              // fontFamily:'Oswald-Regular',
+              fontFamily:"Lato-Bold"
           }}>{this.state.title}</Text>
           <TouchableWithoutFeedback style={{
                 }} onPress={this.onClickMenu.bind(this)}>
@@ -183,7 +183,7 @@ export default class TermsConditions extends Component {
           />
           {/* </KeyboardAwareScrollView>   */}
           { isShowHud == true ? <ActivityIndicator
-                    color={'rgba(0,165,235,1)'}    //rgba(254,130,1,0.5)'
+                    color={'rgba(227,54,74,1)'}    //rgba(254,130,1,0.5)'
                     size={'large'}
                     style={styles.loaderStyle}
                     />: null

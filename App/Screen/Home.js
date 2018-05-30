@@ -514,7 +514,7 @@ export default class Home extends Component {
   }
 
   gotoSymtoms() {
-      this.props.navigation.push('symtomsList')
+      this.props.navigation.push('symtomsList',{'userLocation':this.state.userLocation})
   }
 
   gotoSearch() {

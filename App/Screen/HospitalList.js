@@ -8,9 +8,14 @@ import {
   TouchableWithoutFeedback,
   ListView,
   TextInput,
+  NetInfo,
+  TouchableHighlight,
+  ActivityIndicator
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
+import Events from 'react-native-simple-events';
+import ws from './GeneralClass/webservice';
 
 export default class HospitalList extends Component {
 
@@ -22,12 +27,109 @@ export default class HospitalList extends Component {
             arrHospitals:[],
             searchText:'',
             isForSearch:props.navigation.state.params.isForSearch,
+            symtomsData:props.navigation.state.params.symtomsData,
+            userLocation: props.navigation.state.params.userLocation,
+            isSorting: 0,
+            PageNumber: 1,
+            PageSize:20,
+            isLoading: true,
+            totalPage:0,
+            isLoadmoreAvailable:true,
+            isLoadMoreRunnig:true,
+            isShowFooter:false,
         };
     }
 
     componentDidMount() {
         // super.componentDidMount()
-        this.setDummyHospital()
+        // this.setDummyHospital()
+        Events.on('receiveResponse', 'receiveHespitalList', this.onReceiveResponse.bind(this)) 
+        this.getHospitalBySymptoms()
+    }
+
+    onReceiveResponse (responceData) { 
+       
+        if (responceData.MethodName == 'getHospitalBySymtoms') {
+          console.log('responceData:=',responceData)
+            this.setState({isLoading: false,isDisable:false,isLoadMoreRunnig:false,isShowFooter:false})
+
+            this.state.totalPage = responceData.TotalPageCount
+            if (this.state.PageNumber >= this.state.totalPage) {
+                this.state.isLoadmoreAvailable = false
+            }
+
+            if (responceData.Status == true) {                    
+                let hospitalList = responceData.Results.HospitalData;
+                var totalHospital= this.state.arrHospitals.concat(hospitalList);
+                var totalHospitalUnique = totalHospital.map(item => item)
+                                .filter((value, index, self) => self.indexOf(value) === index)
+                this.setState({
+                    arrHospitals : totalHospitalUnique,
+                    dataSource:this.state.dataSource.cloneWithRows(totalHospitalUnique),
+                })
+            }
+            else {
+                this.setState({
+                    isLoading:false
+                })
+                alert(responceData.ErrorMessage)
+            }
+        }     
+        else if (responceData.MethodName == 'getHospitalByHospitalId') {
+            console.log("responceData:=",responceData)
+        }   
+    }
+
+    getHospitalBySymptoms() {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log(isConnected)
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+            if(isConnected) {
+              var param = {
+                  'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+                  'Latitude': this.state.userLocation.latitude,
+                  'Longitude': this.state.userLocation.longitude,
+                  'PageNumber': this.state.PageNumber,
+                  'PageSize': this.state.PageSize,
+                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'IsSorting': this.state.isSorting,
+                  'SearchText': this.state.searchText,
+                  'SymtomId': this.state.symtomsData.SymptomsId
+              }
+              console.log("param is ",param);
+              this.setState({
+                isLoading : true
+              })
+              ws.callWebservice('getHospitalBySymtoms',param,'')
+            }
+            else {
+              alert(Constant.NETWORK_ALERT)
+            }
+        });
+    }
+
+    getHospitalByHospitalId(hospitalData) {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log(isConnected)
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+            if(isConnected) {
+              var param = {
+                  'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+                  'Latitude': this.state.userLocation.latitude,
+                  'Longitude': this.state.userLocation.longitude,
+                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'HospitalId': hospitalData.HospitalsId
+              }
+              console.log("param is ",param);
+            //   this.setState({
+            //     isLoading : true
+            //   })
+              ws.callWebservice('getHospitalByHospitalId',param,'')
+            }
+            else {
+              alert(Constant.NETWORK_ALERT)
+            }
+        });
     }
 
     setDummyHospital() {
@@ -94,17 +196,21 @@ export default class HospitalList extends Component {
                         marginLeft: 5,
                         // backgroundColor:'yellow',
                         textAlign:'center',
-                    }}>Hospitals</Text>
+                    }}>LISTING</Text>
 
-                    <Image
-                        style={{
-                            height:40,
-                            width:40,
-                            // backgroundColor:'white',
-                            marginTop: Platform.OS === 'ios' ?  15 : 0,
-                            marginLeft:5,
-                        }}
-                    ></Image>
+                    <TouchableWithoutFeedback onPress={this.onClickFilter.bind(this)}>
+                        <Image
+                            style={{
+                                height:40,
+                                width:40,
+                                // backgroundColor:'white',
+                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginLeft:5,
+                            }}
+                            source={require('../Images/filter.png')}
+                            resizeMode={'center'}
+                        ></Image>
+                    </TouchableWithoutFeedback>
 
                 </View>
                 
@@ -117,18 +223,21 @@ export default class HospitalList extends Component {
                         justifyContent:'center',
                         alignItems:'center',
                         height:64,
+                        // backgroundColor:'red'
                     }}>
                         <View style={{
-                            backgroundColor:'white',
+                            // backgroundColor:'white',
                             // marginLeft:10,
                             // marginRight:10,
-                            width:'90%',
+                            width:Constant.DEVICE_WIDTH-20,
                             height:'60%',
-                            borderRadius:20,
+                            // borderRadius:20,
                             flexDirection:'row',
                             // justifyContent:'center',
                             alignItems:'center',
-                            paddingLeft:15
+                            paddingLeft:15,
+                            borderColor:'black',
+                            borderBottomWidth:1,
                         }}>
                             <TextInput style={{
                                 // borderBottomColor:'grey',
@@ -137,7 +246,7 @@ export default class HospitalList extends Component {
                                 // marginRight:10,
                                 // paddingBottom:Platform.ios === 'ios' ? 0 : 5,
                                 // height:Platform.ios === 'ios' ? 23 : 32,
-                                width:'80%'
+                                width:Constant.DEVICE_WIDTH-70,
                             }}
                                 placeholder= {'Search'}
                                 allowFontScaling={false}
@@ -156,15 +265,15 @@ export default class HospitalList extends Component {
                                 }} onPress={this.onSearchClick.bind(this)}>
                             <Image style={{
                                 position:'relative',
-                                backgroundColor:'red',
-                                width:40,
+                                // backgroundColor:'red',
+                                width:20,
                                 height:'100%',
                                 // marginTop:20,
                                 marginLeft:10
                                 }}
-                                // source={require('Domingo/Src/images/search.png')}
-                                resizeMethod='resize'
-                                resizeMode='center'
+                                source={require('../Images/search.png')}
+                                // resizeMethod='resize'
+                                resizeMode='contain'
                                 />
                             </TouchableWithoutFeedback>
                         </View>
@@ -190,17 +299,72 @@ export default class HospitalList extends Component {
                         }}
                         dataSource={this.state.dataSource}
                         renderRow={this.renderRow.bind(this)}
-                        // renderFooter={this.state.isShowFooter ? this.renderFooter.bind(this) : null}
-                        // onScroll={this.onSrollViewEnd.bind(this)}
-                        // scrollEventThrottle={9000}
+                        renderFooter={this.state.isShowFooter && this.state.arrHospitals.length > 0 ? this.renderFooter.bind(this) : null}
+                        onScroll={this.onSrollViewEnd.bind(this)}
                         enableEmptySections={true}
                         automaticallyAdjustContentInsets={false}
                         showsVerticalScrollIndicator={false}
                     />
                 </View>
-
+                        
+                { this.state.isLoading == true && this.state.PageNumber === 1 ? <ActivityIndicator
+                    color={'rgba(227,54,74,1)'}    //rgba(254,130,1,0.5)'
+                    size={'large'}
+                    style={{
+                        height:'10%',
+                        width:'20%',
+                        position:'absolute',
+                        left:'40%',
+                        top:'45%',
+                        justifyContent:'center',
+                    }}
+                    />: null
+                }
             </View>
         )
+    }
+
+    renderFooter() {
+        return (
+          <View style ={{height:50,justifyContent:'center',alignItems:'center',flexDirection:'row',backgroundColor:'rgba(227,54,74,1)'}}>
+             <ActivityIndicator
+                        color={'white'}
+                        size={'large'}
+                        hidesWhenStopped={true}
+                        style={{marginLeft:20}}
+                        />
+             <Text style={{marginLeft:15,color:'white',fontSize:20}}>Loading...</Text>
+          </View>
+         )
+    }
+
+    onEndReached() {
+      console.log("onEndReached")
+      if(this.state.isLoadmoreAvailable == true) {
+        console.log("load more available")
+        if(this.state.isLoadMoreRunnig == false) {
+            this.state.PageNumber = this.state.PageNumber+1
+            this.setState({isLoadMoreRunnig:true,isShowFooter:true})
+            this.getHospitalBySymptoms()
+        }
+      }
+    }
+
+    onSrollViewEnd(e) {
+      console.log("end calleds")
+      var windowHeight = Constant.DEVICE_HEIGHT,
+      height = e.nativeEvent.contentSize.height,
+      offset = e.nativeEvent.contentOffset.y;
+      if( windowHeight + offset >= height ) {
+          if(this.state.isLoadmoreAvailable == true) {
+            console.log("load more available")
+            if(this.state.isLoadMoreRunnig == false) {
+                this.state.PageNumber = this.state.PageNumber+1
+                this.setState({isLoadMoreRunnig:true,isShowFooter:true})
+                this.getHospitalBySymptoms()
+            }
+          }
+      }
     }
 
     onSearchClick() {
@@ -208,6 +372,15 @@ export default class HospitalList extends Component {
           alert('Please enter text to search hospital')
           return
         }
+
+        this.state.PageNumber = 1
+        this.setState({
+            PageNumber: 1,
+            isLoading: true,
+            arrHospitals: [],
+            dataSource : this.state.dataSource.cloneWithRows([]),
+        })
+        this.getHospitalBySymptoms()
     }
 
     renderRow(rowdata) {
@@ -225,11 +398,12 @@ export default class HospitalList extends Component {
                     shadowColor:'gray',
                     shadowOpacity:0.3,
                     shadowOffset:{ width: 0, height: 2 },
-                    height:80,
+                    elevation:4,
+                    // height:80,
                 }}>    
                     <View style={{
                         flexDirection:'column',
-                        width:Constant.DEVICE_WIDTH-80,
+                        width:Constant.DEVICE_WIDTH-20,
                         justifyContent: 'flex-start',
                         height:'100%',
                     }}> 
@@ -237,32 +411,220 @@ export default class HospitalList extends Component {
                             marginLeft:10,
                             marginTop:5,
                             fontSize:19,
-                            color:'rgba(114,114,115,1)'
-                        }}>{rowdata.name}</Text>
-                        <Text style={{
-                            marginLeft:10,
-                            marginTop:5,
-                            marginBottom:10,
-                            color:'rgba(114,114,115,1)'
-                        }}
-                        numberOfLines={2}
-                        >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</Text>
-                    </View>
+                            color:'rgba(227,54,74,1)',
+                            fontFamily:'Lato-Regular',
+                            marginRight:5,
+                        }}>{rowdata.HospitalName}</Text>
 
-                    <View style={{
-                        width:50,
-                        height:'100%',
-                        // backgroundColor:'red',
-                        marginLeft:10,
-                        justifyContent:'center',
-                        alignItems:'center',
-                        flexDirection:'column',
-                    }}>
-                        <Image style={{
-                            height:40,
-                            width:40,
-                            backgroundColor:'red',
-                        }}></Image>
+                        <View style={{
+                            flexDirection:'row',
+                            width:Constant.DEVICE_WIDTH-20,
+                            justifyContent: 'flex-start',
+                            // height:'100%',
+                        }}>
+                            <Text style={{
+                                    marginLeft:10,
+                                    marginTop:5,
+                                    marginBottom:10,
+                                    color:'rgba(26,26,26,1)',
+                                    fontFamily:'Lato-Regular',
+                                }}
+                                numberOfLines={2}
+                            >Door to Doctor Time :</Text>
+                            <Text style={{
+                                    marginLeft:5,
+                                    marginTop:5,
+                                    marginBottom:10,
+                                    color:'rgba(137,138,139,1)',
+                                    fontFamily:'Lato-Regular',
+                                }}
+                                numberOfLines={1}
+                            >{rowdata.DoorToDoctorTimeUnweighted} Min</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:0,
+                        }}> 
+                            <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                width:((Constant.DEVICE_WIDTH)/2),
+                                borderRadius:5,
+                            }}>        
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >Travel Time :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >{rowdata.TravelTime}</Text>
+
+                                </View>
+                            </View>
+
+                            <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                marginLeft:5,
+                                width:((Constant.DEVICE_WIDTH-70)/2),
+                                borderRadius:5,
+                            }}> 
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={2}
+                                    >Ed. Vol. :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >{rowdata.EdVolume}</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:0,
+                        }}> 
+                                <View style={{
+                                    flexDirection:'row',
+                                    alignItems:'center',
+                                    width:((Constant.DEVICE_WIDTH)/2),
+                                    borderRadius:5,
+                                }}>     
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent: 'flex-start',
+                                    }}>
+                                        <Text style={{
+                                                marginLeft:10,
+                                                marginBottom:10,
+                                                color:'rgba(26,26,26,1)',
+                                                fontFamily:'Lato-Regular',
+                                            }}
+                                            numberOfLines={2}
+                                        >{rowdata.PersonLeft}% left without being seen</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{
+                                    flexDirection:'row',
+                                    // backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:5,
+                                    width:((Constant.DEVICE_WIDTH-70)/2),
+                                    borderRadius:5,
+                                }}> 
+                                    <View style={{
+                                        flexDirection:'row',
+                                        justifyContent: 'flex-start',
+                                        // backgroundColor:'yellow',
+                                    }}>
+                                        <Text style={{
+                                                marginLeft:10,
+                                                // marginTop:5,
+                                                marginBottom:10,
+                                                color:'rgba(137,138,139,1)',
+                                                fontFamily:'Lato-Regular',
+                                            }}
+                                            numberOfLines={1}
+                                        >{rowdata.HospitalDistance} Miles / {rowdata.TravelTime}</Text>
+                                    </View>
+                                </View>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:10,
+                        }}>
+                            <TouchableWithoutFeedback onPress={this.onClickCallAction.bind(this, rowdata)}>
+                                <View style={{
+                                    flexDirection:'row',
+                                    backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:10,
+                                    width:((Constant.DEVICE_WIDTH-60)/2),
+                                    height:40,
+                                    justifyContent:'center',
+                                    borderRadius:5,
+                                    marginBottom:15,
+                                }}>
+                                    <Image
+                                        style={{
+                                            height:25,
+                                            width:25,
+                                            // backgroundColor:'black',
+                                            // marginTop: 5,
+                                            marginLeft:0,
+                                        }}
+                                        source={require('../Images/call.png')}
+                                        resizeMode='center'
+                                    ></Image>
+                                    
+                                    <Text style={{
+                                        color:'white',
+                                        marginLeft:10,
+                                        fontFamily:"Lato-Regular"
+                                    }} >Call</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={this.onClickDirectionAction.bind(this, rowdata)}>
+                                <View style={{
+                                    flexDirection:'row',
+                                    backgroundColor:'rgba(227,54,74,1)',
+                                    alignItems:'center',
+                                    marginLeft:20,
+                                    width:((Constant.DEVICE_WIDTH-60)/2),
+                                    height:40,
+                                    justifyContent:'center',
+                                    borderRadius:5,
+                                }}>
+                                    <Image
+                                        style={{
+                                            height:25,
+                                            width:25,
+                                            // backgroundColor:'black',
+                                            // marginTop: 5,
+                                            marginLeft:0,
+                                        }}
+                                        source={require('../Images/direction.png')}
+                                        resizeMode='center'
+                                    ></Image>
+                                    
+                                    <Text style={{
+                                        color:'white',
+                                        marginLeft:10,
+                                        fontFamily:"Lato-Regular"
+                                    }} >Direction</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                        
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -276,5 +638,49 @@ export default class HospitalList extends Component {
     onClickBack() {
         console.log("onClickBack")
         this.props.navigation.pop()
+    }
+
+    onClickCallAction(data) {
+        var callUrl = 'tel:' + data.PhoneNumber
+        console.log('call:=',callUrl)
+        Linking.canOpenURL(callUrl).then(supported => {
+            if (!supported) {
+                console.log('Can\'t handle url: ' + callUrl);
+                alert('This feature is not supported by device')
+            } else {
+                return Linking.openURL(callUrl);
+            }
+        }).catch(err => alert(err));
+    }
+
+    onClickDirectionAction(data) {
+        // this.props.navigation.push('directionScreen',{
+        //     'selectedHospital': data, 
+        //     'userLocation': this.state.userLocation
+        //     // 'userLocation': this.state.dummyLocation
+        // })
+        this.getHospitalByHospitalId(data)
+
+        this.props.navigation.push('searchByLocationDirection',{
+            'selectedHospital': data, 
+            'userLocation': this.state.userLocation,
+            'arrHospitals': this.state.arrHospitals,
+        })
+    }
+
+    onClickFilter() {
+        if(this.state.isSorting === 1) {
+            this.state.isSorting = 0
+        }
+        else {
+            this.state.isSorting = 1
+        }
+        this.state.PageNumber = 1
+        this.state.isLoading = true
+        this.setState({
+            arrHospitals:[],
+            dataSource: this.state.dataSource.cloneWithRows([])
+        })
+        this.getHospitalBySymptoms()
     }
 }

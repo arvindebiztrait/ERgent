@@ -42,7 +42,7 @@ export default class ShortestWaitTimeList extends Component {
     componentDidMount() {
         // super.componentDidMount()
         // this.setDummyHospital()
-        Events.on('receiveResponse', 'receiveMenuScreen', this.onReceiveResponse.bind(this)) 
+        Events.on('receiveResponse', 'receiveSWT', this.onReceiveResponse.bind(this)) 
         this.getHospitalBySWT()
     }
 
@@ -73,7 +73,10 @@ export default class ShortestWaitTimeList extends Component {
                 })
                 alert(responceData.ErrorMessage)
             }
-        }        
+        }    
+        else if (responceData.MethodName == 'getHospitalByHospitalId') {
+            console.log("responceData:=",responceData)
+        }
     }
 
     getHospitalBySWT() {
@@ -96,6 +99,30 @@ export default class ShortestWaitTimeList extends Component {
                 isLoading : true
               })
               ws.callWebservice('getHospitalBySWT',param,'')
+            }
+            else {
+              alert(Constant.NETWORK_ALERT)
+            }
+        });
+    }
+
+    getHospitalByHospitalId(hospitalData) {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log(isConnected)
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+            if(isConnected) {
+              var param = {
+                  'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+                  'Latitude': this.state.userLocation.latitude,
+                  'Longitude': this.state.userLocation.longitude,
+                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'HospitalId': hospitalData.HospitalsId
+              }
+              console.log("param is ",param);
+            //   this.setState({
+            //     isLoading : true
+            //   })
+              ws.callWebservice('getHospitalByHospitalId',param,'')
             }
             else {
               alert(Constant.NETWORK_ALERT)
@@ -642,10 +669,17 @@ export default class ShortestWaitTimeList extends Component {
     }
 
     onClickDirectionAction(data) {
-        this.props.navigation.push('directionScreen',{
+        // this.props.navigation.push('directionScreen',{
+        //     'selectedHospital': data, 
+        //     'userLocation': this.state.userLocation
+        //     // 'userLocation': this.state.dummyLocation
+        // })
+        this.getHospitalByHospitalId(data)
+
+        this.props.navigation.push('searchByLocationDirection',{
             'selectedHospital': data, 
-            'userLocation': this.state.userLocation
-            // 'userLocation': this.state.dummyLocation
+            'userLocation': this.state.userLocation,
+            'arrHospitals': this.state.arrHospitals,
         })
     }
 }

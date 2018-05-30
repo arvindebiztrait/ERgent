@@ -29,36 +29,36 @@ import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 //InHouse Development Key
 Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
 
-export default class SearchByLocation extends Component {
+export default class SearchByLocationDirection extends Component {
 
     constructor(props) {
         super(props)
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             isLoading:true,
-            dataSource:ds,
-            arrHospitals:[],
+            dataSource:ds.cloneWithRows(props.navigation.state.params.arrHospitals),
+            arrHospitals:props.navigation.state.params.arrHospitals,
             searchText:'',
             isForSearch: true, //props.navigation.state.params.isForSearch,
             initialRegion: {
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: props.navigation.state.params.userLocation.latitude,
+                longitude: props.navigation.state.params.userLocation.longitude,
                 latitudeDelta: 0.5922,
                 longitudeDelta: 0.5421,
             },
             region: {
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: props.navigation.state.params.userLocation.latitude,
+                longitude: props.navigation.state.params.userLocation.longitude,
                 latitudeDelta: 0.5922,
                 longitudeDelta: 0.5421,
             },
             coordinate:{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: props.navigation.state.params.userLocation.latitude,
+                longitude: props.navigation.state.params.userLocation.longitude,
             },
             userLocation:{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: props.navigation.state.params.userLocation.latitude,
+                longitude: props.navigation.state.params.userLocation.longitude,
             },
             dummyLocation:{
                 latitude: 37.78825,
@@ -66,13 +66,13 @@ export default class SearchByLocation extends Component {
             },
             placesList:[],
             selectedAddress:{},
-            selectedHospital:{},
+            selectedHospital:props.navigation.state.params.selectedHospital,
             isUpdateRegion:false,
             isOpen: false,
             isDisabled: false,
             swipeToClose: true,
             sliderValue: 0.3,
-            isOpenModal:false,
+            isOpenModal:true,
             mapType:'standard',
         };
     }

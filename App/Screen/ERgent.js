@@ -29,6 +29,7 @@ import ShortestWaitTimeList from './ShortestWaitTimeList'
 import SearchByLocation from './SearchByLocation'
 import DirectionScreen from './DirectionScreen'
 import MapViewListScreen from './MapViewListScreen'
+import SearchByLocationDirection from './SearchByLocationDirection'
 import ws from './GeneralClass/webservice'
 
 export default class ERgent extends Component {
@@ -70,7 +71,8 @@ export const createRootNavigator = (signedIn,userType) => {
         shortestWaitTimeList: {screen: ShortestWaitTimeList},
         searchByLocation: {screen: SearchByLocation},
         directionScreen: {screen: DirectionScreen},
-        mapViewListScreen: {screen: MapViewListScreen}
+        mapViewListScreen: {screen: MapViewListScreen},
+        searchByLocationDirection: {screen: SearchByLocationDirection}
     },
     {
       headerMode: "none",
