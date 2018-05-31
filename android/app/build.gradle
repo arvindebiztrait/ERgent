@@ -148,6 +148,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile project(':react-native-android-location-enabler')
     compile project(':react-native-fused-location')
     // compile project(':react-native-maps')

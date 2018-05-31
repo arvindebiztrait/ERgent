@@ -15,6 +15,7 @@ import {
 import Constant from './GeneralClass/Constant';
 import Events from 'react-native-simple-events';
 import ws from './GeneralClass/webservice';
+import DeviceInfo from 'react-native-device-info';
 
 export default class SymtomsList extends Component {
 
@@ -83,7 +84,7 @@ export default class SymtomsList extends Component {
                   'Longitude': this.state.userLocation.longitude,
                   'PageNumber': this.state.PageNumber,
                   'PageSize': this.state.PageSize,
-                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'DeviceId': DeviceInfo.getUniqueID(),
               }
               console.log("param is ",param);
               this.setState({

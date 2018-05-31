@@ -10,6 +10,7 @@
     "react": "16.3.1",
     "react-native": "0.55.3",
     "react-native-android-location-enabler": "^1.0.5",
+    "react-native-device-info": "^0.21.5",
     "react-native-fused-location": "^0.2.1",
     "react-native-geocoding": "^0.3.0",
     "react-native-maps": "^0.16.0",

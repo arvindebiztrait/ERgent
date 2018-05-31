@@ -21,6 +21,7 @@ import Constant from './GeneralClass/Constant';
 import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import FusedLocation from 'react-native-fused-location';
+import DeviceInfo from 'react-native-device-info';
 
 export default class Home extends Component {
 
@@ -39,6 +40,8 @@ export default class Home extends Component {
         this.setState({
             isShowPopup:true
         })
+
+        console.log("Device Id:=",DeviceInfo.getUniqueID())
 
         if (Platform.OS === 'ios') {
             Permissions.check('location','whenInUse')

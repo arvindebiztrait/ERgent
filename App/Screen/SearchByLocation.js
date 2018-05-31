@@ -25,6 +25,7 @@ import Modal from 'react-native-modalbox';
 import Permissions from 'react-native-permissions';
 import FusedLocation from 'react-native-fused-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import DeviceInfo from 'react-native-device-info';
 
 //InHouse Development Key
 Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
@@ -256,7 +257,7 @@ export default class SearchByLocation extends Component {
                   'Longitude': this.state.coordinate.longitude,
                   'PageNumber': 1,
                   'PageSize': 20,
-                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'DeviceId': DeviceInfo.getUniqueID(),
               }
               console.log("param is ",param);
               this.setState({
@@ -279,7 +280,7 @@ export default class SearchByLocation extends Component {
                   'DeviceType': Platform.OS === 'ios' ? 1 : 2,
                   'Latitude': this.state.coordinate.latitude,
                   'Longitude': this.state.coordinate.longitude,
-                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'DeviceId': DeviceInfo.getUniqueID(),
                   'HospitalId': hospitalData.HospitalsId
               }
               console.log("param is ",param);

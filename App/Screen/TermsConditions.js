@@ -24,6 +24,7 @@ import {
 import Constant from './GeneralClass/Constant';
 import Events from 'react-native-simple-events';
 import ws from './GeneralClass/webservice';
+import DeviceInfo from 'react-native-device-info';
 // import LS from 'Domingo/Src/Screens/GeneralClass/LocalizationStrings';
 
 export const STATUSBAR_HEIGHT  = Platform.OS === 'ios' ? 0 : StatusBar.currentHeight;
@@ -82,6 +83,7 @@ export default class TermsConditions extends Component {
       if(isConnected) {
             var param = {
                   'CMSDataId': this.state.isForPrivacy === true ? 1 : 2,
+                  'DeviceId': DeviceInfo.getUniqueID(),
             }
             console.log("param is ",param);
             this.setState({

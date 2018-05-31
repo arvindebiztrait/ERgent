@@ -17,6 +17,7 @@ import {
 import Constant from './GeneralClass/Constant';
 import Events from 'react-native-simple-events';
 import ws from './GeneralClass/webservice';
+import DeviceInfo from 'react-native-device-info';
 
 export default class ShortestWaitTimeList extends Component {
 
@@ -90,7 +91,7 @@ export default class ShortestWaitTimeList extends Component {
                   'Longitude': this.state.userLocation.longitude,
                   'PageNumber': this.state.PageNumber,
                   'PageSize': 20,
-                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'DeviceId': DeviceInfo.getUniqueID(),
                   'IsSorting': this.state.isSorting,
                   'SearchText': this.state.searchText,
               }
@@ -115,7 +116,7 @@ export default class ShortestWaitTimeList extends Component {
                   'DeviceType': Platform.OS === 'ios' ? 1 : 2,
                   'Latitude': this.state.userLocation.latitude,
                   'Longitude': this.state.userLocation.longitude,
-                  'DeviceId': "kldsf97asfd98a7sdf97a9sdf9as8df",
+                  'DeviceId': DeviceInfo.getUniqueID(),
                   'HospitalId': hospitalData.HospitalsId
               }
               console.log("param is ",param);
