@@ -14,7 +14,8 @@ import {
   TouchableWithoutFeedback,
   Modal,
   Alert,
-  PermissionsAndroid
+  PermissionsAndroid,
+  AsyncStorage
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
@@ -37,9 +38,22 @@ export default class Home extends Component {
     }
 
     async componentDidMount() {
-        this.setState({
-            isShowPopup:true
-        })
+
+        AsyncStorage.getItem("isShowFirstTimePopup").then((value1) => {
+            console.log("isShowFirstTimePopup:=",value1) 
+            if(value1 == null) {
+
+                this.setState({
+                    isShowPopup:true
+                })
+
+                console.log("isShowFirstTimePopup Null")
+                                
+            }
+            else {
+                console.log("isShowFirstTimePopup Not Null")
+            } 
+        }).done();
 
         console.log("Device Id:=",DeviceInfo.getUniqueID())
 
@@ -286,7 +300,7 @@ export default class Home extends Component {
                         fontSize:17,
                         color:'rgba(114,114,115,1)',
                         fontFamily:"Lato-Regular"
-                    }}>Symtoms</Text>
+                    }}>Search by Symptoms</Text>
 
                     <Image style={{
                         height:20,
@@ -496,11 +510,12 @@ export default class Home extends Component {
 
   }
 
-  onClickUnderstand() {
-      this.setState({
-          isShowPopup:false
-      })
-  }
+    onClickUnderstand() {
+        AsyncStorage.setItem('isShowFirstTimePopup','1')
+        this.setState({
+            isShowPopup:false
+        })
+    }
 
   gotoPrivacyPolicy() {
     console.log("on Click Privacy Policy")

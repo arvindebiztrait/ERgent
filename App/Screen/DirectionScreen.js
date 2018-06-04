@@ -128,7 +128,7 @@ export default class DirectionScreen extends Component {
                         // backgroundColor:'yellow',
                         textAlign:'center',
                         fontFamily:"Lato-Regular"
-                    }}>Direction</Text>
+                    }}>DIRECTION</Text>
                     <TouchableWithoutFeedback onPress={this.onClickExternalDirection.bind(this)}>
                         <Image
                             style={{

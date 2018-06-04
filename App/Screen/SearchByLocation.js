@@ -737,7 +737,7 @@ export default class SearchByLocation extends Component {
                                 color:'white',
                                 fontSize:12,
                                 fontFamily:"Lato-Regular"
-                            }}>{this.state.selectedHospital.CountyName + ", " + this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text>
+                            }}>{this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text>
                         </View>
                     </View>
                 </View>

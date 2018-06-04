@@ -201,14 +201,14 @@ export default class ShortestWaitTimeList extends Component {
                     <TouchableWithoutFeedback onPress={this.onClickFilter.bind(this)}>
                         <Image
                             style={{
-                                height:40,
-                                width:40,
+                                height:30,
+                                width:30,
                                 // backgroundColor:'white',
                                 marginTop: Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:5,
                             }}
-                            source={require('../Images/filter.png')}
-                            resizeMode={'center'}
+                            source={require('../Images/sort.png')}
+                            resizeMode={'contain'}
                         ></Image>
                     </TouchableWithoutFeedback>
                 </View>
