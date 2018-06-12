@@ -59,15 +59,15 @@ export default class ERgent extends Component {
 
      componentDidMount() {
         ws.initNetInfoForConnectivity()
-        Events.on('receiveResponse', 'receiveERgent', this.onReceiveResponse.bind(this)) 
+        // Events.on('receiveResponse', 'receiveERgent', this.onReceiveResponse.bind(this)) 
 
-        var that = this
+        // var that = this
 
-        clearTimeout(timerVar)
+        // clearTimeout(timerVar)
 
-        timerVar = setTimeout(()=>{
-          that.getAdvertisementList()
-        }, 5000);
+        // timerVar = setTimeout(()=>{
+        //   that.getAdvertisementList()
+        // }, 5000);
      }
 
      onReceiveResponse (responceData) { 
@@ -117,11 +117,11 @@ export default class ERgent extends Component {
      render() {
         console.log("signed inside render",this.state.isLogin)
 
-        var strURL = ""
-        if (this.state.currentAdvertimementData.ImagePath) {
-          strURL = this.state.currentAdvertimementData.ImagePath
-        }
-        console.log("strURL:=",strURL)
+        // var strURL = ""
+        // if (this.state.currentAdvertimementData.ImagePath) {
+        //   strURL = this.state.currentAdvertimementData.ImagePath
+        // }
+        // console.log("strURL:=",strURL)
         
         const Layout = createRootNavigator(this.state.isLogin,this.state.userType);
         return(
@@ -129,7 +129,7 @@ export default class ERgent extends Component {
             flex:1
           }}>
            <Layout />
-           {this.state.isVisibleAdvertise === true ? 
+           {/* {this.state.isVisibleAdvertise === true ? 
             <View style={{
               flex:1,
               backgroundColor:'rgba(0,0,0,0.4)',
@@ -208,7 +208,7 @@ export default class ERgent extends Component {
             </View>
           :
             undefined
-          }
+          } */}
            </View>
         );
    }

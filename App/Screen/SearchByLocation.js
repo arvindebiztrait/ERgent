@@ -542,13 +542,25 @@ export default class SearchByLocation extends Component {
                         onMarkerPress={this.onMarkerClicked.bind(this,place)}
                         onPress={this.onMarkerClicked.bind(this,place)}
                         >
-                        <Image
-                            source={require('../Images/clinic.png')}
-                            style={{
-                                height:40,
-                                width:40,
-                            }}
-                        />
+
+                        {Platform.OS === 'ios' ? 
+                            <Image
+                                source={require('../Images/hospital_icon_new.png')}
+                                style={{
+                                    height:40,
+                                    width:40,
+                                }}
+                                resizeMode={'contain'}
+                            />
+                            :
+                            <Image
+                                source={require('../Images/hospital_icon_new.png')}
+                                style={{
+                                    height:40,
+                                    width:40,
+                                }}
+                            />
+                        }
                         </MapView.Marker>
                     ))}
                     </MapView>

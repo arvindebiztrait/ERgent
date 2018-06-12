@@ -11,13 +11,16 @@ import {
   NetInfo,
   TouchableHighlight,
   ActivityIndicator,
-  Linking
+  Linking,
+  StatusBar
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
 import Events from 'react-native-simple-events';
 import ws from './GeneralClass/webservice';
 import DeviceInfo from 'react-native-device-info';
+
+var timerVar;
 
 export default class HospitalList extends Component {
 
@@ -39,6 +42,12 @@ export default class HospitalList extends Component {
             isLoadmoreAvailable:true,
             isLoadMoreRunnig:true,
             isShowFooter:false,
+            isVisibleAdvertise:false,
+            arrAdvertisements:[],
+            advertiseIndex:0,
+            currentAdvertimementData: {},
+            PageNumberAd:1,
+            PageSizeAd: 100,
         };
     }
 
@@ -47,6 +56,14 @@ export default class HospitalList extends Component {
         // this.setDummyHospital()
         Events.on('receiveResponse', 'receiveHespitalList', this.onReceiveResponse.bind(this)) 
         this.getHospitalBySymptoms()
+
+        var that = this
+
+        clearTimeout(timerVar)
+
+        timerVar = setTimeout(()=>{
+          that.getAdvertisementList()
+        }, 5000);
     }
 
     onReceiveResponse (responceData) { 
@@ -79,7 +96,29 @@ export default class HospitalList extends Component {
         }     
         else if (responceData.MethodName == 'getHospitalByHospitalId') {
             console.log("responceData:=",responceData)
-        }   
+        }
+        else if (responceData.MethodName == 'getAdvertisementList') {
+            console.log('responceDataHome:=',responceData)
+              
+              if (responceData.Status == true) {                    
+                  let advertiseList = responceData.Results.SymptomsData;
+                  
+                  // this.setState({
+                  //     arrAdvertisements : advertiseList,
+                  // })
+                  this.state.arrAdvertisements = advertiseList
+                  this.startCounterForAdvertisement()
+              }
+              else {
+                  this.setState({
+                      isLoading:false
+                  })
+                  alert(responceData.ErrorMessage)
+              }
+          }    
+          else if (responceData.MethodName == 'AdvertisementClick') {
+              console.log("responceData:=",responceData)
+          }   
     }
 
     getHospitalBySymptoms() {
@@ -153,6 +192,11 @@ export default class HospitalList extends Component {
     }
 
     render() {
+        var strURL = ""
+        if (this.state.currentAdvertimementData.ImagePath) {
+          strURL = this.state.currentAdvertimementData.ImagePath
+        }
+        console.log("strURL:=",strURL)
         return(
             <View style={{
                 flex: 1,
@@ -295,7 +339,7 @@ export default class HospitalList extends Component {
                     <ListView
                         contentContainerStyle={{
                             backgroundColor:'rgba(239,240,241,1)',
-                            paddingBottom:10,
+                            paddingBottom: this.state.isVisibleAdvertise === true ? 74 : 10,
                             // backgroundColor:'yellow',
                             paddingTop: this.state.isForSearch ? 0 : 10,
                         }}
@@ -308,6 +352,50 @@ export default class HospitalList extends Component {
                         showsVerticalScrollIndicator={false}
                     />
                 </View>
+
+                {this.state.isVisibleAdvertise === true ?
+                <TouchableWithoutFeedback onPress={this.viewAdvertisement.bind(this)}>
+                <View style={{
+                    position:'absolute',
+                    zIndex: 1,
+                    backgroundColor: 'white',
+                    marginLeft:0,
+                    marginTop: Platform.OS === 'ios' ? Constant.DEVICE_HEIGHT - 64 : (Constant.DEVICE_HEIGHT - (64 + StatusBar.currentHeight)),
+                    height: 64,
+                    width: Constant.DEVICE_WIDTH,
+                    // alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <Image style={{
+                            // backgroundColor:'rgba(227,54,74,1)',
+                            height:'100%',
+                            width:'100%',
+                            // borderRadius:50,
+                            // borderWidth:1,
+                            // borderColor:'rgba(227,54,74,1)'
+                        }}
+                        // source={require('../Images/logo-popup.png')}
+                        source={{ uri: strURL}}
+                        resizeMode={'contain'}
+                        onLoad={this.startCounterForNextAdvertisemet.bind(this)}
+                    />
+                    {/* <TouchableWithoutFeedback onPress={this.viewAdvertisement.bind(this)}>
+                        <Text style={{
+                            padding: 10,
+                            borderColor: 'black',
+                            color: 'black',
+                            borderWidth: 1,
+                            zIndex: 1,
+                            position: 'absolute',
+                            width: 60,
+                            textAlign: 'center',
+                            marginLeft: Constant.DEVICE_WIDTH - 70,
+                            borderRadius: 5,
+                        }}>View</Text>
+                    </TouchableWithoutFeedback> */}
+                </View>
+                </TouchableWithoutFeedback>
+                : undefined}
                         
                 { this.state.isLoading == true && this.state.PageNumber === 1 ? <ActivityIndicator
                     color={'rgba(227,54,74,1)'}    //rgba(254,130,1,0.5)'
@@ -684,5 +772,114 @@ export default class HospitalList extends Component {
             dataSource: this.state.dataSource.cloneWithRows([])
         })
         this.getHospitalBySymptoms()
+    }
+
+    //Advertisement
+
+    startCounterForAdvertisement() {
+        var that = this
+        clearTimeout(timerVar)
+        timerVar = setTimeout(()=>{
+          that.loadAdvertisements()
+        }, 5000);
+      }
+    
+      loadAdvertisements() {
+          console.log("loadAdvertisements called")
+        if (this.state.advertiseIndex < this.state.arrAdvertisements.length) {
+          var adData = this.state.arrAdvertisements[this.state.advertiseIndex]
+          this.setState({
+            advertiseIndex : this.state.advertiseIndex + 1,
+            currentAdvertimementData : adData,
+            isVisibleAdvertise: true
+          })
+        }
+        else {
+            this.state.advertiseIndex = 0
+            this.getAdvertisementList()
+        }
+      }
+    
+      viewAdvertisement() {
+        // this.setState({
+        //   isVisibleAdvertise:false
+        // })
+        this.viewAdvertisementAPICalled()
+        var url = this.state.currentAdvertimementData.AdUrl
+        console.log("currentAdvertimementData:=",this.state.currentAdvertimementData)
+        console.log("url:=",url)
+        var prefix = 'http';
+        if (url.substr(0, prefix.length) !== prefix) {
+          url = prefix + "://" + url;
+        }
+        console.log("URL :=",url)
+        if (Linking.canOpenURL(url)) {
+            this.startCounterForNextAdvertisemet()
+            Linking.openURL(url)
+        }
+        else {
+            alert("Advertisement url is not valid")
+        }
+     }
+    
+     hideAdvertiseMent() {
+       this.setState({
+         isVisibleAdvertise:false
+       })
+      //  this.startCounterForNextAdvertisemet()
+     }
+    
+     startCounterForNextAdvertisemet() {
+         console.log("startCounterForNextAdvertisemet called")
+      var that = this
+      clearTimeout(timerVar)
+      timerVar = setTimeout(()=>{
+        that.loadAdvertisements()
+      }, 5000);
+     }
+    
+    getAdvertisementList() {
+      NetInfo.isConnected.fetch().then(isConnected => {
+          console.log(isConnected)
+          console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+          if(isConnected) {
+            var param = {
+                'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+                'DeviceId': DeviceInfo.getUniqueID(),
+                'PageNumber': this.state.PageNumberAd,
+                'PageSize': this.state.PageSizeAd,
+            }
+            console.log("param is ",param);
+          //   this.setState({
+          //     isLoading : true
+          //   })
+            ws.callWebservice('getAdvertisementList',param,'')
+          }
+          else {
+            alert(Constant.NETWORK_ALERT)
+          }
+      });
+    }
+    
+    viewAdvertisementAPICalled() {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            console.log(isConnected)
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+            if(isConnected) {
+              var param = {
+                  'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+                  'DeviceId': DeviceInfo.getUniqueID(),
+                  'AdvertisementsId': this.state.currentAdvertimementData.AdvertisementsId
+              }
+              console.log("param is ",param);
+            //   this.setState({
+            //     isLoading : true
+            //   })
+              ws.callWebservice('AdvertisementClick',param,'')
+            }
+            else {
+              alert(Constant.NETWORK_ALERT)
+            }
+        });
     }
 }

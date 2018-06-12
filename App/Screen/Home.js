@@ -15,7 +15,10 @@ import {
   Modal,
   Alert,
   PermissionsAndroid,
-  AsyncStorage
+  AsyncStorage,
+  NetInfo,
+  Linking,
+  StatusBar
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
@@ -23,6 +26,10 @@ import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import FusedLocation from 'react-native-fused-location';
 import DeviceInfo from 'react-native-device-info';
+import ws from './GeneralClass/webservice';
+import Events from 'react-native-simple-events';
+
+var timerVar;
 
 export default class Home extends Component {
 
@@ -34,21 +41,33 @@ export default class Home extends Component {
                 latitude: 0.0,
                 longitude: 0.0,
             },
+            isVisibleAdvertise:false,
+            arrAdvertisements:[],
+            advertiseIndex:0,
+            currentAdvertimementData: {},
+            PageNumber:1,
+            PageSize: 100,
         };
     }
 
     async componentDidMount() {
+        Events.on('receiveResponse', 'receiveHome', this.onReceiveResponse.bind(this)) 
+
+        var that = this
+
+        clearTimeout(timerVar)
+
+        timerVar = setTimeout(()=>{
+          that.getAdvertisementList()
+        }, 5000);
 
         AsyncStorage.getItem("isShowFirstTimePopup").then((value1) => {
             console.log("isShowFirstTimePopup:=",value1) 
             if(value1 == null) {
-
                 this.setState({
                     isShowPopup:true
                 })
-
-                console.log("isShowFirstTimePopup Null")
-                                
+                console.log("isShowFirstTimePopup Null")                                
             }
             else {
                 console.log("isShowFirstTimePopup Not Null")
@@ -156,9 +175,42 @@ export default class Home extends Component {
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },);
     }
 
+    onReceiveResponse (responceData) { 
+       
+        if (responceData.MethodName == 'getAdvertisementList') {
+          console.log('responceDataHome:=',responceData)
+            
+            if (responceData.Status == true) {                    
+                let advertiseList = responceData.Results.SymptomsData;
+                
+                // this.setState({
+                //     arrAdvertisements : advertiseList,
+                // })
+                this.state.arrAdvertisements = advertiseList
+                this.startCounterForAdvertisement()
+            }
+            else {
+                // this.setState({
+                //     isLoading:false
+                // })
+                alert(responceData.ErrorMessage)
+            }
+        }    
+        else if (responceData.MethodName == 'AdvertisementClick') {
+            console.log("responceData:=",responceData)
+        }
+    }
+
     render() {
-    return (
-        <View style={{
+
+        var strURL = ""
+        if (this.state.currentAdvertimementData.ImagePath) {
+          strURL = this.state.currentAdvertimementData.ImagePath
+        }
+        console.log("strURL:=",strURL)
+
+        return (
+            <View style={{
                 flex: 1,
                 // justifyContent: 'center',
                 alignItems: 'center',
@@ -422,6 +474,51 @@ export default class Home extends Component {
                 />
             </View>
 
+            {this.state.isVisibleAdvertise === true ?
+            <TouchableWithoutFeedback onPress={this.viewAdvertisement.bind(this)}>
+            <View style={{
+                position:'absolute',
+                zIndex: 1,
+                backgroundColor: 'white',
+                marginLeft:0,
+                marginTop: Platform.OS === 'ios' ? Constant.DEVICE_HEIGHT - 64 : (Constant.DEVICE_HEIGHT - (64 + StatusBar.currentHeight)),
+                height: 64,
+                width: Constant.DEVICE_WIDTH,
+                // alignItems: 'center',
+                justifyContent: 'center',
+            }}>
+                <Image style={{
+                        // backgroundColor:'rgba(227,54,74,1)',
+                        height:'100%',
+                        width:'100%',
+                        // borderRadius:50,
+                        // borderWidth:1,
+                        // borderColor:'rgba(227,54,74,1)'
+                    }}
+                    // source={require('../Images/logo-popup.png')}
+                    source={{ uri: strURL}}
+                    resizeMode={'contain'}
+                    onLoad={this.startCounterForNextAdvertisemet.bind(this)}
+                />
+                {/* <TouchableWithoutFeedback onPress={this.viewAdvertisement.bind(this)}>
+                    <Text style={{
+                        padding: 10,
+                        borderColor: 'black',
+                        color: 'black',
+                        borderWidth: 1,
+                        zIndex: 1,
+                        position: 'absolute',
+                        width: 60,
+                        textAlign: 'center',
+                        marginLeft: Constant.DEVICE_WIDTH - 70,
+                        borderRadius: 5,
+                    }}>View</Text>
+                </TouchableWithoutFeedback> */}
+            </View>
+            </TouchableWithoutFeedback>
+
+            : undefined}
+
             <Modal visible={this.state.isShowPopup} animationType={'fade'} transparent={true} onRequestClose={this.onModalCloseAction.bind(this)}>
                 <View style={{
                     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -538,6 +635,115 @@ export default class Home extends Component {
   gotoSearch() {
     this.props.navigation.push('searchByLocation', {'isForSearch':true})
   }
+
+  
+
+  startCounterForAdvertisement() {
+    var that = this
+    clearTimeout(timerVar)
+    timerVar = setTimeout(()=>{
+      that.loadAdvertisements()
+    }, 5000);
+  }
+
+  loadAdvertisements() {
+      console.log("loadAdvertisements called")
+    if (this.state.advertiseIndex < this.state.arrAdvertisements.length) {
+      var adData = this.state.arrAdvertisements[this.state.advertiseIndex]
+      this.setState({
+        advertiseIndex : this.state.advertiseIndex + 1,
+        currentAdvertimementData : adData,
+        isVisibleAdvertise: true
+      })
+    }
+    else {
+        this.state.advertiseIndex = 0
+        this.getAdvertisementList()
+    }
+  }
+
+  viewAdvertisement() {
+    // this.setState({
+    //   isVisibleAdvertise:false
+    // })
+    this.viewAdvertisementAPICalled()
+    var url = this.state.currentAdvertimementData.AdUrl
+    console.log("currentAdvertimementData:=",this.state.currentAdvertimementData)
+    console.log("url:=",url)
+    var prefix = 'http';
+    if (url.substr(0, prefix.length) !== prefix) {
+      url = prefix + "://" + url;
+    }
+    console.log("URL :=",url)
+    if (Linking.canOpenURL(url)) {
+        this.startCounterForNextAdvertisemet()
+        Linking.openURL(url)
+    }
+    else {
+        alert("Advertisement url is not valid")
+    }
+ }
+
+ hideAdvertiseMent() {
+   this.setState({
+     isVisibleAdvertise:false
+   })
+  //  this.startCounterForNextAdvertisemet()
+ }
+
+ startCounterForNextAdvertisemet() {
+     console.log("startCounterForNextAdvertisemet called")
+  var that = this
+  clearTimeout(timerVar)
+  timerVar = setTimeout(()=>{
+    that.loadAdvertisements()
+  }, 5000);
+ }
+
+ getAdvertisementList() {
+  NetInfo.isConnected.fetch().then(isConnected => {
+      console.log(isConnected)
+      console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+      if(isConnected) {
+        var param = {
+            'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+            'DeviceId': DeviceInfo.getUniqueID(),
+            'PageNumber': this.state.PageNumber,
+            'PageSize': this.state.PageSize,
+        }
+        console.log("param is ",param);
+      //   this.setState({
+      //     isLoading : true
+      //   })
+        ws.callWebservice('getAdvertisementList',param,'')
+      }
+      else {
+        alert(Constant.NETWORK_ALERT)
+      }
+  });
+ }
+
+ viewAdvertisementAPICalled() {
+    NetInfo.isConnected.fetch().then(isConnected => {
+        console.log(isConnected)
+        console.log('First, is ' + (isConnected ? 'online' : 'offline'));        
+        if(isConnected) {
+          var param = {
+              'DeviceType': Platform.OS === 'ios' ? 1 : 2,
+              'DeviceId': DeviceInfo.getUniqueID(),
+              'AdvertisementsId': this.state.currentAdvertimementData.AdvertisementsId
+          }
+          console.log("param is ",param);
+        //   this.setState({
+        //     isLoading : true
+        //   })
+          ws.callWebservice('AdvertisementClick',param,'')
+        }
+        else {
+          alert(Constant.NETWORK_ALERT)
+        }
+    });
+ }
 }
 
 const styles = StyleSheet.create({
