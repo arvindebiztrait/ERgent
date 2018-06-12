@@ -518,8 +518,8 @@ export default class SearchByLocation extends Component {
                         coordinate={this.state.coordinate}
                         // onMarkerPress={this.onMarkerClicked.bind(this,place)}
                         // onPress={this.onMarkerClicked.bind(this,place)}
-                        omMarkerPress={this.testRoutesStatic.bind(this)}
-                        onPress={this.testRoutesStatic.bind(this)}
+                        // omMarkerPress={this.testRoutesStatic.bind(this)}
+                        // onPress={this.testRoutesStatic.bind(this)}
                         >
                         {/* <Image
                             source={require('../Images/clinic.png')}
