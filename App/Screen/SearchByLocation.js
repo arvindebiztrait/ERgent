@@ -922,9 +922,11 @@ export default class SearchByLocation extends Component {
     }
 
     onClickDirectionAction() {
+        console.log("Pass this.state.userLocation:=",this.state.userLocation)
+        console.log("Pass this.state.coordinate:=",this.state.coordinate)
         this.props.navigation.push('directionScreen',{
             'selectedHospital':this.state.selectedHospital, 
-            'userLocation': this.state.userLocation
+            'userLocation': this.state.coordinate //this.state.userLocation
             // 'userLocation': this.state.dummyLocation
         })        
         // this.testRoutes()
@@ -1155,7 +1157,7 @@ export default class SearchByLocation extends Component {
         if(this.state.arrHospitals.length > 0) {
             this.props.navigation.push('mapViewListScreen',{
                 'arrHospitals':this.state.arrHospitals, 
-                'userLocation': this.state.userLocation
+                'userLocation': this.state.coordinate //this.state.userLocation
                 // 'userLocation': this.state.dummyLocation
             })
         }
