@@ -224,9 +224,74 @@ export default class SymtomsList extends Component {
     }
 
     renderRow(rowdata) {
+        //  return this.loadSquareUI(rowdata)
+         return this.loadHorizontalUI(rowdata)
+     }
+
+     loadHorizontalUI(rowdata) {
         console.log("row data inside",rowdata);
         var imgUrl = rowdata.ImagePath;
        return ( <TouchableHighlight underlayColor = {'transparent'} onPress={this.onClickListView.bind(this,rowdata)}>
+                <View style = {{
+                  // height:200,
+                  backgroundColor:'transparent',
+                  width:((Constant.DEVICE_WIDTH)),
+                  flexDirection:'column',
+                  // padding:10,
+                  // paddingTop:0,
+                  alignContent:'center',
+                  alignItems:'center',
+                  marginBottom:10,
+                  shadowColor:'gray',
+                    shadowOpacity:0.1,
+                    shadowOffset:{ width: 0, height: 0.5 },
+                }}>
+    
+                  <View style={{
+                    margin:5,
+                    backgroundColor:'white',
+                    borderRadius:2,
+                    padding:10,
+                    // justifyContent:'center',
+                    alignItems:'center',
+                    borderWidth:1,
+                    borderColor:'rgba(219,220,221,1)',
+                    height:Constant.DEVICE_WIDTH/2 - 20,
+                    width:Constant.DEVICE_WIDTH - 20,
+                    // flexDirection: 'row'
+                  }}>
+                       <Image
+                         style={{
+                           height:Constant.DEVICE_WIDTH/2 - 80,
+                           width:Constant.DEVICE_WIDTH/2 - 80,
+                          //  backgroundColor:'rgba(0,165,235,1)',
+                         }}
+                        //  source={rowdata.index%2 == 0 ? require('Domingo/Src/images/static_img/Beauty.png') : require('Domingo/Src/images/static_img/Childcare.png')}
+                        //  source={require('Domingo/Src/images/static_img/Childcare.png')}
+                        //  defaultSource={require('Domingo/Src/images/placeholder_home.png')}
+                         source={{ uri: imgUrl}}
+                         resizeMode='contain'
+                         resizeMethod='resize'
+                        //  loadingIndicatorSource={require('Domingo/Src/images/placeholder_home.png')}
+    
+                     />
+                     <Text style={{
+                       fontSize:18,
+                       marginTop:10,
+                       marginBottom:10,
+                     }}
+                     numberOfLines={1}
+                     >{rowdata.Name}</Text>
+                  </View>
+                </View>
+              </TouchableHighlight>
+             );
+     }
+
+     loadSquareUI(rowdata) {
+        console.log("row data inside",rowdata);
+        var imgUrl = rowdata.ImagePath;
+        return ( <TouchableHighlight underlayColor = {'transparent'} onPress={this.onClickListView.bind(this,rowdata)}>
                 <View style = {{
                   // height:200,
                   backgroundColor:'transparent',
@@ -278,9 +343,9 @@ export default class SymtomsList extends Component {
                      >{rowdata.Name}</Text>
                   </View>
                 </View>
-              </TouchableHighlight>
-             );
-     }
+            </TouchableHighlight>
+        );
+    }
 
     // renderRow(rowdata) {
     //     console.log("row data inside",rowdata);

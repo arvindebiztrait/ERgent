@@ -82,7 +82,7 @@ export default class TermsConditions extends Component {
 
       if(isConnected) {
             var param = {
-                  'CMSDataId': this.state.isForPrivacy === true ? 1 : 2,
+                  'CMSDataId': this.state.isForPrivacy === '1' ? 1 : 2,
                   'DeviceId': DeviceInfo.getUniqueID(),
             }
             console.log("param is ",param);

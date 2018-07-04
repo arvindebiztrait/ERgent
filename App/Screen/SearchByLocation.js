@@ -231,11 +231,21 @@ export default class SearchByLocation extends Component {
           console.log('responceData:=',responceData)
           this.setState({isLoading: false,isDisable:false})
           if (responceData.Status == true) {                    
-            var hospitalData = responceData.Results.HospitalData            
-            this.setState({
-                arrHospitals:hospitalData,
-                isLoading:false
-            })
+            var hospitalData = responceData.Results.HospitalData     
+            if (hospitalData.length > 0) {
+                this.setState({
+                    arrHospitals:hospitalData,
+                    isLoading:false,
+                    isOpenModal:true,
+                    selectedHospital:hospitalData[0]
+                })
+            }   
+            else {
+                this.setState({
+                    arrHospitals:hospitalData,
+                    isLoading:false
+                })
+            }    
           }
           else {
             alert(responceData.ErrorMessage)
@@ -621,7 +631,7 @@ export default class SearchByLocation extends Component {
                         zIndex:5,
                         // marginBottom:320,
                         // marginRight:30,
-                        marginTop: (Constant.DEVICE_HEIGHT - (this.state.isOpenModal ? ( Platform.OS === 'ios' ? 350 : 370) :  Platform.OS === 'ios' ? 50 : 70)),
+                        marginTop: (Constant.DEVICE_HEIGHT - (this.state.isOpenModal ? ( Platform.OS === 'ios' ? 330 : 350) :  Platform.OS === 'ios' ? 50 : 70)),
                         marginLeft: Constant.DEVICE_WIDTH - 130,
                         shadowColor:'gray',
                         shadowOpacity:1.0,
@@ -680,7 +690,7 @@ export default class SearchByLocation extends Component {
             <Modal style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: 300,
+                height: 280,
                 // backgroundColor: 'transparent'
             }} 
             position={"bottom"} 
@@ -694,7 +704,7 @@ export default class SearchByLocation extends Component {
             {/* <ScrollView> */}
                 <View style={{
                     width: Constant.DEVICE_WIDTH, 
-                    height:300, 
+                    height:280, 
                     // paddingLeft: 10, 
                     backgroundColor:'transparent', 
                     // borderTopWidth:1,
@@ -744,12 +754,12 @@ export default class SearchByLocation extends Component {
                                 color:'white',
                                 fontSize:12,
                                 fontFamily:"Lato-Regular"
-                            }}>{this.state.selectedHospital.City}</Text>
-                            <Text style={{
+                            }}>{this.state.selectedHospital.City + ", " + this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text>
+                            {/* <Text style={{
                                 color:'white',
                                 fontSize:12,
                                 fontFamily:"Lato-Regular"
-                            }}>{this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text>
+                            }}>{this.state.selectedHospital.State + " " + this.state.selectedHospital.ZIPCode}</Text> */}
                         </View>
                     </View>
                 </View>
@@ -1002,13 +1012,13 @@ export default class SearchByLocation extends Component {
         console.log('Modal just closed');
     }
     
-      onOpen() {
+    onOpen() {
         console.log('Modal just openned');
-      }
-    
-      onClosingState(state) {
+    }
+
+    onClosingState(state) {
         console.log('the open/close of the swipeToClose just changed');
-      }
+    }
 
     onMarkerClicked(param) {
         console.log("onMarkerClicked:=",param)
@@ -1077,7 +1087,7 @@ export default class SearchByLocation extends Component {
         //       })
         //   }
         // );
-      }
+    }
 
     onRegionChange(region) {
         // this.setState({ region:region });

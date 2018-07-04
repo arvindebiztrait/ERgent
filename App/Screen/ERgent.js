@@ -36,6 +36,7 @@ import ws from './GeneralClass/webservice'
 import Constant from './GeneralClass/Constant'
 import Events from 'react-native-simple-events';
 import DeviceInfo from 'react-native-device-info';
+import SplashScreen from 'react-native-splash-screen'
 
 var timerVar;
 
@@ -58,6 +59,7 @@ export default class ERgent extends Component {
      }
 
      componentDidMount() {
+        SplashScreen.hide();
         ws.initNetInfoForConnectivity()
         // Events.on('receiveResponse', 'receiveERgent', this.onReceiveResponse.bind(this)) 
 
