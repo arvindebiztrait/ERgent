@@ -652,7 +652,7 @@ export default class SearchByLocationDirection extends Component {
                             }}>
                                 <Text style={{
                                     fontFamily:"Lato-Regular"
-                                }}>Satelite</Text>
+                                }}>Satellite</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
@@ -688,7 +688,9 @@ export default class SearchByLocationDirection extends Component {
             isOpen={this.state.isOpenModal}
             onClosed={this.onClose.bind(this)}
             onOpened={this.onOpen.bind(this)}
-            onClosingState={this.onClosingState}>
+            onClosingState={this.onClosingState}
+            backdropColor={'transparent'}
+            >
             
             {/* <ScrollView> */}
                 <View style={{
@@ -780,7 +782,7 @@ export default class SearchByLocationDirection extends Component {
                                 fontSize:13,
                                 marginLeft:10,
                                 fontFamily:"Lato-Regular"
-                            }}>{"Door to Doctor : " + this.state.selectedHospital.DoorToDoctorTimeUnweighted + " minutes"}</Text>
+                            }}>{"Door to Doctor : " + this.state.selectedHospital.DoorToDoctorTimeUnweighted + " min"}</Text>
                         </View>
 
                         <View style={{
@@ -807,7 +809,7 @@ export default class SearchByLocationDirection extends Component {
                                 fontSize:13,
                                 marginLeft:10,
                                 fontFamily:"Lato-Regular"
-                            }}>{"Drive to Hospital : " + this.state.selectedHospital.TravelTime}</Text>
+                            }}>{"Drive to Hospital : " + this.state.selectedHospital.TravelTime.toString().replace("mins","min").replace("hour","hrs").replace("hrss","hrs")}</Text>
                         </View>
 
                         <View style={{
@@ -906,7 +908,7 @@ export default class SearchByLocationDirection extends Component {
                                         color:'white',
                                         marginLeft:10,
                                         fontFamily:"Lato-Regular"
-                                    }} >Direction</Text>
+                                    }} >Directions</Text>
                                 </View>
                             </TouchableWithoutFeedback>
                         </View>

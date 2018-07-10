@@ -128,7 +128,7 @@ export default class DirectionScreen extends Component {
                         // backgroundColor:'yellow',
                         textAlign:'center',
                         fontFamily:"Lato-Regular"
-                    }}>DIRECTION</Text>
+                    }}>DIRECTIONS</Text>
                     <TouchableWithoutFeedback onPress={this.onClickExternalDirection.bind(this)}>
                         <Image
                             style={{
@@ -286,7 +286,7 @@ export default class DirectionScreen extends Component {
                             }}>
                                 <Text style={{
                                     fontFamily:"Lato-Regular"
-                                }}>Satelite</Text>
+                                }}>Satellite</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>

@@ -529,7 +529,7 @@ export default class HospitalList extends Component {
                                     fontFamily:'Lato-Regular',
                                 }}
                                 numberOfLines={1}
-                            >{rowdata.DoorToDoctorTimeUnweighted} Min</Text>
+                            >{rowdata.DoorToDoctorTimeUnweighted} min</Text>
                         </View>
 
                         <View style={{
@@ -561,7 +561,7 @@ export default class HospitalList extends Component {
                                             fontFamily:'Lato-Regular',
                                         }}
                                         numberOfLines={1}
-                                    >{rowdata.TravelTime}</Text>
+                                    >{rowdata.TravelTime.toString().replace("mins","min").replace("hour","hrs").replace("hrss","hrs")}</Text>
 
                                 </View>
                             </View>
@@ -643,7 +643,7 @@ export default class HospitalList extends Component {
                                                 fontFamily:'Lato-Regular',
                                             }}
                                             numberOfLines={1}
-                                        >{rowdata.HospitalDistance} Miles / {rowdata.TravelTime}</Text>
+                                        >{rowdata.HospitalDistance} Miles / {rowdata.TravelTime.toString().replace("mins","min").replace("hour","hrs").replace("hrss","hrs")}</Text>
                                     </View>
                                 </View>
                         </View>
@@ -710,7 +710,7 @@ export default class HospitalList extends Component {
                                         color:'white',
                                         marginLeft:10,
                                         fontFamily:"Lato-Regular"
-                                    }} >Direction</Text>
+                                    }} >Directions</Text>
                                 </View>
                             </TouchableWithoutFeedback>
                         </View>
