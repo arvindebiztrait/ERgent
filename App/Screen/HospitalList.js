@@ -86,6 +86,19 @@ export default class HospitalList extends Component {
                     arrHospitals : totalHospitalUnique,
                     dataSource:this.state.dataSource.cloneWithRows(totalHospitalUnique),
                 })
+
+                //Uncomment for Flow Change CR
+                /*
+                if (this.state.PageNumber === 1) {
+                    if (totalHospitalUnique.length > 0) {
+                        this.props.navigation.push('searchByLocationDirection',{
+                            'selectedHospital': totalHospitalUnique[0], 
+                            'userLocation': this.state.userLocation,
+                            'arrHospitals': totalHospitalUnique,
+                        })
+                    }
+                }
+                */
             }
             else {
                 this.setState({
@@ -100,25 +113,25 @@ export default class HospitalList extends Component {
         else if (responceData.MethodName == 'getAdvertisementList') {
             console.log('responceDataHome:=',responceData)
               
-              if (responceData.Status == true) {                    
-                  let advertiseList = responceData.Results.SymptomsData;
-                  
-                  // this.setState({
-                  //     arrAdvertisements : advertiseList,
-                  // })
-                  this.state.arrAdvertisements = advertiseList
-                  this.startCounterForAdvertisement()
-              }
-              else {
-                  this.setState({
-                      isLoading:false
-                  })
-                  alert(responceData.ErrorMessage)
-              }
-          }    
-          else if (responceData.MethodName == 'AdvertisementClick') {
-              console.log("responceData:=",responceData)
-          }   
+            if (responceData.Status == true) {                    
+                let advertiseList = responceData.Results.SymptomsData;
+                
+                // this.setState({
+                //     arrAdvertisements : advertiseList,
+                // })
+                this.state.arrAdvertisements = advertiseList
+                this.startCounterForAdvertisement()
+            }
+            else {
+                this.setState({
+                    isLoading:false
+                })
+                alert(responceData.ErrorMessage)
+            }
+        }    
+        else if (responceData.MethodName == 'AdvertisementClick') {
+            console.log("responceData:=",responceData)
+        }   
     }
 
     getHospitalBySymptoms() {
@@ -294,7 +307,7 @@ export default class HospitalList extends Component {
                                 // height:Platform.ios === 'ios' ? 23 : 32,
                                 width:Constant.DEVICE_WIDTH-70,
                             }}
-                                placeholder= {'Search'}
+                                placeholder= {'Search for Hospital'}
                                 allowFontScaling={false}
                                 ref='bName'
                                 keyboardType='default'

@@ -203,23 +203,23 @@ export default class SearchByLocationDirection extends Component {
                     that.state.isUpdateRegion = true
                
                   }, 2000);
-              this.setState({
-                isLoading:false,
-                coordinate: { 
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                },
-                userLocation: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                },
-                region: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.5922,
-                    longitudeDelta: 0.5421,
-                },
-            },this.getHospitalFromCurrentLocation());
+                this.setState({
+                    isLoading:false,
+                    coordinate: { 
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    },
+                    userLocation: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    },
+                    region: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.5922,
+                        longitudeDelta: 0.5421,
+                    },
+                })//,this.getHospitalFromCurrentLocation());
             },
             (error) => console.log(error.error),
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },);
@@ -232,10 +232,24 @@ export default class SearchByLocationDirection extends Component {
           this.setState({isLoading: false,isDisable:false})
           if (responceData.Status == true) {                    
             var hospitalData = responceData.Results.HospitalData            
-            this.setState({
-                arrHospitals:hospitalData,
-                isLoading:false
-            })
+            // this.setState({
+            //     arrHospitals:hospitalData,
+            //     isLoading:false
+            // })
+            if (hospitalData.length > 0) {
+                this.setState({
+                    arrHospitals:hospitalData,
+                    isLoading:false,
+                    isOpenModal:true,
+                    selectedHospital:hospitalData[0]
+                })
+            }   
+            else {
+                this.setState({
+                    arrHospitals:hospitalData,
+                    isLoading:false
+                })
+            }
           }
           else {
             alert(responceData.ErrorMessage)
@@ -435,7 +449,7 @@ export default class SearchByLocationDirection extends Component {
                                 marginLeft:5,
                                 fontFamily:"Lato-Regular"
                             }}
-                                placeholder= {'Search'}
+                                placeholder= {'Search by Location'}
                                 allowFontScaling={false}
                                 ref='bName'
                                 keyboardType='default'
@@ -564,40 +578,6 @@ export default class SearchByLocationDirection extends Component {
                     ))}
                     </MapView>
 
-                    {this.state.placesList.length > 0 ? 
-                        <View style={{
-                            position:'absolute',
-                            zIndex:5,
-                            marginTop:60,
-                            height:200,
-                            // backgroundColor:'yellow',
-                            marginHorizontal:10,
-                            shadowColor:'gray',
-                            shadowOpacity:1.0,
-                            shadowOffset:{ width: 0, height: 2 },
-                        }}>
-                        <ListView
-                            contentContainerStyle={{
-                                // backgroundColor:'rgba(239,240,241,1)',
-                                paddingBottom:10,
-                                // backgroundColor:'yellow',
-                                paddingTop: this.state.isForSearch ? 0 : 10,
-                                
-                            }}
-                            dataSource={this.state.dataSource}
-                            renderRow={this.renderRow.bind(this)}
-                            // renderFooter={this.state.isShowFooter ? this.renderFooter.bind(this) : null}
-                            // onScroll={this.onSrollViewEnd.bind(this)}
-                            // scrollEventThrottle={9000}
-                            enableEmptySections={true}
-                            automaticallyAdjustContentInsets={false}
-                            showsVerticalScrollIndicator={false}
-                        />
-                        </View>
-                    :
-                        undefined
-                    }
-
                 </View>
                 { this.state.isLoading == true ? <ActivityIndicator
                     color={'rgba(227,54,74,1)'}    //rgba(254,130,1,0.5)'
@@ -658,6 +638,40 @@ export default class SearchByLocationDirection extends Component {
                     </View>
                 
                 {this.loadAddressDetailView()}
+
+                {this.state.placesList.length > 0 ? 
+                        <View style={{
+                            position: 'absolute',
+                            zIndex: 5,
+                            marginTop: (60 + (Platform.OS === 'ios' ? 64 : 54)),
+                            height: 200,
+                            // backgroundColor: 'yellow',
+                            marginHorizontal: 10,
+                            shadowColor: 'gray',
+                            shadowOpacity: 1.0,
+                            shadowOffset:{ width: 0, height: 2 },
+                        }}>
+                        <ListView
+                            contentContainerStyle={{
+                                // backgroundColor:'rgba(239,240,241,1)',
+                                paddingBottom:10,
+                                // backgroundColor:'yellow',
+                                paddingTop: this.state.isForSearch ? 0 : 10,
+                                
+                            }}
+                            dataSource={this.state.dataSource}
+                            renderRow={this.renderRow.bind(this)}
+                            // renderFooter={this.state.isShowFooter ? this.renderFooter.bind(this) : null}
+                            // onScroll={this.onSrollViewEnd.bind(this)}
+                            // scrollEventThrottle={9000}
+                            enableEmptySections={true}
+                            automaticallyAdjustContentInsets={false}
+                            showsVerticalScrollIndicator={false}
+                        />
+                        </View>
+                    :
+                        undefined
+                    }
             </View>
         )
     }
@@ -690,6 +704,7 @@ export default class SearchByLocationDirection extends Component {
             onOpened={this.onOpen.bind(this)}
             onClosingState={this.onClosingState}
             backdropColor={'transparent'}
+            backdrop={false}
             >
             
             {/* <ScrollView> */}
@@ -1141,7 +1156,9 @@ export default class SearchByLocationDirection extends Component {
             selectedAddress:rowData,
             isLoading:true,
             placesList:[],
-            searchText:rowData.description
+            searchText:rowData.description,
+            arrHospitals: [],
+            isOpenModal : false
         })
         this.getLatLongFromAddressFun(rowData)
     }

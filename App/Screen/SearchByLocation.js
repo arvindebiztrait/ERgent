@@ -445,7 +445,7 @@ export default class SearchByLocation extends Component {
                                 marginLeft:5,
                                 fontFamily:"Lato-Regular"
                             }}
-                                placeholder= {'Search'}
+                                placeholder= {'Search by Location'}
                                 allowFontScaling={false}
                                 ref='bName'
                                 keyboardType='default'
@@ -456,6 +456,7 @@ export default class SearchByLocation extends Component {
                                 autoCapitalize='none'
                                 onChangeText={(text) => this.searchPlacesByText(text)}
                                 onSubmitEditing={(event) => this.onSearchClick()}
+                                // onFocus={(event) => this.onFocusSearchBarTextFields()}
                                 multiline={false}
                                 // onBlur= {this.onBlurTextInput.bind(this)}
                                 />
@@ -575,39 +576,7 @@ export default class SearchByLocation extends Component {
                     ))}
                     </MapView>
 
-                    {this.state.placesList.length > 0 ? 
-                        <View style={{
-                            position:'absolute',
-                            zIndex:5,
-                            marginTop:60,
-                            height:200,
-                            // backgroundColor:'yellow',
-                            marginHorizontal:10,
-                            shadowColor:'gray',
-                            shadowOpacity:1.0,
-                            shadowOffset:{ width: 0, height: 2 },
-                        }}>
-                        <ListView
-                            contentContainerStyle={{
-                                // backgroundColor:'rgba(239,240,241,1)',
-                                paddingBottom:10,
-                                // backgroundColor:'yellow',
-                                paddingTop: this.state.isForSearch ? 0 : 10,
-                                
-                            }}
-                            dataSource={this.state.dataSource}
-                            renderRow={this.renderRow.bind(this)}
-                            // renderFooter={this.state.isShowFooter ? this.renderFooter.bind(this) : null}
-                            // onScroll={this.onSrollViewEnd.bind(this)}
-                            // scrollEventThrottle={9000}
-                            enableEmptySections={true}
-                            automaticallyAdjustContentInsets={false}
-                            showsVerticalScrollIndicator={false}
-                        />
-                        </View>
-                    :
-                        undefined
-                    }
+                    
 
                 </View>
                 { this.state.isLoading == true ? <ActivityIndicator
@@ -669,6 +638,40 @@ export default class SearchByLocation extends Component {
                     </View>
                 
                 {this.loadAddressDetailView()}
+
+                {this.state.placesList.length > 0 ? 
+                        <View style={{
+                            position:'absolute',
+                            zIndex:5,
+                            marginTop:(60 + (Platform.OS === 'ios' ? 64 : 54)),
+                            height:200,
+                            // backgroundColor:'yellow',
+                            marginHorizontal:10,
+                            shadowColor:'gray',
+                            shadowOpacity:1.0,
+                            shadowOffset:{ width: 0, height: 2 },
+                        }}>
+                        <ListView
+                            contentContainerStyle={{
+                                // backgroundColor:'rgba(239,240,241,1)',
+                                paddingBottom:10,
+                                // backgroundColor:'yellow',
+                                paddingTop: this.state.isForSearch ? 0 : 10,
+                                
+                            }}
+                            dataSource={this.state.dataSource}
+                            renderRow={this.renderRow.bind(this)}
+                            // renderFooter={this.state.isShowFooter ? this.renderFooter.bind(this) : null}
+                            // onScroll={this.onSrollViewEnd.bind(this)}
+                            // scrollEventThrottle={9000}
+                            enableEmptySections={true}
+                            automaticallyAdjustContentInsets={false}
+                            showsVerticalScrollIndicator={false}
+                        />
+                        </View>
+                    :
+                        undefined
+                    }
             </View>
         )
     }
@@ -696,11 +699,12 @@ export default class SearchByLocation extends Component {
             position={"bottom"} 
             ref={"modal6"} 
             swipeArea={20}
-            isOpen={this.state.isOpenModal}
-            onClosed={this.onClose.bind(this)}
+            isOpen={this.state.isOpenModal}            
             onOpened={this.onOpen.bind(this)}
-            onClosingState={this.onClosingState}
+            onClosed={this.onClose.bind(this)}
+            onClosingState={this.onClosingState.bind(this)}
             backdropColor={'transparent'}
+            backdrop={false}
             >
             
             {/* <ScrollView> */}
@@ -1105,6 +1109,18 @@ export default class SearchByLocation extends Component {
         }
     }
 
+    onFocusSearchBarTextFields() {
+        
+        if (this.state.isOpenModal === true) {
+            this.state.isOpenModal = false
+            this.setState({
+                isOpenModal: false
+            },this.refs['modal6'].close())
+            // this.refs.bName.focus()
+            this.refs['bName'].focus()
+        }
+    }
+
     onSearchClick() {
         if (this.state.searchText.trim() === '') {
           alert('Please enter text to search hospital')
@@ -1154,7 +1170,9 @@ export default class SearchByLocation extends Component {
             selectedAddress:rowData,
             isLoading:true,
             placesList:[],
-            searchText:rowData.description
+            searchText:rowData.description,
+            arrHospitals: [],
+            isOpenModal : false
         })
         this.getLatLongFromAddressFun(rowData)
     }
@@ -1181,9 +1199,11 @@ export default class SearchByLocation extends Component {
     searchPlacesByText(strSearchText) {
         
         console.log("strSearchText:=",strSearchText)
-
+        // this.state.isOpenModal = false
+        // this.refs['modal6'].close()
         this.setState({
             searchText : strSearchText,
+            // isOpenModal : false,
         })
         if (strSearchText.trim().length > 3) {
             

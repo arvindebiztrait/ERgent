@@ -45,8 +45,8 @@ export default class DirectionScreen extends Component {
             region: {
                 latitude: props.navigation.state.params.userLocation ? props.navigation.state.params.userLocation.latitude : 37.78825,
                 longitude: props.navigation.state.params.userLocation ? props.navigation.state.params.userLocation.longitude : -122.4324,
-                latitudeDelta: 0.5922,
-                longitudeDelta: 0.5421,
+                latitudeDelta: 0.00522, //0.5922,
+                longitudeDelta: 0.00221, //0.5421,
             },
             coordinate:{
                 latitude:  props.navigation.state.params.userLocation ? props.navigation.state.params.userLocation.latitude : 37.78825,
