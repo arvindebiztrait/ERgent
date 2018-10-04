@@ -155,14 +155,18 @@ export default class DirectionScreen extends Component {
                 }}>
 
                     <MapView
+                        ref={(ref) => { this.mapRef = ref; }}
                         style = {{height: (Constant.DEVICE_HEIGHT - (Platform.OS === 'ios' ? 64.0 : 54.0)), width:Constant.DEVICE_WIDTH, marginRight:0, marginBottom:0, marginLeft:0, marginTop:0}}
-                        region={this.state.region}
+                        // region={this.state.region}
                         onRegionChange={this.onRegionChange.bind(this)}
                         showsMyLocationButton={true}
-                        showsUserLocation={true}
+                        showsUserLocation={false}
                         showsCompass={false}
                         mapType={this.state.mapType}   
+                        onMapReady={this.onMapReadyAction.bind(this)}
                         // liteMode={true}   
+                        // onLayout={() => this.mapRef.fitToCoordinates([{latitude:this.state.userLocation.latitude, longitude:this.state.userLocation.longitude}, {latitude: parseFloat(this.state.selectedHospital.Latitude), longitude: parseFloat(this.state.selectedHospital.Longitude)}], { edgePadding: { top: 10, right: 30, bottom: 10, left: 30 }, animated: false })} >
+                        // onLayout={() => console.log("OnLayout Log")}>
                     >
 
                     {/* {this.state.arrHospitals.map((place, index) => (
@@ -292,6 +296,11 @@ export default class DirectionScreen extends Component {
                     </View>
             </View>
         )
+    }
+
+    onMapReadyAction() {
+        console.log('onMapReadyAction:=')
+        this.mapRef.fitToElements(true);
     }
 
     onClickMapAction() {

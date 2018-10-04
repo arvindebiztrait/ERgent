@@ -302,7 +302,7 @@ export default class Home extends Component {
                         fontSize:17,
                         color:'rgba(114,114,115,1)',
                         fontFamily:"Lato-Regular"
-                    }}>Shortest Wait Time</Text>
+                    }}>ERgent's Recommendation</Text>
 
                     <Image style={{
                         height:20,

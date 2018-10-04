@@ -253,7 +253,7 @@ export default class ShortestWaitTimeList extends Component {
                         // backgroundColor:'yellow',
                         textAlign:'center',
                         fontFamily:"Lato-Bold"
-                    }}>SHORTEST WAIT TIME</Text>
+                    }}>ERgent's Recommendation</Text>
 
                     <TouchableWithoutFeedback onPress={this.onClickFilter.bind(this)}>
                         <Image
@@ -547,12 +547,14 @@ export default class ShortestWaitTimeList extends Component {
                         <View style={{
                             flexDirection:'row',
                             marginTop:0,
+                            // backgroundColor:'yellow'
                         }}> 
                             <View style={{
                                 flexDirection:'row',
                                 alignItems:'center',
-                                width:((Constant.DEVICE_WIDTH)/2),
+                                // width:((Constant.DEVICE_WIDTH)/2),
                                 borderRadius:5,
+                                // backgroundColor:'green'
                             }}>        
                                 <View style={{
                                     flexDirection:'row',
@@ -578,7 +580,7 @@ export default class ShortestWaitTimeList extends Component {
                                 </View>
                             </View>
 
-                            <View style={{
+                            {/* <View style={{
                                 flexDirection:'row',
                                 alignItems:'center',
                                 marginLeft:5,
@@ -596,7 +598,74 @@ export default class ShortestWaitTimeList extends Component {
                                             fontFamily:'Lato-Regular',
                                         }}
                                         numberOfLines={2}
-                                    >Ed. Vol. :</Text>
+                                    >ER Volume :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >{rowdata.EdVolume}</Text>
+                                </View>
+                            </View> */}
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:0,
+                            // backgroundColor:'yellow'
+                        }}> 
+                            {/* <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                width:((Constant.DEVICE_WIDTH)/2),
+                                borderRadius:5,
+                                backgroundColor:'green'
+                            }}>        
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >Travel Time :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >{rowdata.TravelTime.toString().replace("mins","min").replace("hour","hrs").replace("hrss","hrs")}</Text>
+
+                                </View>
+                            </View> */}
+
+                            <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                // marginLeft:5,
+                                // width:((Constant.DEVICE_WIDTH-70)/2),
+                                borderRadius:5,
+                            }}> 
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={2}
+                                    >ER Volume :</Text>
                                     <Text style={{
                                             marginLeft:5,
                                             marginBottom:10,
@@ -609,7 +678,7 @@ export default class ShortestWaitTimeList extends Component {
                             </View>
                         </View>
 
-                        <View style={{
+                        {/* <View style={{
                             flexDirection:'row',
                             marginTop:0,
                         }}> 
@@ -658,7 +727,7 @@ export default class ShortestWaitTimeList extends Component {
                                         >{rowdata.HospitalDistance} Miles / {rowdata.TravelTime.toString().replace("mins","min").replace("hour","hrs").replace("hrss","hrs")}</Text>
                                     </View>
                                 </View>
-                        </View>
+                        </View> */}
 
                         <View style={{
                             flexDirection:'row',

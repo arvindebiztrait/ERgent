@@ -286,7 +286,7 @@ export default class MapViewListScreen extends Component {
                             <View style={{
                                 flexDirection:'row',
                                 alignItems:'center',
-                                width:((Constant.DEVICE_WIDTH)/2),
+                                // width:((Constant.DEVICE_WIDTH)/2),
                                 borderRadius:5,
                             }}>        
                                 <View style={{
@@ -313,7 +313,7 @@ export default class MapViewListScreen extends Component {
                                 </View>
                             </View>
 
-                            <View style={{
+                            {/* <View style={{
                                 flexDirection:'row',
                                 alignItems:'center',
                                 marginLeft:5,
@@ -331,7 +331,72 @@ export default class MapViewListScreen extends Component {
                                             fontFamily:'Lato-Regular',
                                         }}
                                         numberOfLines={2}
-                                    >Ed. Vol. :</Text>
+                                    >ER Volume :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >{rowdata.EdVolume}</Text>
+                                </View>
+                            </View> */}
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            marginTop:0,
+                        }}> 
+                            {/* <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                width:((Constant.DEVICE_WIDTH)/2),
+                                borderRadius:5,
+                            }}>        
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >Travel Time :</Text>
+                                    <Text style={{
+                                            marginLeft:5,
+                                            marginBottom:10,
+                                            color:'rgba(137,138,139,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={1}
+                                    >{rowdata.TravelTime.toString().replace("mins","min").replace("hour","hrs").replace("hrss","hrs")}</Text>
+
+                                </View>
+                            </View> */}
+
+                            <View style={{
+                                flexDirection:'row',
+                                alignItems:'center',
+                                // marginLeft:5,
+                                // width:((Constant.DEVICE_WIDTH-70)/2),
+                                borderRadius:5,
+                            }}> 
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent: 'flex-start',
+                                }}>
+                                    <Text style={{
+                                            marginLeft:10,
+                                            marginBottom:10,
+                                            color:'rgba(26,26,26,1)',
+                                            fontFamily:'Lato-Regular',
+                                        }}
+                                        numberOfLines={2}
+                                    >ER Volume :</Text>
                                     <Text style={{
                                             marginLeft:5,
                                             marginBottom:10,
@@ -344,7 +409,7 @@ export default class MapViewListScreen extends Component {
                             </View>
                         </View>
 
-                        <View style={{
+                        {/* <View style={{
                             flexDirection:'row',
                             marginTop:0,
                         }}> 
@@ -393,7 +458,7 @@ export default class MapViewListScreen extends Component {
                                         >{rowdata.HospitalDistance} Miles / {rowdata.TravelTime.toString().replace("mins","min").replace("hour","hrs").replace("hrss","hrs")}</Text>
                                     </View>
                                 </View>
-                        </View>
+                        </View> */}
 
                         <View style={{
                             flexDirection:'row',
