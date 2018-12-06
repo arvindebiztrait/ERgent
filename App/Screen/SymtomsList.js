@@ -16,6 +16,7 @@ import Constant from './GeneralClass/Constant';
 import Events from 'react-native-simple-events';
 import ws from './GeneralClass/webservice';
 import DeviceInfo from 'react-native-device-info';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 export default class SymtomsList extends Component {
 
@@ -124,7 +125,7 @@ export default class SymtomsList extends Component {
 
                 {/* Header View */}
                 <View style={{
-                    height: Platform.OS === 'ios' ? 64 : 54,
+                    height: isIphoneX() ? 74 : Platform.OS === 'ios' ? 64 : 54,
                     backgroundColor:'rgba(227,54,74,1)',
                     width:'100%',
                     // justifyContent:'center',
@@ -141,7 +142,7 @@ export default class SymtomsList extends Component {
                                 height:40,
                                 width:40,
                                 // backgroundColor:'white',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:5,
                             }}
                             source={require('../Images/back.png')}
@@ -154,7 +155,7 @@ export default class SymtomsList extends Component {
                         color:'white',
                         fontSize: 18,
                         fontWeight:'bold',
-                        marginTop: Platform.OS === 'ios' ? 12 : 0,
+                        marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 12 : 0,
                         width:Constant.DEVICE_WIDTH - 100,
                         marginLeft: 5,
                         // backgroundColor:'yellow',

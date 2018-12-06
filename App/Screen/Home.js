@@ -28,6 +28,7 @@ import FusedLocation from 'react-native-fused-location';
 import DeviceInfo from 'react-native-device-info';
 import ws from './GeneralClass/webservice';
 import Events from 'react-native-simple-events';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 var timerVar;
 
@@ -207,7 +208,7 @@ export default class Home extends Component {
         if (this.state.currentAdvertimementData.ImagePath) {
           strURL = this.state.currentAdvertimementData.ImagePath
         }
-        console.log("strURL:=",strURL)
+        // console.log("strURL:=",strURL)
 
         return (
             <View style={{
@@ -220,7 +221,7 @@ export default class Home extends Component {
 
             {/* Header View */}
             <View style={{
-                height: Platform.OS === 'ios' ? 64 : 54,
+                height: isIphoneX() ? 74 : Platform.OS === 'ios' ? 64 : 54,
                 backgroundColor:'rgba(227,54,74,1)',
                 width:'100%',
                 justifyContent:'center',
@@ -235,7 +236,7 @@ export default class Home extends Component {
                     color:'white',
                     fontSize: 18,
                     fontWeight:'bold',
-                    marginTop: Platform.OS === 'ios' ? 12 : 0,
+                    marginTop: isIphoneX() ? 20 : Platform.OS === 'ios' ? 12 : 0,
                     fontFamily:"Lato-Bold"
                 }}>HOME</Text>
 
@@ -647,7 +648,7 @@ export default class Home extends Component {
   }
 
   loadAdvertisements() {
-      console.log("loadAdvertisements called")
+    //   console.log("loadAdvertisements called")
     if (this.state.advertiseIndex < this.state.arrAdvertisements.length) {
       var adData = this.state.arrAdvertisements[this.state.advertiseIndex]
       this.setState({
@@ -692,7 +693,7 @@ export default class Home extends Component {
  }
 
  startCounterForNextAdvertisemet() {
-     console.log("startCounterForNextAdvertisemet called")
+    //  console.log("startCounterForNextAdvertisemet called")
   var that = this
   clearTimeout(timerVar)
   timerVar = setTimeout(()=>{

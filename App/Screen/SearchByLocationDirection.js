@@ -26,6 +26,7 @@ import Permissions from 'react-native-permissions';
 import FusedLocation from 'react-native-fused-location';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import DeviceInfo from 'react-native-device-info';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 //InHouse Development Key
 Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
@@ -186,8 +187,8 @@ export default class SearchByLocationDirection extends Component {
                     region: {
                         latitude: location.latitude,
                         longitude: location.longitude,
-                        latitudeDelta: 0.5922,
-                        longitudeDelta: 0.5421,
+                        latitudeDelta: this.state.region.latitudeDelta, // 0.5922,
+                        longitudeDelta: this.state.region.longitudeDelta, // 0.5421,
                     },
                 },this.getHospitalFromCurrentLocation());
     }
@@ -216,8 +217,8 @@ export default class SearchByLocationDirection extends Component {
                     region: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.5922,
-                        longitudeDelta: 0.5421,
+                        latitudeDelta: this.state.region.latitudeDelta, //0.05922,
+                        longitudeDelta: this.state.region.longitudeDelta, //0.05421,
                     },
                 })//,this.getHospitalFromCurrentLocation());
             },
@@ -339,7 +340,7 @@ export default class SearchByLocationDirection extends Component {
 
                 {/* Header View */}
                 <View style={{
-                    height: Platform.OS === 'ios' ? 64 : 54,
+                    height: isIphoneX() ? 74 : Platform.OS === 'ios' ? 64 : 54,
                     backgroundColor:'rgba(227,54,74,1)',
                     width:'100%',
                     // justifyContent:'center',
@@ -356,7 +357,7 @@ export default class SearchByLocationDirection extends Component {
                                 height:40,
                                 width:40,
                                 // backgroundColor:'black',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:0,
                             }}
                             source={require('../Images/back.png')}
@@ -368,7 +369,7 @@ export default class SearchByLocationDirection extends Component {
                         color:'white',
                         fontSize: 18,
                         fontWeight:'bold',
-                        marginTop: Platform.OS === 'ios' ? 12 : 0,
+                        marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 12 : 0,
                         width:Constant.DEVICE_WIDTH - 100,
                         marginLeft: 5,
                         // backgroundColor:'yellow',
@@ -381,7 +382,7 @@ export default class SearchByLocationDirection extends Component {
                                 height:40,
                                 width:40,
                                 // backgroundColor:'white',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:5,
                                 // opacity:0,
                             }}
@@ -406,7 +407,7 @@ export default class SearchByLocationDirection extends Component {
                         shadowOpacity:1.0,
                         shadowOffset:{ width: 0, height: 2 },
                         position:'absolute',
-                        marginTop: Platform.OS === 'ios' ? 74 : 64,
+                        marginTop: isIphoneX() ? 84 : Platform.OS === 'ios' ? 74 : 64,
                         zIndex:3,
                         elevation:2
                     }}>
@@ -504,7 +505,8 @@ export default class SearchByLocationDirection extends Component {
                     <MapView
                         style = {{height: (Constant.DEVICE_HEIGHT - (Platform.OS === 'ios' ? 64.0 : 54.0)), width:Constant.DEVICE_WIDTH, marginRight:0, marginBottom:0, marginLeft:0, marginTop:0}}
                         region={this.state.region}
-                        onRegionChange={this.onRegionChange.bind(this)}
+                        // onRegionChange={this.onRegionChange.bind(this)}
+                        onRegionChangeComplete={this.onRegionChange.bind(this)}
                         showsMyLocationButton={true}
                         showsUserLocation={true}
                         showsCompass={false}
@@ -643,7 +645,7 @@ export default class SearchByLocationDirection extends Component {
                         <View style={{
                             position: 'absolute',
                             zIndex: 5,
-                            marginTop: (60 + (Platform.OS === 'ios' ? 64 : 54)),
+                            marginTop: (60 + (Platform.OS === 'ios' ? isIphoneX() ? 74 : 64 : 54)),
                             height: 200,
                             // backgroundColor: 'yellow',
                             marginHorizontal: 10,
@@ -1097,6 +1099,14 @@ export default class SearchByLocationDirection extends Component {
         // this.setState({ region:region });
         console.log("region:=",region)
         if (this.state.isUpdateRegion === true) {
+
+            var regionNew = {
+                latitude: region.latitude,
+                longitude: region.longitude,
+                latitudeDelta: 0.05922,
+                longitudeDelta: 0.05421,
+            }
+
             this.setState({
                 region: region,
                 // coordinate: {
@@ -1253,8 +1263,8 @@ export default class SearchByLocationDirection extends Component {
                         region:{
                             latitude:geometry.location.lat,
                             longitude:geometry.location.lng,
-                            latitudeDelta: 0.5922,
-                            longitudeDelta: 0.5421,
+                            latitudeDelta: this.state.region.latitudeDelta, // 0.5922,
+                            longitudeDelta: this.state.region.longitudeDelta, // 0.5421,
                         }
                     },this.getHospitalFromCurrentLocation())
                 }

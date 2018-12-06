@@ -19,6 +19,7 @@ import Constant from './GeneralClass/Constant';
 import Events from 'react-native-simple-events';
 import ws from './GeneralClass/webservice';
 import DeviceInfo from 'react-native-device-info';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 var timerVar;
 
@@ -206,7 +207,7 @@ export default class ShortestWaitTimeList extends Component {
         if (this.state.currentAdvertimementData.ImagePath) {
           strURL = this.state.currentAdvertimementData.ImagePath
         }
-        console.log("strURL:=",strURL)
+        // console.log("strURL:=",strURL)
         return(
             <View style={{
                 flex: 1,
@@ -218,7 +219,7 @@ export default class ShortestWaitTimeList extends Component {
 
                 {/* Header View */}
                 <View style={{
-                    height: Platform.OS === 'ios' ? 64 : 54,
+                    height: isIphoneX() ? 74 : Platform.OS === 'ios' ? 64 : 54,
                     backgroundColor:'rgba(227,54,74,1)',
                     width:'100%',
                     // justifyContent:'center',
@@ -235,7 +236,7 @@ export default class ShortestWaitTimeList extends Component {
                                 height:40,
                                 width:40,
                                 // backgroundColor:'white',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:5,
                             }}
                             source={require('../Images/back.png')}
@@ -247,7 +248,7 @@ export default class ShortestWaitTimeList extends Component {
                         color:'white',
                         fontSize: 18,
                         fontWeight:'bold',
-                        marginTop: Platform.OS === 'ios' ? 12 : 0,
+                        marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 12 : 0,
                         width:Constant.DEVICE_WIDTH - 100,
                         marginLeft: 5,
                         // backgroundColor:'yellow',
@@ -261,7 +262,7 @@ export default class ShortestWaitTimeList extends Component {
                                 height:30,
                                 width:30,
                                 // backgroundColor:'white',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:5,
                             }}
                             source={require('../Images/sort.png')}
@@ -486,7 +487,7 @@ export default class ShortestWaitTimeList extends Component {
     }
 
     renderRow(rowdata) {
-        console.log("row data inside",rowdata);
+        // console.log("row data inside",rowdata);
         var imgUrl = rowdata.ImagePath;
         return ( 
             <TouchableWithoutFeedback underlayColor = {'transparent'} onPress={this.onClickListView.bind(this,rowdata)}>
@@ -804,6 +805,13 @@ export default class ShortestWaitTimeList extends Component {
 
     onClickListView(rowData) {
         console.log("rowData:=",rowData)
+        this.getHospitalByHospitalId(rowData)
+
+        this.props.navigation.push('searchByLocationDirection',{
+            'selectedHospital': rowData, 
+            'userLocation': this.state.userLocation,
+            'arrHospitals': this.state.arrHospitals,
+        })
     }
 
     onClickBack() {
@@ -866,7 +874,7 @@ export default class ShortestWaitTimeList extends Component {
       }
     
       loadAdvertisements() {
-          console.log("loadAdvertisements called")
+        //   console.log("loadAdvertisements called")
         if (this.state.advertiseIndex < this.state.arrAdvertisements.length) {
           var adData = this.state.arrAdvertisements[this.state.advertiseIndex]
           this.setState({
@@ -911,7 +919,7 @@ export default class ShortestWaitTimeList extends Component {
      }
     
      startCounterForNextAdvertisemet() {
-         console.log("startCounterForNextAdvertisemet called")
+        //  console.log("startCounterForNextAdvertisemet called")
       var that = this
       clearTimeout(timerVar)
       timerVar = setTimeout(()=>{

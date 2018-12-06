@@ -26,6 +26,7 @@ import Events from 'react-native-simple-events';
 import ws from './GeneralClass/webservice';
 import DeviceInfo from 'react-native-device-info';
 // import LS from 'Domingo/Src/Screens/GeneralClass/LocalizationStrings';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 export const STATUSBAR_HEIGHT  = Platform.OS === 'ios' ? 0 : StatusBar.currentHeight;
 
@@ -117,7 +118,7 @@ export default class TermsConditions extends Component {
           // justifyContent:'center',
           alignItems:'center',
           width:'100%',
-          height: Platform.OS === 'ios' ? 64 : 54,
+          height: isIphoneX() ? 74 : Platform.OS === 'ios' ? 64 : 54,
           shadowColor:'gray',
           shadowOpacity:1.0,
           shadowOffset:{ width: 0, height: 2 },
@@ -130,7 +131,7 @@ export default class TermsConditions extends Component {
                 // backgroundColor:'white',
                 width:40,
                 height:40,
-                marginTop:Platform.OS === 'ios' ? 20 : 0,
+                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 20 : 0,
                 marginLeft:5
               }}
               source={require('../Images/back.png')}
@@ -142,7 +143,7 @@ export default class TermsConditions extends Component {
               fontSize:20,
               color:'white',
               width:Constant.DEVICE_WIDTH - 50 - 50,
-              marginTop:Platform.OS === 'ios' ? 20 : 0,
+              marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 20 : 0,
               justifyContent:'center',
               textAlign:'center',
               alignItems:'center',

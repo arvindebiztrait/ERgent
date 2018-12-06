@@ -21,6 +21,7 @@ import Geocoder from 'react-native-geocoding';
 import ws from './GeneralClass/webservice';
 import Events from 'react-native-simple-events';
 import Modal from 'react-native-modalbox';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 //InHouse Development Key
 Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
@@ -93,7 +94,7 @@ export default class DirectionScreen extends Component {
 
                 {/* Header View */}
                 <View style={{
-                    height: Platform.OS === 'ios' ? 64 : 54,
+                    height: isIphoneX() ? 74 : Platform.OS === 'ios' ? 64 : 54,
                     backgroundColor:'rgba(227,54,74,1)',
                     width:'100%',
                     // justifyContent:'center',
@@ -110,7 +111,7 @@ export default class DirectionScreen extends Component {
                                 height:40,
                                 width:40,
                                 // backgroundColor:'black',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:0,
                             }}
                             source={require('../Images/back.png')}
@@ -122,7 +123,7 @@ export default class DirectionScreen extends Component {
                         color:'white',
                         fontSize: 18,
                         fontWeight:'bold',
-                        marginTop: Platform.OS === 'ios' ? 12 : 0,
+                        marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 12 : 0,
                         width:Constant.DEVICE_WIDTH - 100,
                         marginLeft: 5,
                         // backgroundColor:'yellow',
@@ -135,7 +136,7 @@ export default class DirectionScreen extends Component {
                                 height:40,
                                 width:40,
                                 // backgroundColor:'white',
-                                marginTop: Platform.OS === 'ios' ? 15 : 0,
+                                marginTop: isIphoneX() ? 25 : Platform.OS === 'ios' ? 15 : 0,
                                 marginLeft:5,
                                 // opacity:0,
                             }}

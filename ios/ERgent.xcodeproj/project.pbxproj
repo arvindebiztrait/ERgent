@@ -48,6 +48,7 @@
 		AA97C78D25C64C37870ADF49 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 075F2761C6CF43FCB7F61B0E /* libAirMaps.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		C11DCFDB01D14BC78734AA7E /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 856DCA27861940DE95FACBFD /* libReactNativePermissions.a */; };
+		C8ED04C921B806340055DEA9 /* libfishhook.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6841FA4F8DC00B85C8A /* libfishhook.a */; };
 		DC95C7939D13487599B20976 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47085B3C17194244BEBD4EFD /* libRNDeviceInfo.a */; };
 /* End PBXBuildFile section */
 
@@ -436,6 +437,7 @@
 				C11DCFDB01D14BC78734AA7E /* libReactNativePermissions.a in Frameworks */,
 				DC95C7939D13487599B20976 /* libRNDeviceInfo.a in Frameworks */,
 				1B9CB17513AB4D8E96F03774 /* libSplashScreen.a in Frameworks */,
+				C8ED04C921B806340055DEA9 /* libfishhook.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
