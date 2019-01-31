@@ -125,7 +125,7 @@ export default class ShortestWaitTimeList extends Component {
                   this.setState({
                       isLoading:false
                   })
-                  alert(responceData.ErrorMessage)
+                //   alert(responceData.ErrorMessage)
               }
           }    
           else if (responceData.MethodName == 'AdvertisementClick') {

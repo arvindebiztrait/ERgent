@@ -17,11 +17,19 @@ module.exports = {
      // 'https://www.tristatetechnology.com/webservice/barApp/faq.html',
      //'https://www.tristatetechnology.com/webservice/barApp/terms&cond.html',
    
-     //Static Url Page 
+    //API_Key
+
+    //Inhouse Key
+    // GOOGLE_API_KEY : 'AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg',
+
+    //Client Key
+    GOOGLE_API_KEY : 'AIzaSyDPe5V2UvMJW_rGYpGxPPAGz4kZk7LmEOc',
+
+    //Static Url Page 
     FAQ_LINK_ENGLISH : 'http://18.221.113.251/faq-eng.html',
     FAQ_LINK_GERMAN : 'http://18.221.113.251/faq-german.html',                        
     TERMS_CONDITION : 'http://18.221.113.251/terms_condition.html',    
-    CONTACTUS_EMAIL : 'info@nimenoeis.ch',                 
+    CONTACTUS_EMAIL : 'ergentdeveloper@gmail.com',                 
 
     //Alert Message 
     NETWORK_ALERT : 'Please check your internet connectivity.',

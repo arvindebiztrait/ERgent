@@ -24,7 +24,7 @@ import Modal from 'react-native-modalbox';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 
 //InHouse Development Key
-Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
+Geocoder.setApiKey("AIzaSyDPe5V2UvMJW_rGYpGxPPAGz4kZk7LmEOc");
 
 export default class DirectionScreen extends Component {
 
@@ -213,7 +213,7 @@ export default class DirectionScreen extends Component {
                             latitude: parseFloat(this.state.selectedHospital.Latitude),
                             longitude: parseFloat(this.state.selectedHospital.Longitude),
                         }}
-                        apikey={'AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg'}
+                        apikey={"AIzaSyDPe5V2UvMJW_rGYpGxPPAGz4kZk7LmEOc"}
                         strokeWidth={5}
                         strokeColor="blue"
                         onStart={(params) => {

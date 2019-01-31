@@ -29,7 +29,7 @@ import DeviceInfo from 'react-native-device-info';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 
 //InHouse Development Key
-Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
+Geocoder.setApiKey("AIzaSyDPe5V2UvMJW_rGYpGxPPAGz4kZk7LmEOc");
 
 export default class SearchByLocationDirection extends Component {
 
@@ -190,7 +190,7 @@ export default class SearchByLocationDirection extends Component {
                         latitudeDelta: this.state.region.latitudeDelta, // 0.5922,
                         longitudeDelta: this.state.region.longitudeDelta, // 0.5421,
                     },
-                },this.getHospitalFromCurrentLocation());
+                })//,this.getHospitalFromCurrentLocation());
     }
 
     getUserCurrentLocation() {
@@ -1204,7 +1204,7 @@ export default class SearchByLocationDirection extends Component {
             this.setState({
                 isLoading : true,
             })
-            var strUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + strSearchText + "&key="+ "AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg"
+            var strUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + strSearchText + "&key="+ "AIzaSyDPe5V2UvMJW_rGYpGxPPAGz4kZk7LmEOc"
             let formData = new FormData();
 			const config = {
 				method: 'GET',

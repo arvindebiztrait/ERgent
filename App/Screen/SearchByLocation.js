@@ -29,7 +29,7 @@ import DeviceInfo from 'react-native-device-info';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 
 //InHouse Development Key
-Geocoder.setApiKey('AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg');
+Geocoder.setApiKey("AIzaSyDPe5V2UvMJW_rGYpGxPPAGz4kZk7LmEOc");
 
 export default class SearchByLocation extends Component {
 
@@ -554,9 +554,10 @@ export default class SearchByLocation extends Component {
                         }}
                         onMarkerPress={this.onMarkerClicked.bind(this,place)}
                         onPress={this.onMarkerClicked.bind(this,place)}
+                        image={require('../Images/hospital_icon_new.png')}
                         >
-
-                        {Platform.OS === 'ios' ? 
+                        {console.log("Log ===> Marker")}
+                        {/* {Platform.OS === 'ios' ? 
                             <Image
                                 source={require('../Images/hospital_icon_new.png')}
                                 style={{
@@ -567,13 +568,16 @@ export default class SearchByLocation extends Component {
                             />
                             :
                             <Image
+                                // onLoad={() => this.forceUpdate()}
+                                // onLayout={() => this.forceUpdate()}
                                 source={require('../Images/hospital_icon_new.png')}
                                 style={{
                                     height:40,
                                     width:40,
                                 }}
+                                resizeMode={'center'}
                             />
-                        }
+                        } */}
                         </MapView.Marker>
                     ))}
                     </MapView>
@@ -1220,7 +1224,7 @@ export default class SearchByLocation extends Component {
             this.setState({
                 isLoading : true,
             })
-            var strUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + strSearchText + "&key="+ "AIzaSyAPWSqlk2JrfgMQAjDOYGcJaIViPKavahg"
+            var strUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + strSearchText + "&key="+ "AIzaSyDPe5V2UvMJW_rGYpGxPPAGz4kZk7LmEOc"
             let formData = new FormData();
 			const config = {
 				method: 'GET',
@@ -1230,7 +1234,8 @@ export default class SearchByLocation extends Component {
 				},
 				// body: formData,
 			}
-			console.log("Request RecentOtp:=",config)
+            console.log("Request RecentOtp:=",config)
+            console.log("URL:=",strUrl)
 			fetch(strUrl, config)
 			.then((response) => response.json())
 			.then((responseData) => {
