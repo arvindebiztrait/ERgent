@@ -29,7 +29,7 @@ import DeviceInfo from 'react-native-device-info';
 import ws from './GeneralClass/webservice';
 import Events from 'react-native-simple-events';
 import { isIphoneX } from 'react-native-iphone-x-helper';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 var timerVar;
 
 export default class Home extends Component {
@@ -38,6 +38,7 @@ export default class Home extends Component {
         super(props)
         this.state = {
             isShowPopup:false,
+            isShowPopupHowDoesERgentWork: false,
             userLocation:{
                 latitude: 0.0,
                 longitude: 0.0,
@@ -242,9 +243,14 @@ export default class Home extends Component {
 
             </View>
 
+            <KeyboardAwareScrollView 
+                keyboardShouldPersistTaps={'handled'}
+                ref={'scrollView'}
+            >
+            <View>
             <View style={{
                 // backgroundColor:'red',
-                marginTop:100,
+                marginTop:80,
                 width:Constant.DEVICE_WIDTH - 30,
                 alignItems:'center',
                 justifyContent:'center',
@@ -416,12 +422,43 @@ export default class Home extends Component {
 
                 </View>
             </TouchableWithoutFeedback>
+            <View style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <Text style={{
+                    color:'rgba(114,114,115,0.8)',
+                    fontFamily:"Lato-Regular",
+                    marginTop: 30,
+                    // fontSize: 14,
+                }}>If this is an emergency, please contact 911.</Text>
+            </View>
 
+            <View style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <TouchableWithoutFeedback onPress={this.onClickHowDoesERgentWork.bind(this)}>
+                    <View style={{
+                        height: 30,
+                        justifyContent: 'center', 
+                        marginTop: 15,
+                    }}>
+                        <Text style={{
+                            color:'rgba(114,114,115,1)',
+                            fontFamily:"Lato-Semibold",
+                            // marginTop: 30,
+                        }}>How Does ERgent Work</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
             <View style={{
                 height:40,
                 // backgroundColor:'white',
                 width:Constant.DEVICE_WIDTH-30,
-                marginTop:30,
+                marginTop:15,
                 justifyContent:'center',
                 flexDirection:'row',
                 alignItems:'center',
@@ -460,19 +497,24 @@ export default class Home extends Component {
                     </View>
                 </TouchableWithoutFeedback>
             </View>
-
             <View style={{
-                // backgroundColor:'red',
-                marginTop:30,
-            }}>
-                <Image style={{
-                    // backgroundColor:'yellow',
-                    // flex:320,
-                    width:175
-                }}
-                source={require('../Images/Logo_Home.png')}
-                resizeMode='contain'
-                />
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>            
+                <View style={{
+                    // backgroundColor:'red',
+                    marginTop:30,
+                }}>
+                    <Image style={{
+                        // backgroundColor:'yellow',
+                        // flex:320,
+                        width:175
+                    }}
+                    source={require('../Images/Logo_Home.png')}
+                    resizeMode='contain'
+                    />
+                </View>
             </View>
 
             {this.state.isVisibleAdvertise === true ?
@@ -519,6 +561,8 @@ export default class Home extends Component {
             </TouchableWithoutFeedback>
 
             : undefined}
+
+            {this.loadHowDoesERgentWorkView()}
 
             <Modal visible={this.state.isShowPopup} animationType={'fade'} transparent={true} onRequestClose={this.onModalCloseAction.bind(this)}>
                 <View style={{
@@ -600,13 +644,179 @@ export default class Home extends Component {
                         </Image>
                     </View>
             </Modal>
+            </View>
+            </KeyboardAwareScrollView>
         </View>
-    );
-  }
+        );
+    }
 
-  onModalCloseAction() {
+    loadHowDoesERgentWorkView() {
+        return(
+            <Modal 
+                visible={this.state.isShowPopupHowDoesERgentWork} 
+                animationType={'fade'} 
+                transparent={true} 
+                onRequestClose={this.onModalCloseAction.bind(this)}
+            >
+                <View style={{
+                    backgroundColor: 'rgba(0,0,0,0.4)',
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}> 
+                    <View style={{
+                        width: Constant.DEVICE_WIDTH-50,
+                        height: 480,
+                        backgroundColor: 'transparent',
+                        // shadowColor: 'gray',
+                        // shadowOpacity: 0.5,
+                        // shadowOffset:{ width: 0, height: 1 },
+                        // borderRadius:5,
+                        alignItems:'center',
+                        // overflow:'hidden',
+                        // marginTop: 60,
+                        overflow: 'visible',
+                    }}>
+                    
+                    <View style={{
+                        backgroundColor: 'white',
+                        height:120,
+                        width:120,
+                        borderRadius:60,
+                        // marginTop: -60,
+                        justifyContent:'center',
+                        alignItems:'center',
+                        position: 'absolute',
+                        zIndex: 1,
+                        // top: -60,
+                    }}>
+                        <Image style={{
+                            height:100,
+                            width:100,
+                            borderRadius:50,
+                            borderWidth:1,
+                            borderColor:'rgba(227,54,74,1)'
+                        }}
+                        source={require('../Images/logo-popup.png')}
+                        />
+                    </View>
 
-  }
+                    <View style={{
+                        width: Constant.DEVICE_WIDTH-50,
+                        height: 420,
+                        backgroundColor: 'white',
+                        shadowColor: 'gray',
+                        shadowOpacity: 0.5,
+                        shadowOffset:{ width: 0, height: 1 },
+                        borderRadius:5,
+                        alignItems:'center',
+                        // overflow:'hidden',
+                        marginTop: 60,
+                        overflow: 'visible',
+                    }}>
+                        <Text style={{
+                            marginTop:60,
+                            fontWeight:'bold',
+                            fontFamily:"Lato-Bold"
+                        }}>How Does ERgent Work?</Text>
+
+                        <Text style={{
+                            // color:'rgba(167,174,186,1)',
+                            color: 'gray',
+                            // textAlign: 'center',
+                            marginTop: 20,
+                            marginHorizontal : 10,
+                            fontFamily:"Lato-Regular",
+                        }}>
+                            <Text style={{
+                                color:'black',
+                                fontFamily:"Lato-Regular"
+                            }}>ERgent’s Recommendation:</Text> ERgent’s unique algorithm combines travel time with specific
+                            hospital data to get you timely care anywhere across the United States. {'\n\n'}
+                            <Text style={{
+                                color:'black',
+                                fontFamily:"Lato-Regular"
+                            }}>Symptoms:</Text> Is there something specific bothering you? ERgent’s Symptoms page will give you
+                            options so you can find emergency rooms with proven success in a given field. {'\n\n'}
+                            <Text style={{
+                                color:'black',
+                                fontFamily:"Lato-Regular"
+                            }}>Search:</Text> Do you need assistance while traveling? Is someone you care about in need? Wherever
+                            you are, ERgent will help you locate a hospital – because 
+                            <Text style={{
+                                color:'black',
+                                fontFamily:"Lato-Regular"
+                            }}> Emergencies Shouldn’t Wait.</Text>
+                        </Text>
+                        
+                        <TouchableWithoutFeedback onPress={this.onClickERgentWorkOkay.bind(this)}>
+                            <View style={{
+                                backgroundColor: 'rgba(227,54,74,1)',
+                                height:45,
+                                width:'100%',
+                                // marginTop: 20,
+                                justifyContent:'center',
+                                alignItems:'center',
+                                borderBottomRightRadius: 5,
+                                borderBottomLeftRadius: 5,
+                                position: 'absolute',
+                                bottom: 0,
+                            }}>
+                                <Text style={{
+                                    color:'white',
+                                    fontFamily:"Lato-Semibold",
+                                    fontWeight: 'bold',
+                                }}>Okay</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        
+                    </View>
+                    </View>
+                    
+                </View>
+                {/* <View style={{
+                    position:'absolute',
+                    backgroundColor: 'white',
+                    height:120,
+                    width:120,
+                    zIndex:1,
+                    borderRadius:60,
+                    marginBottom:150,
+                    marginLeft:(Constant.DEVICE_WIDTH-120)/2,
+                    marginTop:(Constant.DEVICE_HEIGHT-120)/2,
+                    justifyContent:'center',
+                    alignItems:'center',
+                }}>
+                    <Image style={{
+                        // backgroundColor:'rgba(227,54,74,1)',
+                        height:100,
+                        width:100,
+                        borderRadius:50,
+                        borderWidth:1,
+                        borderColor:'rgba(227,54,74,1)'
+                    }}
+                    source={require('../Images/logo-popup.png')}
+                    />
+                </View> */}
+            </Modal>
+        )
+    }
+
+    onClickERgentWorkOkay() {
+        this.setState({
+            isShowPopupHowDoesERgentWork: false
+        })
+    }
+
+    onClickHowDoesERgentWork() {
+        this.setState({
+            isShowPopupHowDoesERgentWork: true
+        })
+    }
+
+    onModalCloseAction() {
+
+    }
 
     onClickUnderstand() {
         AsyncStorage.setItem('isShowFirstTimePopup','1')
@@ -615,53 +825,53 @@ export default class Home extends Component {
         })
     }
 
-  gotoPrivacyPolicy() {
-    console.log("on Click Privacy Policy")
-    this.props.navigation.push('termsConditions',{'isForPrivacy':'1'})
-  }
+    gotoPrivacyPolicy() {
+        console.log("on Click Privacy Policy")
+        this.props.navigation.push('termsConditions',{'isForPrivacy':'1'})
+    }
 
-  gotoTermsAndConditions() {
-    console.log("on Click Terms & Conditions")
-    this.props.navigation.push('termsConditions',{'isForPrivacy':'0'})
-  }
+    gotoTermsAndConditions() {
+        console.log("on Click Terms & Conditions")
+        this.props.navigation.push('termsConditions',{'isForPrivacy':'0'})
+    }
 
-  gotoShortestWaitTime() {
-    this.props.navigation.push('shortestWaitTimeList',{'userLocation':this.state.userLocation})
-  }
+    gotoShortestWaitTime() {
+        this.props.navigation.push('shortestWaitTimeList',{'userLocation':this.state.userLocation})
+    }
 
-  gotoSymtoms() {
-      this.props.navigation.push('symtomsList',{'userLocation':this.state.userLocation})
-  }
+    gotoSymtoms() {
+        this.props.navigation.push('symtomsList',{'userLocation':this.state.userLocation})
+    }
 
-  gotoSearch() {
-    this.props.navigation.push('searchByLocation', {'isForSearch':true})
-  }
+    gotoSearch() {
+        this.props.navigation.push('searchByLocation', {'isForSearch':true})
+    }
 
   
 
-  startCounterForAdvertisement() {
-    var that = this
-    clearTimeout(timerVar)
-    timerVar = setTimeout(()=>{
-      that.loadAdvertisements()
-    }, 5000);
-  }
+    startCounterForAdvertisement() {
+        var that = this
+        clearTimeout(timerVar)
+        timerVar = setTimeout(()=>{
+            that.loadAdvertisements()
+        }, 5000);
+    }
 
-  loadAdvertisements() {
-    //   console.log("loadAdvertisements called")
-    if (this.state.advertiseIndex < this.state.arrAdvertisements.length) {
-      var adData = this.state.arrAdvertisements[this.state.advertiseIndex]
-      this.setState({
-        advertiseIndex : this.state.advertiseIndex + 1,
-        currentAdvertimementData : adData,
-        isVisibleAdvertise: true
-      })
+    loadAdvertisements() {
+        //   console.log("loadAdvertisements called")
+        if (this.state.advertiseIndex < this.state.arrAdvertisements.length) {
+            var adData = this.state.arrAdvertisements[this.state.advertiseIndex]
+            this.setState({
+                advertiseIndex : this.state.advertiseIndex + 1,
+                currentAdvertimementData : adData,
+                isVisibleAdvertise: true
+            })
+            }
+        else {
+            this.state.advertiseIndex = 0
+            this.getAdvertisementList()
+        }
     }
-    else {
-        this.state.advertiseIndex = 0
-        this.getAdvertisementList()
-    }
-  }
 
   viewAdvertisement() {
     // this.setState({

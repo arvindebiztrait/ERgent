@@ -58,6 +58,10 @@ export default class SearchByLocation extends Component {
                 latitude: 37.78825,
                 longitude: -122.4324,
             },
+            coordinateRedo:{
+                latitude: 37.78825,
+                longitude: -122.4324,
+            },
             userLocation:{
                 latitude: 37.78825,
                 longitude: -122.4324,
@@ -76,6 +80,7 @@ export default class SearchByLocation extends Component {
             sliderValue: 0.3,
             isOpenModal:false,
             mapType:'standard',
+            isShowRedoButton: false,
         };
     }
 
@@ -238,6 +243,7 @@ export default class SearchByLocation extends Component {
                     arrHospitals:hospitalData,
                     isLoading:false,
                     isOpenModal:true,
+                    isShowRedoButton: false,
                     selectedHospital:hospitalData[0]
                 })
             }   
@@ -431,7 +437,7 @@ export default class SearchByLocation extends Component {
                                 source={require('../Images/search_gray.png')}
                                 resizeMethod='resize'
                                 resizeMode='contain'
-                                />
+                            />
 
                             <TextInput style={{
                                 // borderBottomColor:'grey',
@@ -483,13 +489,9 @@ export default class SearchByLocation extends Component {
                             }
                         </View>
                     </View>
-
                     :
-
                     undefined                
                 }
-                
-                
 
                 {/* Content View */}
                 <View style={{
@@ -498,7 +500,6 @@ export default class SearchByLocation extends Component {
                     width:Constant.DEVICE_WIDTH,
                     // backgroundColor:'red',
                 }}>
-
                     <MapView
                         style = {{height: (Constant.DEVICE_HEIGHT - (Platform.OS === 'ios' ? 64.0 : 54.0)), width:Constant.DEVICE_WIDTH, marginRight:0, marginBottom:0, marginLeft:0, marginTop:0}}
                         region={this.state.region}
@@ -678,8 +679,42 @@ export default class SearchByLocation extends Component {
                     :
                         undefined
                     }
+                {
+                    this.state.isShowRedoButton && this.state.placesList.length <= 0 ? 
+                        <TouchableWithoutFeedback onPress={this.onClickRedoSearch.bind(this)}>
+                            <View style={{
+                                backgroundColor: 'white',
+                                position: 'absolute',
+                                zIndex: 6,
+                                height: 30,
+                                marginTop: (isIphoneX() ? 84 : Platform.OS === 'ios' ? 74 : 64 ) + 54,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 5,
+                                shadowColor:'gray',
+                                shadowOpacity:0.3,
+                                shadowOffset:{ width: 0, height: 2 },
+                                paddingVertical:5,
+                                elevation:3
+                            }}>
+                                <Text style={{
+                                    marginHorizontal: 10,
+                                    color: 'rgba(0,164,238,1)',
+                                }}>Redo Search In This Area</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    :
+                        undefined
+                }
             </View>
         )
+    }
+
+    onClickRedoSearch() {
+        this.setState({
+            isShowRedoButton: false,
+            coordinate: this.state.coordinateRedo,
+        },this.getHospitalFromCurrentLocation())
     }
 
     onClickMapAction() {
@@ -1113,8 +1148,15 @@ export default class SearchByLocation extends Component {
                 longitudeDelta: 0.05421,
             }
 
+            var lCoordinate = {
+                latitude: region.latitude,
+                longitude: region.longitude,
+            }
+
             this.setState({
                 region: region,
+                isShowRedoButton: true,
+                coordinateRedo: lCoordinate,
                 // coordinate: {
                 //     latitude: region.latitude,
                 //     longitude: region.longitude
@@ -1186,7 +1228,8 @@ export default class SearchByLocation extends Component {
             placesList:[],
             searchText:rowData.description,
             arrHospitals: [],
-            isOpenModal : false
+            isOpenModal : false,
+            isShowRedoButton: false,
         })
         this.getLatLongFromAddressFun(rowData)
     }
