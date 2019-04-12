@@ -447,10 +447,11 @@ export default class Home extends Component {
                         marginTop: 15,
                     }}>
                         <Text style={{
-                            color:'rgba(114,114,115,1)',
+                            color:'rgba(227,54,74,1)',
+                            // backgroundColor:'rgba(227,54,74,1)',
                             fontFamily:"Lato-Semibold",
                             // marginTop: 30,
-                        }}>How Does ERgent Work</Text>
+                        }}>How Does ERgent Work?</Text>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
@@ -501,10 +502,30 @@ export default class Home extends Component {
                 width: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
+            }}>
+                <TouchableWithoutFeedback onPress={this.onClickTellUsWhatYouThink.bind(this)}>
+                    <View style={{
+                        height: 30,
+                        justifyContent: 'center', 
+                        marginTop: 10,
+                    }}>
+                        <Text style={{
+                            color:'rgba(114,114,115,1)',
+                            // backgroundColor:'rgba(227,54,74,1)',
+                            fontFamily:"Lato-Regular",
+                            // marginTop: 30,
+                        }}>Tell Us What You Think</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
+            <View style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
             }}>            
                 <View style={{
                     // backgroundColor:'red',
-                    marginTop:30,
+                    marginTop:10,
                 }}>
                     <Image style={{
                         // backgroundColor:'yellow',
@@ -717,7 +738,8 @@ export default class Home extends Component {
                         <Text style={{
                             marginTop:60,
                             fontWeight:'bold',
-                            fontFamily:"Lato-Bold"
+                            fontFamily:"Lato-Bold",
+                            color:'rgba(227,54,74,1)',
                         }}>How Does ERgent Work?</Text>
 
                         <Text style={{
@@ -806,6 +828,13 @@ export default class Home extends Component {
         this.setState({
             isShowPopupHowDoesERgentWork: false
         })
+    }
+
+    onClickTellUsWhatYouThink() {
+        var strURL = "http://www.ergentapp.com/feedback"
+        if (Linking.canOpenURL(strURL)) {
+            Linking.openURL(strURL)
+        }
     }
 
     onClickHowDoesERgentWork() {
