@@ -233,7 +233,9 @@ export default class Home extends Component {
                 elevation:5
             }}>
 
-                <Text style={{
+                <Text 
+                allowFontScaling={false}
+                style={{
                     color:'white',
                     fontSize: 18,
                     fontWeight:'bold',
@@ -261,7 +263,9 @@ export default class Home extends Component {
                     width: Platform.OS === 'ios' ? 92 : 87,
                     borderColor:'rgba(218,219,220,1)',
                 }}></View>
-                <Text style={{
+                <Text 
+                allowFontScaling={false}
+                style={{
                     fontSize:16,
                     fontWeight: 'bold',
                     // backgroundColor:'yellow',
@@ -302,7 +306,9 @@ export default class Home extends Component {
                     resizeMode='center'
                     ></Image>
 
-                    <Text style={{
+                    <Text 
+                    allowFontScaling={false}
+                    style={{
                         width:Constant.DEVICE_WIDTH-140,
                         marginLeft: 5,
                         // backgroundColor:'yellow',
@@ -352,7 +358,9 @@ export default class Home extends Component {
                     resizeMode='center'
                     ></Image>
 
-                    <Text style={{
+                    <Text 
+                    allowFontScaling={false}
+                    style={{
                         width:Constant.DEVICE_WIDTH-140,
                         marginLeft: 5,
                         // backgroundColor:'yellow',
@@ -401,7 +409,9 @@ export default class Home extends Component {
                     resizeMode='center'
                     ></Image>
 
-                    <Text style={{
+                    <Text 
+                    allowFontScaling={false}
+                    style={{
                         width:Constant.DEVICE_WIDTH-140,
                         marginLeft: 5,
                         // backgroundColor:'yellow',
@@ -427,7 +437,9 @@ export default class Home extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
-                <Text style={{
+                <Text 
+                allowFontScaling={false}
+                style={{
                     color:'rgba(114,114,115,0.8)',
                     fontFamily:"Lato-Regular",
                     marginTop: 30,
@@ -446,7 +458,9 @@ export default class Home extends Component {
                         justifyContent: 'center', 
                         marginTop: 15,
                     }}>
-                        <Text style={{
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
                             color:'rgba(227,54,74,1)',
                             // backgroundColor:'rgba(227,54,74,1)',
                             fontFamily:"Lato-Semibold",
@@ -476,7 +490,9 @@ export default class Home extends Component {
                         borderRightWidth:0.5,
                         borderRightColor:'gray'
                     }}>
-                        <Text style={{
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
                             color:'rgba(114,114,115,1)',
                             fontFamily:"Lato-Regular"
                         }}>Privacy Policy</Text>
@@ -491,7 +507,9 @@ export default class Home extends Component {
                         justifyContent:'center',
                         alignItems:'center',
                     }}>
-                        <Text style={{
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
                             color:'rgba(114,114,115,1)',
                             fontFamily:"Lato-Regular"
                         }}>Terms & Conditions</Text>
@@ -509,7 +527,9 @@ export default class Home extends Component {
                         justifyContent: 'center', 
                         marginTop: 10,
                     }}>
-                        <Text style={{
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
                             color:'rgba(114,114,115,1)',
                             // backgroundColor:'rgba(227,54,74,1)',
                             fontFamily:"Lato-Regular",
@@ -603,17 +623,27 @@ export default class Home extends Component {
                         alignItems:'center',
                         overflow:'hidden',
                     }}>
-                        <Text style={{
-                            marginTop:100,
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
+                            marginTop:80,
+                            height:22,
                             fontWeight:'bold',
-                            fontFamily:"Lato-Bold"
-                        }}>Message from the ERgent team</Text>
+                            fontFamily:"Lato-Bold",
+                            // backgroundColor:'red'
+                        }}
+                        >Message from the ERgent team</Text>
 
-                        <Text style={{
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
                             color:'rgba(167,174,186,1)',
                             textAlign: 'center',
                             marginTop: 20,
+                            height:82,
                             marginHorizontal : 10,
+                            // backgroundColor:'yellow',
+                            fontSize:14,
                             fontFamily:"Lato-Regular"
                         }}>
                             If you are requesting the immediate wait time, please call the hospital. If you are having a heart attack, stroke, or any life-threatening emergency, please call <Text style={{
@@ -634,7 +664,8 @@ export default class Home extends Component {
                                 <Text style={{
                                     color:'white',
                                     fontFamily:"Lato-Semibold"
-                                }}>I Understand</Text>
+                                }}
+                                allowFontScaling={false}>I Understand</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
@@ -735,14 +766,18 @@ export default class Home extends Component {
                         marginTop: 60,
                         overflow: 'visible',
                     }}>
-                        <Text style={{
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
                             marginTop:60,
                             fontWeight:'bold',
                             fontFamily:"Lato-Bold",
                             color:'rgba(227,54,74,1)',
                         }}>How Does ERgent Work?</Text>
 
-                        <Text style={{
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
                             // color:'rgba(167,174,186,1)',
                             color: 'gray',
                             // textAlign: 'center',
@@ -750,22 +785,30 @@ export default class Home extends Component {
                             marginHorizontal : 10,
                             fontFamily:"Lato-Regular",
                         }}>
-                            <Text style={{
+                            <Text 
+                            allowFontScaling={false}
+                            style={{
                                 color:'black',
                                 fontFamily:"Lato-Regular"
                             }}>ERgent’s Recommendation:</Text> ERgent’s unique algorithm combines travel time with specific
                             hospital data to get you timely care anywhere across the United States. {'\n\n'}
-                            <Text style={{
+                            <Text 
+                            allowFontScaling={false}
+                            style={{
                                 color:'black',
                                 fontFamily:"Lato-Regular"
                             }}>Symptoms:</Text> Is there something specific bothering you? ERgent’s Symptoms page will give you
                             options so you can find emergency rooms with proven success in a given field. {'\n\n'}
-                            <Text style={{
+                            <Text 
+                            allowFontScaling={false}
+                            style={{
                                 color:'black',
                                 fontFamily:"Lato-Regular"
                             }}>Search:</Text> Do you need assistance while traveling? Is someone you care about in need? Wherever
                             you are, ERgent will help you locate a hospital – because 
-                            <Text style={{
+                            <Text 
+                            allowFontScaling={false}
+                            style={{
                                 color:'black',
                                 fontFamily:"Lato-Regular"
                             }}> Emergencies Shouldn’t Wait.</Text>
@@ -784,7 +827,9 @@ export default class Home extends Component {
                                 position: 'absolute',
                                 bottom: 0,
                             }}>
-                                <Text style={{
+                                <Text 
+                                allowFontScaling={false}
+                                style={{
                                     color:'white',
                                     fontFamily:"Lato-Semibold",
                                     fontWeight: 'bold',
