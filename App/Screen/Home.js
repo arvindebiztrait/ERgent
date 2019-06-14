@@ -18,7 +18,7 @@ import {
   AsyncStorage,
   NetInfo,
   Linking,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 
 import Constant from './GeneralClass/Constant';
@@ -37,17 +37,19 @@ export default class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isShowPopup:false,
+            isShowPopup: false,
+            isShowPopupForOptions: false,
+            intOptionIndex: 0,
             isShowPopupHowDoesERgentWork: false,
-            userLocation:{
+            userLocation: {
                 latitude: 0.0,
                 longitude: 0.0,
             },
-            isVisibleAdvertise:false,
-            arrAdvertisements:[],
-            advertiseIndex:0,
+            isVisibleAdvertise: false,
+            arrAdvertisements: [],
+            advertiseIndex: 0,
             currentAdvertimementData: {},
-            PageNumber:1,
+            PageNumber: 1,
             PageSize: 100,
         };
     }
@@ -280,7 +282,8 @@ export default class Home extends Component {
             </View>
 
             <TouchableWithoutFeedback onPress={
-                    this.gotoShortestWaitTime.bind(this)
+                    // this.gotoShortestWaitTime.bind(this)
+                    this.onClickERgentRecommendations.bind(this)
                 }>
                 <View style={{
                     height:55,
@@ -332,7 +335,8 @@ export default class Home extends Component {
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback onPress={
-                    this.gotoSymtoms.bind(this)
+                    // this.gotoSymtoms.bind(this)
+                    this.onClickSearchBySymptoms.bind(this)
                 }>
                 <View style={{
                     height:55,
@@ -383,8 +387,9 @@ export default class Home extends Component {
             </TouchableWithoutFeedback>
 
             <TouchableWithoutFeedback onPress={
-                    this.gotoSearch.bind(this)
-                }>
+                // this.gotoSearch.bind(this)
+                this.onClickSearchByLocation.bind(this)
+            }>
                 <View style={{
                     height:55,
                     backgroundColor:'white',
@@ -604,7 +609,18 @@ export default class Home extends Component {
             : undefined}
 
             {this.loadHowDoesERgentWorkView()}
+            {this.loadPopUpForOptionsProcess()}
+            {/* {this.loadEmergencyFirstTimePopUp()} */}
+            {this.loadTermsAndConditionsFirstTimePopUp()}
 
+            </View>
+            </KeyboardAwareScrollView>
+        </View>
+        );
+    }
+
+    loadEmergencyFirstTimePopUp() {
+        return(
             <Modal visible={this.state.isShowPopup} animationType={'fade'} transparent={true} onRequestClose={this.onModalCloseAction.bind(this)}>
                 <View style={{
                     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -696,10 +712,395 @@ export default class Home extends Component {
                         </Image>
                     </View>
             </Modal>
+        )
+    }
+
+    loadTermsAndConditionsFirstTimePopUp() {
+        return(
+            <Modal visible={this.state.isShowPopup} animationType={'fade'} transparent={true} onRequestClose={this.onModalCloseAction.bind(this)}>
+                <View style={{
+                    backgroundColor: 'rgba(0,0,0,0.4)',
+                    flex: 1,
+                    // justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <View style={{
+                        width: Constant.DEVICE_WIDTH-50,
+                        height: Constant.DEVICE_HEIGHT - (Platform.OS === 'ios' ? 100 : 140),
+                        backgroundColor: 'white',
+                        shadowColor: 'gray',
+                        shadowOpacity: 0.5,
+                        shadowOffset:{ width: 0, height: 1 },
+                        borderRadius:5,
+                        alignItems:'center',
+                        overflow:'hidden',
+                        marginTop: 80,
+                    }}>
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
+                            marginTop:70,
+                            height:22,
+                            fontWeight:'bold',
+                            fontFamily:"Lato-Bold",
+                            // backgroundColor:'red'
+                        }}
+                        >Terms & Conditions</Text>
+                        <KeyboardAwareScrollView style={{
+                            // backgroundColor: 'red'
+                        }}>
+                        {/* <View style={{
+                            backgroundColor: 'green',
+                        }}> */}
+                        {this.loadTC()}
+                        {/* </View> */}
+                        </KeyboardAwareScrollView>
+                        <TouchableWithoutFeedback onPress={this.onClickUnderstand.bind(this)}>
+                            <View style={{
+                                backgroundColor: 'rgba(227,54,74,1)',
+                                height:45,
+                                width:'100%',
+                                // marginTop: 10,
+                                justifyContent:'center',
+                                alignItems:'center',
+                                // position: 'absolute',
+                                // bottom: 0,
+                            }}>
+                                <Text style={{
+                                    color:'white',
+                                    fontFamily:"Lato-Bold"
+                                }}
+                                allowFontScaling={false}>I ACCEPT</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </View>
+                <View style={{
+                        position:'absolute',
+                        backgroundColor: 'white',
+                        height:120,
+                        width:120,
+                        zIndex:1,
+                        borderRadius:60,
+                        marginBottom:150,
+                        marginLeft:(Constant.DEVICE_WIDTH-120)/2,
+                        marginTop: 30, //(Constant.DEVICE_HEIGHT-120)/2 - 135,
+                        justifyContent:'center',
+                        alignItems:'center',
+                    }}>
+                        <Image style={{
+                            // backgroundColor:'rgba(227,54,74,1)',
+                            height:100,
+                            width:100,
+                            borderRadius:50,
+                            borderWidth:1,
+                            borderColor:'rgba(227,54,74,1)'
+                        }}
+                        source={require('../Images/logo-popup.png')}
+                        >
+                        </Image>
+                    </View>
+            </Modal>
+        )
+    }
+
+    loadTC() {
+        return(
+            <View>
+            <Text 
+            allowFontScaling={false}
+            style={{
+                // color:'rgba(167,174,186,1)',
+                color: 'gray',
+                marginTop: 20,
+                marginHorizontal : 10,
+                fontSize:14,
+                fontFamily:"Lato-Regular",
+                paddingBottom: 10,
+                lineHeight: 20,
+            }}>
+                The following terms and conditions (the “Terms and Conditions”) govern your use of this website and app (www.ergentapp.com and ERgent) provided to you by ERgent, LLC (the “Company”) or any of its affiliates, subsidiaries, and any content made available from or through this website and app, including any subdomains thereof, or application (collectively, the “Site”).  Such content includes any and all information, text, graphics, or other materials appearing on the Site.  The Site is made available by the Company and/or its affiliates, subsidiaries (“we” or “us” or “our”), each of which have adopted these Terms and Conditions with regard to its website. We may change the Terms and Conditions from time to time, at any time without notice to you, by posting such changes on the Site. BY USING THE SITE, YOU ACCEPT AND AGREE TO THESE TERMS AND CONDITIONS AS APPLIED TO YOUR USE OF THE SITE. If you do not agree to these Terms and Conditions, you may not access or otherwise use the Site.  In addition, we may send you an email informing you that the Terms and Conditions have changed.
+ERgent is an app designed to get you to an emergency department within a hospital based on your GPS location or any other location given and average waiting times within the hospital. This data is public information collected from a number of public and government sources, and such data should only be used for informational purposes and not be considered as medical advice in any manner. 
+Proprietary Rights.{'\n'}{'\n'}
+As between you and us, we own, solely and exclusively, all rights, title and interest in and to the Site, all the content (including, for example, audio, photographs, illustrations, graphics, other visuals, video, copy, text, software, titles, etc.), code, data and materials thereon, the look and feel, design and organization of the Site, and the compilation of the content, code, data and materials on the Site, including but not limited to any copyrights, trademark rights, patent rights, database rights, moral rights, sui generis rights and other intellectual property and proprietary rights therein. Your use of the Site does not grant to you ownership of any content, code, data or materials you may access on or through the Site.
+Limited License.{'\n'}{'\n'}
+You may access and view the content on the Site on your computer or other device and, unless otherwise indicated in these Terms and Conditions or on the Site, make single copies or prints of the content on the Site for your personal, internal use only.  Use of the Site and any services offered on or through the Site are only for your personal, non-commercial use.
+Prohibited Use.{'\n'}{'\n'}
+Any commercial or promotional distribution, publishing or exploitation of the Site, or any content, code, data or materials on the Site, is strictly prohibited unless you have received express prior written permission from our authorized personnel or the otherwise applicable rights holder. Other than as expressly allowed herein (such as in the case of personal social media accounts), you may not download, post, display, publish, copy, reproduce, distribute, transmit, modify, perform, broadcast, transfer, create derivative works from, sell or otherwise exploit any content, code, data or materials on or available through the Site.  You further agree that you may not alter, edit, delete, remove, otherwise change the meaning or appearance of, or repurpose, any of the content, code, data, or other materials on or available through the Site, including, without limitation, the alteration or removal of any trademarks, trade names, logos, service marks, or any other proprietary content or proprietary rights notices. You acknowledge that you do not acquire any ownership rights by downloading any copyrighted material from or through the Site. If you make other use of the Site, or the content, code, data or materials thereon or available through the Site, except as otherwise provided above, you may violate copyright and other laws of the United States, other countries, as well as applicable state laws and may be subject to liability for such unauthorized use.
+Trademarks.{'\n'}{'\n'}
+The trademarks, logos, service marks and trade names (collectively the “Trademarks”) displayed on the Site or on content available through the Site are registered and unregistered Trademarks and may not be used in connection with products and/or services that are not related to, associated with, or sponsored by their rights holders that are likely to cause customer confusion, or in any manner that disparages or discredits their rights holders. All Trademarks not owned by us that appear on the Site or on or through the Site’s services, if any, are the property of their respective owners. Nothing contained on the Site should be construed as granting, by implication, estoppel, or otherwise, any license or right to use any Trademark displayed on the Site without our written permission or the third party that may own the applicable Trademark. Your misuse of the Trademarks displayed on the Site or on or through any of the Site’s services is strictly prohibited and at your own risk. 
+User Information.{'\n'}{'\n'}
+In the course of your use of the Site and/or the services made available on or through the Site, you may be asked to provide certain personalized information to us (such information referred to hereinafter as “User Information”). Our information collection and use policies with respect to the privacy of such User Information are set forth in the Site’s Privacy Policy which is incorporated herein by reference for all purposes. You acknowledge and agree that you are solely responsible for the accuracy and content of User Information.
+Submitted Materials.{'\n'}{'\n'}
+Unless specifically requested, we do not solicit nor do we wish to receive any confidential, secret or proprietary information or other material from you through the Site, by e-mail or in any other way. Any information, creative works, demos, ideas, suggestions, concepts, methods, systems, designs, plans, techniques or other materials submitted or sent to us (including, for example and without limitation, that which you submit or send to us via e-mail) (“Submitted Materials”) will be deemed not to be confidential or secret, and may be used by us in any manner consistent with the Site’s Privacy Policy. By submitting or sending Submitted Materials to us, you: (i) represent and warrant that the Submitted Materials are original to you, that no other party has any rights thereto, and that any “moral rights” in Submitted Materials have been waived, and (ii) you grant us and our affiliates a royalty-free, unrestricted, worldwide, perpetual, irrevocable, non-exclusive and fully transferable, assignable and sublicensable right and license to use, copy, reproduce, modify, adapt, publish, translate, create derivative works from, distribute, perform, display and incorporate in other works any Submitted Materials (in whole or part) in any form, media, or technology now known or later developed, including for promotional and/or commercial purposes. We cannot be responsible for maintaining any Submitted Material that you provide to us, and we may delete or destroy any such Submitted Material at any time.
+Prohibited User Conduct.</Text>
+            <Text 
+            allowFontScaling={false}
+            style={{
+                // color:'rgba(167,174,186,1)',
+                color: 'gray',
+                marginTop: 20,
+                marginHorizontal : 10,
+                fontSize:14,
+                fontFamily:"Lato-Regular",
+                paddingBottom: 10,
+            }}>You alone are responsible for the content and consequences of any of your activities.  You warrant and agree that, while using the Site and the various services and features offered on or through the Site, you shall not:
+{'\n'}{'\n'}(a) impersonate any person or entity or misrepresent your affiliation with any other person or entity;
+{'\n'}{'\n'}(b) insert your own or a third party’s advertising, branding or other promotional content into any of the Site’s content, materials or services (for example, without limitation, in an RSS feed or a podcast received from us or otherwise through the Site), or use, redistribute, republish or exploit such content or service for any further commercial or promotional purposes;
+{'\n'}{'\n'}(c) engage in spidering, “screen scraping,” “database scraping,” harvesting of e-mail addresses, wireless addresses or other contact or personal information, or any other automatic means of obtaining lists of users or other information from or through the Site or any services offered on or through the Site, including without limitation, any information residing on any server or database connected to the Site or any services offered on or through the Site;
+{'\n'}{'\n'}(d) obtain or attempt to obtain unauthorized access to our or other computer systems, materials or information through the Site by any means;
+{'\n'}{'\n'}(e) use the Site or the services made available on or through the Site in any manner with the intent to interrupt, damage, disable, overburden, or impair the Site or such services, including, without limitation, sending mass unsolicited messages or “flooding” servers with requests;
+{'\n'}{'\n'}(f) use the Site or the Site’s services or features in violation of our or any third party’s intellectual property or other proprietary or legal rights;
+{'\n'}{'\n'}(g) use the Site or the Site’s services in violation of any applicable law;
+{'\n'}{'\n'}(h) attempt (or encourage or support anyone else’s attempt) to circumvent, reverse engineer, decrypt, or otherwise alter or interfere with the Site or the Site’s services, or any content thereof, or make any unauthorized use thereof;
+{'\n'}{'\n'}(i) use the Site in any manner that could damage, disable, overburden, or impair the Site or interfere with any other party’s use and enjoyment of the Site or any of its services;
+{'\n'}{'\n'}(j) obtain or attempt to obtain any materials or information through any means not intentionally made publicly available or provided for through the Site;
+{'\n'}{'\n'}(k) post, publish or transmit any text, graphics, or material that: (i) is false or misleading; (ii) is defamatory; (iii) invades another’s privacy; (iv) is obscene, pornographic, or offensive; (v) promotes bigotry, racism, hatred or harm against any individual or group; (vi) infringes another’s legal rights; or (vii) violates, or encourages any conduct that would violate, any applicable law or regulation or would give rise to civil or criminal liability; and
+{'\n'}{'\n'}(l) send unsolicited email, junk mail, “spam,” chain letters, or promotions or advertisements for products or services.
+{'\n'}{'\n'}(m) restrict or inhibit any other user from using and enjoying the Site or its Services.
+            </Text>
+            <Text 
+            allowFontScaling={false}
+            style={{
+                // color:'rgba(167,174,186,1)',
+                color: 'gray',
+                marginTop: 20,
+                marginHorizontal : 10,
+                fontSize:14,
+                fontFamily:"Lato-Regular",
+                paddingBottom: 10,
+            }}>
+Linking to the Web Site.
+You are not permitted to link directly to any image hosted on the Site or our services, such as using an "in-line" linking method to cause the image hosted by us to be displayed on another web site. You agree not to download or use images hosted on this Site on another web site, for any purpose, including, without limitation, posting such images on another site.  Such restriction does not apply to personal social media accounts. You agree not to link from any other web site to this Site in any manner such that the Site, or any page of the Site, is "framed," surrounded or obfuscated by any third party content, materials or branding. We reserve all of our rights under the law to insist that any link to the Site be discontinued, and to revoke your right to link to the Site from any other web site at any time upon written notice to you.
+Indemnification.{'\n'}{'\n'}
+You agree to defend, indemnify and hold us and our subsidiaries, affiliates and any directors, officers, employees and agents harmless from any and all claims, liabilities, costs and expenses, including reasonable attorneys’ fees, arising in any way from your use of the Site, your placement or transmission of any message, content, information, software or other materials through the Site, or your breach or violation of the law or of these Terms and Conditions. We reserve the right, at our own expense, to assume the exclusive defense and control of any matter otherwise subject to indemnification by you, and in such case, you agree to cooperate with our defense of such claim.
+Third Party Sites.{'\n'}{'\n'}
+You may be able to link from the Site to third party Sites, and third party Sites may link to the Site (“Linked Sites”). You acknowledge and agree that we have no responsibility for the information, content, products, services, advertising, code or other materials which may or may not be provided by or through Linked Sites, even if they are owned or run by affiliates of ours. Links to Linked Sites do not constitute an endorsement or sponsorship by us of such Sites or the information, content, products, services, advertising, code or other materials presented on or through such Sites. The inclusion of any link to such sites on our Site does not imply our endorsement, sponsorship, or recommendation of that site. We disclaim any liability for links (1) from another Site to this Site and (2) to another Site from this Site. We do not guarantee the standards of any Site to which links are provided on this Site nor shall we be held responsible for the contents of such sites, or any subsequent links. We do not represent or warrant that the contents of any third party Site is accurate, compliant with state or federal law, or compliant with copyright or other intellectual property laws. Also, we are not responsible for or any form of transmission received from any linked Site. Any reliance on the contents of a third party Site is done so at your own risk and you assume all responsibilities and consequences resulting from such reliance.
+DISCLAIMER OF WARRANTIES.{'\n'}{'\n'}
+THE SITE, INCLUDING, WITHOUT LIMITATION, ALL SERVICES, CONTENT, FUNCTIONS AND MATERIALS PROVIDED THROUGH THE SITE, ARE PROVIDED “AS IS,” “AS AVAILABLE,” WITHOUT WARRANTY OR CONDITION OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING, WITHOUT LIMITATION, ANY WARRANTY FOR INFORMATION, DATA, DATA PROCESSING SERVICES, UNINTERRUPTED ACCESS, ANY WARRANTIES CONCERNING THE AVAILABILITY, PLAYABILITY, DISPLAYABILITY, ACCURACY, PRECISION, CORRECTNESS, THOROUGHNESS, COMPLETENESS, USEFULNESS, OR CONTENT OF INFORMATION, AND ANY WARRANTIES OF TITLE, QUIET ENJOYMENT, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. WE DO NOT WARRANT THAT THE SITE OR THE SERVICES, CONTENT, FUNCTIONS OR MATERIALS PROVIDED THROUGH THE SITE WILL BE TIMELY, SECURE, UNINTERRUPTED OR ERROR FREE, OR THAT DEFECTS WILL BE CORRECTED. WE MAKE NO WARRANTY THAT THE SITE OR THE PROVIDED SERVICES WILL MEET USERS’ REQUIREMENTS. NO ADVICE, RESULTS OR INFORMATION, WHETHER ORAL OR WRITTEN, OBTAINED BY YOU FROM US OR THROUGH THE SITE SHALL CREATE ANY WARRANTY NOT EXPRESSLY MADE HEREIN. 
+WE AND OUR AFFILIATES ALSO ASSUME NO RESPONSIBILITY, AND SHALL NOT BE LIABLE FOR, ANY DAMAGES TO, OR VIRUSES THAT MAY INFECT, YOUR EQUIPMENT ON ACCOUNT OF YOUR ACCESS TO, USE OF, OR BROWSING IN THE SITE OR YOUR DOWNLOADING OF ANY MATERIALS, DATA, TEXT, IMAGES, VIDEO CONTENT, OR AUDIO CONTENT FROM THE SITE. IF YOU ARE DISSATISFIED WITH THE SITE, YOUR SOLE REMEDY IS TO DISCONTINUE USING THE SITE.
+WE TRY TO ENSURE THAT THE INFORMATION POSTED ON THE SITE IS CORRECT AND UP-TO-DATE. WE RESERVE THE RIGHT TO CHANGE OR MAKE CORRECTIONS TO ANY OF THE INFORMATION PROVIDED ON THE SITE AT ANY TIME AND WITHOUT ANY PRIOR WARNING. WE NEITHER ENDORSE NOR ARE RESPONSIBLE FOR THE ACCURACY OR RELIABILITY OF ANY OPINION, ADVICE OR STATEMENT ON THE SITE, NOR FOR ANY OFFENSIVE, DEFAMATORY, OBSCENE, INDECENT, UNLAWFUL OR INFRINGING POSTING MADE THEREON BY ANYONE OTHER THAN OUR AUTHORIZED EMPLOYEE SPOKESPERSONS WHILE ACTING IN THEIR OFFICIAL CAPACITIES (INCLUDING, WITHOUT LIMITATION, OTHER USERS OF THE SITE). IT IS YOUR RESPONSIBILITY TO EVALUATE THE ACCURACY, COMPLETENESS OR USEFULNESS OF ANY INFORMATION, OPINION, ADVICE OR OTHER CONTENT AVAILABLE THROUGH THE SITE. PLEASE SEEK THE ADVICE OF PROFESSIONALS, AS APPROPRIATE, REGARDING THE EVALUATION OF ANY SPECIFIC INFORMATION, OPINION, ADVICE OR OTHER CONTENT.  UNDER NO CIRCUMSTANCES SHOULD THE INFORMATION PROVIDED ON THIS SITE BE CONSIDERED A DIAGNOSIS OR MEDICAL ADVICE OF ANY KIND.  IN THE EVENT OF AN EMERGENCY, IT IS ALWAYS ADVISABLE TO CALL 911.
+WITHOUT LIMITATION OF THE ABOVE IN THIS SECTION, WE AND OUR AFFILIATES, SUPPLIERS AND LICENSORS MAKE NO WARRANTIES OR REPRESENTATIONS REGARDING ANY PRODUCTS OR SERVICES ORDERED OR PROVIDED VIA THE SITE, AND HEREBY DISCLAIM, AND YOU HEREBY WAIVE, ANY AND ALL WARRANTIES AND REPRESENTATIONS MADE IN PRODUCT OR SERVICES LITERATURE, AND OTHERWISE ON THE SITE OR IN CORRESPONDENCE WITH US OR OUR AGENTS. ANY PRODUCTS AND SERVICES ORDERED OR PROVIDED VIA THE SITE ARE PROVIDED BY US “AS IS,” EXCEPT TO THE EXTENT, IF AT ALL, OTHERWISE SET FORTH IN A LICENSE OR SALE AGREEMENT SEPARATELY ENTERED INTO IN WRITING BETWEEN YOU AND US OR OUR LICENSOR OR SUPPLIER.
+LIMITATION OF LIABILITY.{'\n'}{'\n'}
+IN NO EVENT, INCLUDING BUT NOT LIMITED TO NEGLIGENCE, SHALL WE, OUR SUBSIDIARIES, AFFILIATES, OR ANY OF OUR DIRECTORS, OFFICERS, EMPLOYEES, AGENTS OR CONTENT OR SERVICE PROVIDERS (COLLECTIVELY, THE “PROTECTED ENTITIES”) BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY OR PUNITIVE DAMAGES ARISING FROM, OR DIRECTLY OR INDIRECTLY RELATED TO, THE USE OF, OR THE INABILITY TO USE, THE SITE OR THE CONTENT, MATERIALS AND FUNCTIONS RELATED THERETO, YOUR PROVISION OF INFORMATION VIA THE SITE, LOST BUSINESS OR LOST SALES, EVEN IF SUCH PROTECTED ENTITY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. SOME JURISDICTIONS DO NOT ALLOW THE LIMITATION OR EXCLUSION OF LIABILITY FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES SO SOME OF THE ABOVE LIMITATIONS MAY NOT APPLY TO CERTAIN USERS. IN NO EVENT SHALL THE PROTECTED ENTITIES BE LIABLE FOR OR IN CONNECTION WITH ANY CONTENT POSTED, TRANSMITTED, EXCHANGED OR RECEIVED BY OR ON BEHALF OF ANY USER OR OTHER PERSON ON OR THROUGH THE SITE.  IN NO EVENT SHALL THE TOTAL AGGREGATE LIABILITY OF THE PROTECTED ENTITIES TO YOU FOR ALL DAMAGES, LOSSES, AND CAUSES OF ACTION (WHETHER IN CONTRACT OR TORT, INCLUDING, BUT NOT LIMITED TO, NEGLIGENCE OR OTHERWISE) ARISING FROM THE TERMS AND CONDITIONS OR YOUR USE OF THE SITE EXCEED, IN THE AGGREGATE, THE AMOUNT, IF ANY, PAID BY YOU TO US FOR YOUR USE OF THE SITE.
+Applicable Laws.{'\n'}{'\n'}
+We control and operate the Site from our offices in the United States. We do not represent that materials on the Site are appropriate or available for use in other locations. Persons who choose to access the Site from other locations do so on their own initiative, and are responsible for compliance with local laws, if and to the extent local laws are applicable. All parties to these Terms and Conditions waive their respective rights to a trial by jury.
+Termination.{'\n'}{'\n'}
+We may terminate, change, suspend or discontinue any aspect of the Site or the Site’s services at any time. We may restrict, suspend or terminate your access to the Site and/or its services if we believe you are in breach of our Terms and Conditions or applicable law, or for any other reason without notice or liability. We maintain a policy that provides for the termination in appropriate circumstances of the Site use privileges of users who are repeat infringers of intellectual property rights.
+Changes to Terms and Conditions.{'\n'}{'\n'}
+We reserve the right, at our sole discretion, to change, modify, add or remove any portion of the Terms and Conditions, in whole or in part, at any time. Changes in the Terms and Conditions will be effective when posted. Your continued use of the Site and/or the services made available on or through the Site after any changes to the Terms and Conditions are posted will be considered acceptance of those changes.
+Severability{'\n'}{'\n'}
+If any provision of the Terms and Conditions is found by a court of competent jurisdiction to be invalid, the parties nevertheless agree that the court should endeavor to give effect to the parties’ intentions as reflected in the provision, and the other provisions of the Terms and Conditions remain in full force and effect.
+Waiver.{'\n'}{'\n'}
+The failure of the Company to enforce any right or provision of these Terms and Conditions will not be deemed a waiver of such right or provision.
+Controlling Law and Jurisdiction.{'\n'}{'\n'}
+The Terms and Conditions, and the relationship between you and us, shall be governed by the laws of the state of Florida, without regard to its conflict of law provisions. You agree that any cause of action that may arise under the Terms and Conditions shall be commenced and be heard in the appropriate court in the state of Florida. You agree to submit to the personal and exclusive jurisdiction of the state and federal courts located within the state of Florida, and each of the parties hereto waive any objection to jurisdiction and venue in such courts.
+                </Text>
             </View>
-            </KeyboardAwareScrollView>
-        </View>
-        );
+        )
+    }
+
+    loadPopUpForOptionsProcess() {
+        return(
+            <Modal visible={this.state.isShowPopupForOptions} animationType={'fade'} transparent={true} onRequestClose={this.onModalCloseAction.bind(this)}>
+                <View style={{
+                    backgroundColor: 'rgba(0,0,0,0.4)',
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <View style={{
+                        width: Constant.DEVICE_WIDTH-50,
+                        height: 370,
+                        backgroundColor: 'white',
+                        shadowColor: 'gray',
+                        shadowOpacity: 0.5,
+                        shadowOffset:{ width: 0, height: 1 },
+                        borderRadius:5,
+                        alignItems:'center',
+                        overflow:'hidden',
+                    }}>
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
+                            marginTop:80,
+                            height:22,
+                            fontWeight:'bold',
+                            fontFamily:"Lato-Bold",
+                            // backgroundColor:'red'
+                        }}
+                        >Message from the ERgent team</Text>
+
+                        <Text 
+                        allowFontScaling={false}
+                        style={{
+                            color:'rgba(167,174,186,1)',
+                            textAlign: 'center',
+                            marginTop: 20,
+                            height:82,
+                            marginHorizontal : 10,
+                            // backgroundColor:'yellow',
+                            fontSize:14,
+                            fontFamily:"Lato-Regular"
+                        }}>
+                            If you are requesting the immediate wait time, please call the hospital. If you are having a heart attack, stroke, or any life-threatening emergency, please call <Text style={{
+                                color:'rgba(227,54,74,1)',
+                                fontFamily:"Lato-Regular"
+                            }}>911</Text>
+                        </Text>
+                        
+                        <TouchableWithoutFeedback onPress={this.onClickIUnderstandOptions.bind(this)}>
+                            <View style={{
+                                backgroundColor: 'rgba(227,54,74,1)',
+                                height:40,
+                                width: Constant.DEVICE_WIDTH - 80,
+                                marginTop: 10,
+                                justifyContent:'center',
+                                alignItems:'center',
+                                marginHorizontal: 40,
+                                borderRadius: 20,
+                                shadowColor: 'gray',
+                                shadowOpacity: 1,
+                                shadowOffset: { width: 0, height: 1 },
+                                elevation: 3,
+                            }}>
+                                <Text style={{
+                                    color:'white',
+                                    fontFamily:"Lato-Bold"
+                                }}
+                                allowFontScaling={false}>I Understand</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={this.onClickCall911.bind(this)}>
+                            <View style={{
+                                backgroundColor: 'rgba(227,54,74,1)',
+                                height:40,
+                                width: Constant.DEVICE_WIDTH - 80,
+                                marginTop: 10,
+                                justifyContent:'center',
+                                alignItems:'center',
+                                marginHorizontal: 40,
+                                borderRadius: 20,
+                                shadowColor: 'gray',
+                                shadowOpacity: 1,
+                                shadowOffset: { width: 0, height: 1 },
+                                elevation: 3,
+                            }}>
+                                <Text style={{
+                                    color:'white',
+                                    fontFamily:"Lato-Bold"
+                                }}
+                                allowFontScaling={false}>Dial 911</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={this.onClickGoBack.bind(this)}>
+                            <View style={{
+                                backgroundColor: 'rgba(227,54,74,1)',
+                                height:40,
+                                width: Constant.DEVICE_WIDTH - 80,
+                                marginTop: 10,
+                                justifyContent:'center',
+                                alignItems:'center',
+                                marginHorizontal: 40,
+                                borderRadius: 20,
+                                shadowColor: 'gray',
+                                shadowOpacity: 1,
+                                shadowOffset: { width: 0, height: 1 },
+                                elevation: 3,
+                            }}>
+                                <Text style={{
+                                    color:'white',
+                                    fontFamily:"Lato-Bold"
+                                }}
+                                allowFontScaling={false}>Go Back</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </View>
+                <View style={{
+                        position:'absolute',
+                        backgroundColor: 'white',
+                        height:120,
+                        width:120,
+                        zIndex:1,
+                        borderRadius:60,
+                        marginBottom:150,
+                        marginLeft:(Constant.DEVICE_WIDTH-120)/2,
+                        marginTop:(Constant.DEVICE_HEIGHT-120)/2 - 185,
+                        justifyContent:'center',
+                        alignItems:'center',
+                    }}>
+                        <Image style={{
+                            // backgroundColor:'rgba(227,54,74,1)',
+                            height:100,
+                            width:100,
+                            borderRadius:50,
+                            borderWidth:1,
+                            borderColor:'rgba(227,54,74,1)'
+                        }}
+                        source={require('../Images/logo-popup.png')}
+                        >
+                        </Image>
+                    </View>
+            </Modal>
+        )
+    }
+
+    onClickERgentRecommendations() {
+        this.setState({
+            intOptionIndex: 1,
+            isShowPopupForOptions: true,
+        })
+    }
+
+    onClickSearchBySymptoms() {
+        this.setState({
+            intOptionIndex: 2,
+            isShowPopupForOptions: true,
+        })
+    }
+
+    onClickSearchByLocation() {
+        this.setState({
+            intOptionIndex: 3,
+            isShowPopupForOptions: true,
+        })
+    }
+
+    onClickIUnderstandOptions() {
+        this.setState({
+            isShowPopupForOptions: false,
+        })
+        if (this.state.intOptionIndex === 1) {
+            this.gotoShortestWaitTime()
+        }
+        else if (this.state.intOptionIndex === 2) {
+            this.gotoSymtoms()
+        } 
+        else if (this.state.intOptionIndex === 3) {
+            this.gotoSearch()
+        }
+    }   
+
+    onClickCall911() {
+        this.setState({
+            intOptionIndex: 0,
+            isShowPopupForOptions: false,
+        })
+        var PhoneNumber = '911'
+        if (Linking.canOpenURL(`tel:${PhoneNumber}`)) {
+            Linking.openURL(`tel:${PhoneNumber}`)
+        }
+        else{
+            alert('this feature is not supported in your device')
+        }
+    }
+
+    onClickGoBack() {
+        this.setState({
+            intOptionIndex: 0,
+            isShowPopupForOptions: false,
+        })
     }
 
     loadHowDoesERgentWorkView() {
@@ -920,8 +1321,6 @@ export default class Home extends Component {
     gotoSearch() {
         this.props.navigation.push('searchByLocation', {'isForSearch':true})
     }
-
-  
 
     startCounterForAdvertisement() {
         var that = this
