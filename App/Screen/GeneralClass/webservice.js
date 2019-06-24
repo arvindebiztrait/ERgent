@@ -42,7 +42,8 @@ module.exports = {
  
   //live inhouse link
 //   serverUri : 'http://ergentapp.sandboxserver.info/api/',
-    serverUri : 'http://18.188.101.156/ERgentApp/api/',
+    // serverUri : 'http://18.188.101.156/ERgentApp/api/',
+    serverUri : 'http://13.59.163.66/ERgentApp/api/',
     languageId : '',
     deviceToken :'',
     CALL_ONETIME:'',

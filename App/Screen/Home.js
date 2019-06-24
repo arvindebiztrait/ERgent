@@ -51,6 +51,8 @@ export default class Home extends Component {
             currentAdvertimementData: {},
             PageNumber: 1,
             PageSize: 100,
+            isSelectedTC: false,
+            isSelectedPP: false,
         };
     }
 
@@ -755,16 +757,70 @@ export default class Home extends Component {
                         {this.loadTC()}
                         {/* </View> */}
                         </KeyboardAwareScrollView>
+                        <TouchableWithoutFeedback onPress={this.onClickTermsAndConditions.bind(this)}>
+                            <View style={{
+                                // height:45,
+                                width: Constant.DEVICE_WIDTH - 50,
+                                // justifyContent:'center',
+                                alignItems:'center',
+                                flexDirection: 'row',
+                                marginTop: 5,
+                            }}>
+                                <Image style={{
+                                    height: 20,
+                                    width: 20,
+                                    marginLeft: 10,
+                                }}
+                                source={this.state.isSelectedTC === true ? require('../Images/check_box_selected.png') : require('../Images/check_box_unselected_BT.png')}
+                                resizeMode={'contain'}
+                                />
+                                <Text style={{
+                                    // color:'white',
+                                    fontFamily:"Lato-Regular",
+                                    fontSize: 12,
+                                    width: Constant.DEVICE_WIDTH - 50 - 50,
+                                    marginLeft: 10,
+                                }}
+                                allowFontScaling={false}>I acknowledge that I have read, understood, and accept the above Terms and Conditions</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={this.onClickPrivacyPolicy.bind(this)}>
+                            <View style={{
+                                // height:45,
+                                width: Constant.DEVICE_WIDTH - 50,
+                                // justifyContent:'center',
+                                alignItems:'center',
+                                flexDirection: 'row',
+                                marginVertical: 5,
+                            }}>
+                                <Image style={{
+                                    height: 20,
+                                    width: 20,
+                                    marginLeft: 10,
+                                }}
+                                source={this.state.isSelectedPP === true ? require('../Images/check_box_selected.png') : require('../Images/check_box_unselected_BT.png')}
+                                resizeMode={'contain'}
+                                />
+                                <Text style={{
+                                    // color:'white',
+                                    fontFamily:"Lato-Regular",
+                                    fontSize: 12,
+                                    width: Constant.DEVICE_WIDTH - 50 - 50,
+                                    marginLeft: 10,
+                                }}
+                                allowFontScaling={false}>I accept the <TouchableWithoutFeedback onPress={this.onClickPrivacyPolicyOpen.bind(this)}><Text style={{
+                                    color: 'blue',
+                                    textDecorationLine: 'underline',
+                                }}>Privacy Policy</Text></TouchableWithoutFeedback></Text>
+                            </View>
+                        </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={this.onClickUnderstand.bind(this)}>
                             <View style={{
                                 backgroundColor: 'rgba(227,54,74,1)',
                                 height:45,
                                 width:'100%',
-                                // marginTop: 10,
                                 justifyContent:'center',
                                 alignItems:'center',
-                                // position: 'absolute',
-                                // bottom: 0,
                             }}>
                                 <Text style={{
                                     color:'white',
@@ -802,6 +858,25 @@ export default class Home extends Component {
                     </View>
             </Modal>
         )
+    }
+
+    onClickTermsAndConditions() {
+        this.setState({
+            isSelectedTC: !this.state.isSelectedTC,
+        })
+    }
+
+    onClickPrivacyPolicy() {
+        this.setState({
+            isSelectedPP: !this.state.isSelectedPP,
+        })
+    }
+
+    onClickPrivacyPolicyOpen() {
+        var strURL = "http://www.ergentapp.com/privacy-policy"
+        if (Linking.canOpenURL(strURL)) {
+            Linking.openURL(strURL)
+        }
     }
 
     loadTC() {
@@ -1294,10 +1369,20 @@ The Terms and Conditions, and the relationship between you and us, shall be gove
     }
 
     onClickUnderstand() {
-        AsyncStorage.setItem('isShowFirstTimePopup','1')
-        this.setState({
-            isShowPopup:false
-        })
+        if (this.state.isSelectedTC === false) {
+            alert('Please accept terms and conditions')
+            return false
+        }
+        else if (this.state.isSelectedPP === false) {
+            alert('Please accept privacy policy')
+            return false
+        }
+        else {
+            AsyncStorage.setItem('isShowFirstTimePopup','1')
+            this.setState({
+                isShowPopup:false
+            })
+        }
     }
 
     gotoPrivacyPolicy() {
