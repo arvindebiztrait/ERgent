@@ -42,15 +42,12 @@ module.exports = {
  
   //live inhouse link
 //   serverUri : 'http://ergentapp.sandboxserver.info/api/',
-    // serverUri : 'http://18.188.101.156/ERgentApp/api/',
-    serverUri : 'http://13.59.163.66/ERgentApp/api/',
     languageId : '',
     deviceToken :'',
     CALL_ONETIME:'',
 
-
-    //live link
-    // serverUri : 'http://18.221.113.251:8181//api/v1/main',      
+    //live link  
+    serverUri : 'http://3.13.88.226/ERgentApp/api/',      
   
     /*
     callGlobalWebservice(methodName,params) {
